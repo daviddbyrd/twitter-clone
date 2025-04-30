@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Feed = () => {
   const [postText, setPostText] = useState<string>("");
   const [posts, setPosts] = useState<string[]>([]);
+  const [data, setData] = useState();
+
+  const fetchData = () => {
+    fetch("http://localhost:3001/data")
+      .then((res) => res.json())
+      .then((resdata) => {
+        setData(resdata);
+        console.log(resdata);
+      });
+  };
 
   const makePost = () => {
     setPosts((oldPosts) => [...oldPosts, postText]);
@@ -19,11 +29,13 @@ const Feed = () => {
         />
         <button onClick={makePost}>Post</button>
       </div>
+      <button onClick={fetchData}>Fetch</button>
       <div>
         {posts.map((post) => {
           return <div>{post}</div>;
         })}
       </div>
+      {data && <div>{JSON.stringify(data)}</div>}
     </div>
   );
 };

@@ -3,11 +3,10 @@ import axios from "axios";
 
 const Feed = () => {
   const [postText, setPostText] = useState<string>("");
-  const [posts, setPosts] = useState<string[]>([]);
   const [data, setData] = useState();
 
   const fetchData = () => {
-    axios.get("http://localhost:3001/data").then((res) => {
+    axios.get("http://localhost:3001/posts").then((res) => {
       setData(res.data);
       console.log(res.data);
     });
@@ -25,7 +24,6 @@ const Feed = () => {
   };
 
   const makePost = async () => {
-    setPosts((oldPosts) => [...oldPosts, postText]);
     await sendPostToDB();
     setPostText("");
   };

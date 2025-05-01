@@ -14,7 +14,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-app.get("/data", async (req, res) => {
+app.get("/posts", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM posts");
     res.json(result.rows);

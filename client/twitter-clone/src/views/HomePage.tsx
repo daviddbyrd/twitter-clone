@@ -1,9 +1,9 @@
-import Feed from "../components/Feed";
+import AuthScreen from "../components/AuthScreen";
 
 const HomePage = () => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center">
-      <Feed />
+    <div className="h-screen w-screen">
+      <AuthScreen />
     </div>
   );
 };

@@ -1,20 +1,27 @@
 import { useState } from "react";
+import { validateSignUp } from "../utils/SignUpValidation";
 
 const SignUpScreen = () => {
   const [logInForm, setLogInForm] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogInForm({ ...logInForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSignUp = () => {
+    const errors = validateSignUp(logInForm);
+    console.log(errors);
   };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
-      <div className="h-70 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
-        <div className="bg-blue-100 p-4 border-2 border-black rounded-md">
+      <div className="h-100 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
+        <div className="p-2">
           <h1>Username:</h1>
           <input
             className="bg-white w-full rounded-md px-2"
@@ -23,17 +30,17 @@ const SignUpScreen = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="bg-blue-100 p-4 border-2 border-black rounded-md">
+        <div className="p-2">
           <h1>Email address:</h1>
           <input
             className="bg-white w-full rounded-md px-2"
-            name="username"
+            name="email"
             value={logInForm.email}
             onChange={handleChange}
           />
         </div>
-        <div className="bg-blue-100 p-4 border-2 border-black rounded-md">
-          <h1>Password</h1>
+        <div className="p-2">
+          <h1>Password:</h1>
           <input
             className="bg-white w-full rounded-md px-2"
             name="password"
@@ -41,6 +48,21 @@ const SignUpScreen = () => {
             onChange={handleChange}
           />
         </div>
+        <div className="p-2">
+          <h1>Confirm Password:</h1>
+          <input
+            className="bg-white w-full rounded-md px-2"
+            name="confirmPassword"
+            value={logInForm.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>
+        <button
+          className="p-2 border-2 border-blue-300 rounded-md bg-blue-100"
+          onClick={handleSignUp}
+        >
+          Sign Up
+        </button>
       </div>
     </div>
   );

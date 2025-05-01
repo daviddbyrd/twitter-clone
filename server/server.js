@@ -14,6 +14,21 @@ const pool = new Pool({
   port: 5432,
 });
 
+app.post("/posts", async (req, res) => {
+  const { post } = req.body;
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO posts (post) VALUES ($1) RETURNING *",
+      [post]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error inserting post");
+  }
+});
+
 app.get("/posts", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM posts");
@@ -21,6 +36,21 @@ app.get("/posts", async (req, res) => {
     console.log(res);
   } catch (err) {
     res.status(500).send(err.toString());
+  }
+});
+
+app.post("/users", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
+      [username, email, password]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.err(err);
+    res.status(500).json({ message: "Error adding user" });
   }
 });
 

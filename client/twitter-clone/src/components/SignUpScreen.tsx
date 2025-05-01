@@ -41,6 +41,18 @@ const SignUpScreen = () => {
     }
   };
 
+  const addUserToDB = async () => {
+    try {
+      await axios.post("http://localhost:3001/users", {
+        username: logInForm.username,
+        email: logInForm.email,
+        password: logInForm.password,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleSignUp = async () => {
     const errors = validateSignUp(logInForm);
     if (errors.length > 0) {
@@ -49,9 +61,7 @@ const SignUpScreen = () => {
     }
     const response = await checkAvailability();
     if (response) {
-      console.log("Success");
-    } else {
-      console.log("Failure");
+      await addUserToDB();
     }
   };
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
 
-const LogInScreen = () => {
+const SignUpScreen = () => {
   const [logInForm, setLogInForm] = useState({
-    usernameOrEmail: "",
+    username: "",
+    email: "",
     password: "",
   });
 
@@ -14,11 +15,20 @@ const LogInScreen = () => {
     <div className="flex items-center justify-center w-screen h-screen">
       <div className="h-70 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
         <div className="bg-blue-100 p-4 border-2 border-black rounded-md">
-          <h1>Username or email address:</h1>
+          <h1>Username:</h1>
           <input
             className="bg-white w-full rounded-md px-2"
             name="username"
-            value={logInForm.usernameOrEmail}
+            value={logInForm.username}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="bg-blue-100 p-4 border-2 border-black rounded-md">
+          <h1>Email address:</h1>
+          <input
+            className="bg-white w-full rounded-md px-2"
+            name="username"
+            value={logInForm.email}
             onChange={handleChange}
           />
         </div>
@@ -36,4 +46,4 @@ const LogInScreen = () => {
   );
 };
 
-export default LogInScreen;
+export default SignUpScreen;

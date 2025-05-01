@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { validateSignUp } from "../utils/SignUpValidation";
+import axios from "axios";
 
 const SignUpScreen = () => {
   const [logInForm, setLogInForm] = useState({
@@ -13,9 +14,45 @@ const SignUpScreen = () => {
     setLogInForm({ ...logInForm, [e.target.name]: e.target.value });
   };
 
-  const handleSignUp = () => {
+  const checkAvailability = async () => {
+    try {
+      let response = await axios.post(
+        "http://localhost:3001/check-unique-email",
+        {
+          email: logInForm.email,
+        }
+      );
+      if (response.status !== 200) {
+        return false;
+      }
+      response = await axios.post(
+        "http://localhost:3001/check-unique-username",
+        {
+          username: logInForm.username,
+        }
+      );
+      if (response.status !== 200) {
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+
+  const handleSignUp = async () => {
     const errors = validateSignUp(logInForm);
-    console.log(errors);
+    if (errors.length > 0) {
+      console.log(errors);
+      return;
+    }
+    const response = await checkAvailability();
+    if (response) {
+      console.log("Success");
+    } else {
+      console.log("Failure");
+    }
   };
 
   return (

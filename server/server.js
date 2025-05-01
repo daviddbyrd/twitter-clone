@@ -7,9 +7,9 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  user: "davby",
+  user: "davidbyrd",
   host: "localhost",
-  database: "mydb",
+  database: "twitter_clone_db",
   password: "password",
   port: 5432,
 });
@@ -21,6 +21,44 @@ app.get("/posts", async (req, res) => {
     console.log(res);
   } catch (err) {
     res.status(500).send(err.toString());
+  }
+});
+
+app.post("/check-unique-email", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+
+    if (result.rows.length > 0) {
+      return res.status(400).json({ message: "Email already taken" });
+    }
+
+    res.status(200).json({ message: "Email is available" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error checking email" });
+  }
+});
+
+app.post("/check-unique-username", async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE username = $1", [
+      username,
+    ]);
+
+    if (result.rows.length > 0) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    res.status(200).json({ message: "Username is available" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error checking username" });
   }
 });
 

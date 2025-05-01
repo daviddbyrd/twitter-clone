@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Feed = () => {
   const [postText, setPostText] = useState<string>("");
@@ -6,16 +7,26 @@ const Feed = () => {
   const [data, setData] = useState();
 
   const fetchData = () => {
-    fetch("http://localhost:3001/data")
-      .then((res) => res.json())
-      .then((resdata) => {
-        setData(resdata);
-        console.log(resdata);
-      });
+    axios.get("http://localhost:3001/data").then((res) => {
+      setData(res.data);
+      console.log(res.data);
+    });
   };
 
-  const makePost = () => {
+  const sendPostToDB = async () => {
+    console.log(postText);
+    try {
+      await axios.post("http://localhost:3001/posts", {
+        post: postText,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const makePost = async () => {
     setPosts((oldPosts) => [...oldPosts, postText]);
+    await sendPostToDB();
     setPostText("");
   };
 
@@ -30,11 +41,6 @@ const Feed = () => {
         <button onClick={makePost}>Post</button>
       </div>
       <button onClick={fetchData}>Fetch</button>
-      <div>
-        {posts.map((post) => {
-          return <div>{post}</div>;
-        })}
-      </div>
       {data && <div>{JSON.stringify(data)}</div>}
     </div>
   );

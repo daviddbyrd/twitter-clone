@@ -1,9 +1,9 @@
-import AuthScreen from "../components/AuthScreen";
+import LogInScreen from "../components/LogInScreen";
 
 const LogInPage = () => {
   return (
     <div className="h-screen w-screen">
-      <AuthScreen />
+      <LogInScreen />
     </div>
   );
 };

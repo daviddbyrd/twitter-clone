@@ -4,8 +4,10 @@ import axios from "axios";
 
 const SignUpScreen = () => {
   const [logInForm, setLogInForm] = useState({
-    username: "",
     email: "",
+    username: "",
+    displayName: "",
+    dob: "",
     password: "",
     confirmPassword: "",
   });
@@ -43,11 +45,14 @@ const SignUpScreen = () => {
 
   const addUserToDB = async () => {
     try {
-      await axios.post("http://localhost:3001/users", {
-        username: logInForm.username,
+      await axios.post("http://localhost:3001/register", {
         email: logInForm.email,
+        username: logInForm.username,
+        displayName: logInForm.displayName,
+        dob: logInForm.dob,
         password: logInForm.password,
       });
+      console.log("Successfully added user.");
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +72,7 @@ const SignUpScreen = () => {
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
-      <div className="h-100 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
+      <div className="h-130 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
         <div className="p-2">
           <h1>Username:</h1>
           <input
@@ -101,6 +106,25 @@ const SignUpScreen = () => {
             className="bg-white w-full rounded-md px-2"
             name="confirmPassword"
             value={logInForm.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="p-2">
+          <h1>Display name:</h1>
+          <input
+            className="bg-white w-full rounded-md px-2"
+            name="displayName"
+            value={logInForm.displayName}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="p-2">
+          <h1>Date of Birth:</h1>
+          <input
+            type="date"
+            className="bg-white w-full rounded-md px-2"
+            name="dob"
+            value={logInForm.dob}
             onChange={handleChange}
           />
         </div>

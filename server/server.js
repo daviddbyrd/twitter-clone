@@ -1,6 +1,8 @@
 const express = require("express");
 const { Pool } = require("pg");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const app = express();
 app.use(cors());
@@ -12,6 +14,22 @@ const pool = new Pool({
   database: "twitter_clone_db",
   password: "password",
   port: 5432,
+});
+
+app.post("/register", async (req, res) => {
+  const { email, username, displayName, dob, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    await pool.query(
+      "INSERT INTO users (email, username, display_name, dob, password_hash) VALUES ($1, $2, $3, $4, $5)",
+      [email, username, displayName, dob, hashedPassword]
+    );
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error registering user" });
+  }
 });
 
 app.post("/posts", async (req, res) => {

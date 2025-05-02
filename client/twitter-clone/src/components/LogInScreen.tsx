@@ -11,50 +11,17 @@ const LogInScreen = () => {
     setLogInForm({ ...logInForm, [e.target.name]: e.target.value });
   };
 
-  const checkUsername = async () => {
-    const response = await axios.post(
-      "http://localhost:3001/check-valid-username-password",
-      {
-        username: logInForm.usernameOrEmail,
-        password: logInForm.password,
-      }
-    );
-    console.log(response.data);
-    if (response.status === 201 && response.data.valid) {
-      return true;
-    }
-    return false;
-  };
-
-  const checkEmail = async () => {
-    const response = await axios.post(
-      "http://localhost:3001/check-valid-email-password",
-      {
-        email: logInForm.usernameOrEmail,
-        password: logInForm.password,
-      }
-    );
-    console.log(response.data);
-    if (response.status === 201 && response.data.valid) {
-      return true;
-    }
-    return false;
-  };
-
   const handleLogIn = async () => {
     try {
-      let response = await checkUsername();
-      if (response) {
-        console.log("Successful login username");
-        return;
-      }
+      let response = await axios.post("http://localhost:3001/login", {
+        usernameOrEmail: logInForm.usernameOrEmail,
+        password: logInForm.password,
+      });
 
-      response = await checkEmail();
-      if (response) {
-        console.log("Successful login email");
-        return;
-      }
-      console.log("Unsuccesful login");
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      console.log(token);
+      console.log("Login successful, token stored!");
     } catch (err) {
       console.error(err);
     }

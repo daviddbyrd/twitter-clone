@@ -3,6 +3,10 @@ const { Pool } = require("pg");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const jwt = require("jsonwebtoken");
+const bodyParser = require("body-parser");
+
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -66,9 +70,7 @@ const verifyPassword = async (enteredPassword, passwordHash) => {
   }
 };
 
-app.post("/check-valid-username-password", async (req, res) => {
-  const { username, password } = req.body;
-
+const checkValidUsernamePassword = async (username, password) => {
   try {
     const response = await pool.query(
       "SELECT * FROM users WHERE username = $1",
@@ -76,57 +78,81 @@ app.post("/check-valid-username-password", async (req, res) => {
     );
     const rows = response.rows;
     if (rows.length === 0) {
-      res.status(201).json({
-        message: "Username not found",
-        valid: false,
-      });
-      return;
+      return {
+        success: true,
+        id: null,
+      };
     }
     console.log(rows);
     if (!verifyPassword(password, rows[0].password_hash)) {
-      res.status(201).json({
-        message: "Password does not match username",
-        valid: false,
-      });
-      return;
+      return {
+        success: true,
+        id: null,
+      };
     }
-    res.status(201).json({
-      message: "Valid username and password",
-      valid: true,
-    });
+    return {
+      success: true,
+      id: rows[0].id,
+    };
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error checking username and password" });
   }
-});
+};
 
-app.post("/check-valid-email-password", async (req, res) => {
-  const { email, password } = req.body;
-
+const checkValidEmailPassword = async (email, password) => {
   try {
     const response = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
     const rows = response.rows;
     if (rows.length === 0) {
-      res.status(201).json({
-        message: "Email not found",
-        valid: false,
-      });
+      return {
+        success: false,
+        id: null,
+      };
     }
     if (!verifyPassword(password, rows[0].password_hash)) {
-      res.status(201).json({
-        message: "Password does not match email",
-        valid: false,
-      });
+      return {
+        success: false,
+        id: null,
+      };
     }
-    res.status(201).json({
-      message: "Valid email and password",
-      valid: true,
-    });
+    return {
+      success: true,
+      id: rows[0].id,
+    };
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error checking username and password" });
+  }
+};
+
+app.post("/login", async (req, res) => {
+  try {
+    const { usernameOrEmail, password } = req.body;
+    let response = await checkValidEmailPassword(usernameOrEmail, password);
+    console.log(response);
+    if (response.success) {
+      const payload = { id: response.id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      res.json({ token });
+      return;
+    }
+    response = await checkValidUsernamePassword(usernameOrEmail, password);
+    console.log(response);
+    if (response.success) {
+      const payload = { id: response.id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      res.json({ token });
+      return;
+    }
+    return res.status(401).json({ message: "Invalid credentials." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error logging in." });
   }
 });
 

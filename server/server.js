@@ -57,6 +57,15 @@ app.get("/posts", async (req, res) => {
   }
 });
 
+const verifyPassword = async (enteredPassword, passwordHash) => {
+  try {
+    const isMatch = await bcrypt.compare(enteredPassword, passwordHash);
+    return isMatch;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 app.post("/check-valid-username-password", async (req, res) => {
   const { username, password } = req.body;
 
@@ -74,7 +83,7 @@ app.post("/check-valid-username-password", async (req, res) => {
       return;
     }
     console.log(rows);
-    if (rows[0].password !== password) {
+    if (!verifyPassword(password, rows[0].password_hash)) {
       res.status(201).json({
         message: "Password does not match username",
         valid: false,
@@ -105,7 +114,7 @@ app.post("/check-valid-email-password", async (req, res) => {
         valid: false,
       });
     }
-    if (rows[0].password !== password) {
+    if (!verifyPassword(password, rows[0].password_hash)) {
       res.status(201).json({
         message: "Password does not match email",
         valid: false,

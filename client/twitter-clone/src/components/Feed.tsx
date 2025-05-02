@@ -15,13 +15,9 @@ const Feed = () => {
   const sendPostToDB = async () => {
     console.log(postText);
     try {
-      const result = await axios.post("http://localhost:3001/posts", {
+      await axios.post("http://localhost:3001/posts", {
         post: postText,
       });
-      if (result.status === 200) {
-        console.log("Sent to DB");
-      }
-      console.log(result);
     } catch (err) {
       console.log(err);
     }

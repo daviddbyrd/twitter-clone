@@ -39,6 +39,70 @@ app.get("/posts", async (req, res) => {
   }
 });
 
+app.post("/check-valid-username-password", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const response = await pool.query(
+      "SELECT * FROM users WHERE username = $1",
+      [username]
+    );
+    const rows = response.rows;
+    if (rows.length === 0) {
+      res.status(201).json({
+        message: "Username not found",
+        valid: false,
+      });
+      return;
+    }
+    console.log(rows);
+    if (rows[0].password !== password) {
+      res.status(201).json({
+        message: "Password does not match username",
+        valid: false,
+      });
+      return;
+    }
+    res.status(201).json({
+      message: "Valid username and password",
+      valid: true,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error checking username and password" });
+  }
+});
+
+app.post("/check-valid-email-password", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const response = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    const rows = response.rows;
+    if (rows.length === 0) {
+      res.status(201).json({
+        message: "Email not found",
+        valid: false,
+      });
+    }
+    if (rows[0].password !== password) {
+      res.status(201).json({
+        message: "Password does not match email",
+        valid: false,
+      });
+    }
+    res.status(201).json({
+      message: "Valid email and password",
+      valid: true,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error checking username and password" });
+  }
+});
+
 app.post("/users", async (req, res) => {
   const { username, email, password } = req.body;
 

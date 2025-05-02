@@ -1,9 +1,11 @@
 import CreatePostBox from "../components/CreatePostBox";
 import Feed from "../components/Feed";
+import SearchBox from "../components/SearchBox";
 
 const MainPage = () => {
   return (
     <div className="h-screen w-screen flex justify-center">
+      <div className="h-full w-6/10"></div>
       <div className="h-full w-6/10 flex flex-col">
         <div>
           <CreatePostBox />
@@ -11,6 +13,9 @@ const MainPage = () => {
         <div>
           <Feed />
         </div>
+      </div>
+      <div className="h-full w-6/10 flex flex-col">
+        <SearchBox />
       </div>
     </div>
   );

@@ -20,6 +20,56 @@ const pool = new Pool({
   port: 5432,
 });
 
+const getUsersByQuery = async (query) => {
+  try {
+    const sql_query = `
+      SELECT
+          username,
+        display_name,
+        GREATEST(
+            similarity(username, $1),
+            similarity(display_name, $1)
+        ) AS sim
+    FROM users
+    WHERE username % $1 OR display_name % $1
+    ORDER BY sim DESC
+    LIMIT 10;
+  `;
+
+    const response = await pool.query(sql_query, [query]);
+    return response.rows;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+app.get("/users/:query", async (req, res) => {
+  try {
+    const { query } = req.params;
+    const users = await getUsersByQuery(query);
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error getting users by id" });
+  }
+});
+
+app.post("/make-post", async (req, res) => {
+  const { userId, content } = req.body;
+
+  try {
+    await pool.query("INSERT INTO posts (user_id, content) VALUES ($1, $2)", [
+      userId,
+      content,
+    ]);
+    res.status(201).json({ message: "Post made successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error making post" });
+  }
+});
+
 app.post("/register", async (req, res) => {
   const { email, username, displayName, dob, password } = req.body;
 

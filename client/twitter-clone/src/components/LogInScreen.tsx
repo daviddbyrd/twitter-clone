@@ -22,6 +22,7 @@ const LogInScreen = () => {
       localStorage.setItem("token", token);
       console.log(token);
       console.log("Login successful, token stored!");
+      
     } catch (err) {
       console.error(err);
     }

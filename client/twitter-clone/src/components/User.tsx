@@ -7,12 +7,30 @@ interface UserProps {
 
 const User = ({ id, username, displayName, handleFollow }: UserProps) => {
   return (
-    <div>
-      <h1>{username}</h1>
-      <h1>{displayName}</h1>
-      <button onClick={() => handleFollow(id)} className="bg-blue-200">
-        Follow
-      </button>
+    <div className="w-full h-30 bg-white border-3 border-gray-100 flex flex-row items-center rounded-lg m-4">
+      <div className="w-30 h-30 flex items-center justify-center">
+        <img
+          src="/images/profilepic.png"
+          alt="Profile picture"
+          className="w-20 h-20 rounded-full mr-auto ml-5"
+        />
+      </div>
+      <div className="flex flex-col">
+        <div>
+          <h1 className="text-lg font-bold">{username}</h1>
+        </div>
+        <div>
+          <h2>{`@${displayName}`}</h2>
+        </div>
+      </div>
+      <div className="ml-auto mr-5">
+        <button
+          onClick={() => handleFollow(id)}
+          className="bg-black text-white rounded-md h-10 w-20"
+        >
+          Follow
+        </button>
+      </div>
     </div>
   );
 };

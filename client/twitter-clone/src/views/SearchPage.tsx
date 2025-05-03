@@ -20,13 +20,13 @@ const MainPage = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex justify-center">
-      <div className="h-full w-6/10"></div>
-      <div className="h-full w-6/10 flex flex-col">
+    <div className="h-screen w-screen flex justify-center items-center">
+      <div className="h-full w-2/10"></div>
+      <div className="h-full w-5/10 flex flex-col">
         {user && `user: ${user.id}`}
         <SearchFeed query={query} handleFollow={handleFollow} />
       </div>
-      <div className="h-full w-6/10 flex flex-col">
+      <div className="h-full w-2/10 flex flex-col">
         <SearchBox />
       </div>
     </div>

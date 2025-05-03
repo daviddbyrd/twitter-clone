@@ -10,7 +10,9 @@ const User = ({ id, username, displayName, handleFollow }: UserProps) => {
     <div>
       <h1>{username}</h1>
       <h1>{displayName}</h1>
-      <button onClick={() => handleFollow(id)}>Follow</button>
+      <button onClick={() => handleFollow(id)} className="bg-blue-200">
+        Follow
+      </button>
     </div>
   );
 };

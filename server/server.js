@@ -56,6 +56,21 @@ app.get("/users/:query", async (req, res) => {
   }
 });
 
+app.post("/follow", async (req, res) => {
+  const { follower_id, followee_id } = req.body;
+  console.log(`follower: ${follower_id}, followee: ${followee_id}`);
+  try {
+    const sql_query = `
+      INSERT INTO follows (follower_id, followee_id)
+      VALUES ($1, $2)
+      ON CONFLICT (follower_id, followee_id) DO NOTHING;
+    `;
+    await pool.query(sql_query, [follower_id, followee_id]);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 app.post("/make-post", async (req, res) => {
   const { userId, content } = req.body;
 

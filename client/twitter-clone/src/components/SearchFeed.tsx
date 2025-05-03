@@ -11,9 +11,10 @@ interface UserProps {
 
 interface SearchFeedProps {
   query: string;
+  handleFollow: (id: string) => void;
 }
 
-const SearchFeed = ({ query }: SearchFeedProps) => {
+const SearchFeed = ({ query, handleFollow }: SearchFeedProps) => {
   const [results, setResults] = useState<UserProps[]>([]);
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const SearchFeed = ({ query }: SearchFeedProps) => {
             id={user.id}
             username={user.username}
             displayName={user.display_name}
+            handleFollow={handleFollow}
           />
         );
       })}

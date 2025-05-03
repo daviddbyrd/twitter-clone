@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import User from "./User.tsx";
 
-interface Result {
+interface UserProps {
   id: string;
+  username: string;
+  display_name: string;
+  sim: number;
 }
 
 interface SearchFeedProps {
@@ -10,7 +14,7 @@ interface SearchFeedProps {
 }
 
 const SearchFeed = ({ query }: SearchFeedProps) => {
-  const [results, setResults] = useState<Result[]>([]);
+  const [results, setResults] = useState<UserProps[]>([]);
 
   useEffect(() => {
     fetchResults();
@@ -28,7 +32,20 @@ const SearchFeed = ({ query }: SearchFeedProps) => {
     }
   };
 
-  return <div>{JSON.stringify(results)}</div>;
+  return (
+    <div>
+      {results.map((user) => {
+        return (
+          <User
+            key={user.id}
+            id={user.id}
+            username={user.username}
+            displayName={user.display_name}
+          />
+        );
+      })}
+    </div>
+  );
 };
 
 export default SearchFeed;

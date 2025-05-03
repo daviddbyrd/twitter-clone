@@ -24,17 +24,18 @@ const getUsersByQuery = async (query) => {
   try {
     const sql_query = `
       SELECT
-          username,
+        id,
+        username,
         display_name,
         GREATEST(
             similarity(username, $1),
             similarity(display_name, $1)
         ) AS sim
-    FROM users
-    WHERE username % $1 OR display_name % $1
-    ORDER BY sim DESC
-    LIMIT 10;
-  `;
+      FROM users
+      WHERE username % $1 OR display_name % $1
+      ORDER BY sim DESC
+      LIMIT 10;
+    `;
 
     const response = await pool.query(sql_query, [query]);
     return response.rows;

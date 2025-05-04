@@ -5,6 +5,7 @@ import SignUpPage from "./views/SignUpPage";
 import MainPage from "./views/MainPage";
 import SearchPage from "./views/SearchPage";
 import RequireAuth from "./utils/RequireAuth";
+import RequireLoggedOut from "./utils/RequireLoggedOut";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -12,9 +13,30 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AuthPage />} />
-          <Route path="/login" element={<LogInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/"
+            element={
+              <RequireLoggedOut>
+                <AuthPage />
+              </RequireLoggedOut>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RequireLoggedOut>
+                <LogInPage />
+              </RequireLoggedOut>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <RequireLoggedOut>
+                <SignUpPage />
+              </RequireLoggedOut>
+            }
+          />
           <Route
             path="/mainpage"
             element={

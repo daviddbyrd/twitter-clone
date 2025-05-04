@@ -13,8 +13,8 @@ const RequireAuth: React.FC<{ children: React.JSX.Element }> = ({
     return <div>Loading...</div>;
   }
 
-  if (!isLoggedIn) {
-    return <Navigate to="/" state={{ from: location }} replace />;
+  if (isLoggedIn) {
+    return <Navigate to="/mainpage" state={{ from: location }} replace />;
   }
 
   return children;

@@ -1,4 +1,4 @@
-import React from "react";
+import { formatDistanceToNow } from "date-fns";
 
 interface PostProps {
   id: string;
@@ -6,12 +6,24 @@ interface PostProps {
   displayName: string;
   username: string;
   content: string;
+  createdAt: string;
 }
 
-const Post = ({ id, user_id, displayName, username, content }: PostProps) => {
+const Post = ({
+  id,
+  user_id,
+  displayName,
+  username,
+  content,
+  createdAt,
+}: PostProps) => {
+  console.log("created at", createdAt);
+  const timestamp = new Date(createdAt);
+  const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
+
   return (
-    <div>
-      <div className="w-full h-20 bg-white border-3 border-gray-100 flex flex-row items-center rounded-lg m-4">
+    <div className="w-full bg-white border-3 border-gray-100 flex flex-col items-center rounded-lg m-4">
+      <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <img
             src="/images/profilepic.png"
@@ -24,11 +36,13 @@ const Post = ({ id, user_id, displayName, username, content }: PostProps) => {
             <h1 className="text-lg font-bold">{username}</h1>
           </div>
           <div>
-            <h2>{`@${displayName}`}</h2>
+            <h2 className="text-md text-gray-500">{`@${displayName} • ${relativeTime}`}</h2>
           </div>
         </div>
       </div>
-      <div>{content}</div>
+      <div className="w-full px-4 pb-4">
+        <div>{content}</div>
+      </div>
     </div>
   );
 };

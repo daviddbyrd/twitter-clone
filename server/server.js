@@ -24,7 +24,7 @@ app.get("/posts-from-followees/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const sql_query = `
-      SELECT p.id, p.content, p.user_id, u.username, u.display_name
+      SELECT p.id, p.content, p.user_id, p.created_at, u.username, u.display_name
       FROM posts p
       JOIN users u ON p.user_id = u.id
       WHERE p.user_id = $1
@@ -35,7 +35,7 @@ app.get("/posts-from-followees/:user_id", async (req, res) => {
       LIMIT 20;
     `;
     const response = await pool.query(sql_query, [user_id]);
-    res.status(200).json(response);
+    res.status(200).json(response.rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error getting posts by followees" });

@@ -26,9 +26,9 @@ const Feed = () => {
       console.log(`user in getPosts: ${user}`);
       if (user) {
         const response = await axios.get(
-          `http://localhost/posts-from-followees/${user.id}`
+          `http://localhost:3001/posts-from-followees/${user.id}`
         );
-        console.log(`response: ${response}`);
+        console.log("response", response.data);
         if (response.status === 200) {
           setPosts(response.data);
         }
@@ -39,7 +39,7 @@ const Feed = () => {
   };
 
   return (
-    <div className="w-4/10 h-full flex flex-col">
+    <div className="w-full h-full flex flex-col">
       {posts.map((post) => {
         return (
           <Post
@@ -49,6 +49,7 @@ const Feed = () => {
             displayName={post.display_name}
             username={post.username}
             content={post.content}
+            createdAt={post.created_at}
           />
         );
       })}

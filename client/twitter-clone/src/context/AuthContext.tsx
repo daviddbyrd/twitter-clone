@@ -18,6 +18,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -31,6 +32,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,10 +53,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.removeItem("token");
       }
     }
+
+    setIsLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, setUser, setIsLoggedIn }}>
+    <AuthContext.Provider
+      value={{ user, isLoggedIn, setUser, setIsLoggedIn, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

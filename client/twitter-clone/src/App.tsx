@@ -4,6 +4,7 @@ import LogInPage from "./views/LogInPage";
 import SignUpPage from "./views/SignUpPage";
 import MainPage from "./views/MainPage";
 import SearchPage from "./views/SearchPage";
+import RequireAuth from "./utils/RequireAuth";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -14,8 +15,22 @@ function App() {
           <Route path="/" element={<AuthPage />} />
           <Route path="/login" element={<LogInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/mainpage" element={<MainPage />} />
-          <Route path="/search/:query" element={<SearchPage />} />
+          <Route
+            path="/mainpage"
+            element={
+              <RequireAuth>
+                <MainPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/search/:query"
+            element={
+              <RequireAuth>
+                <SearchPage />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

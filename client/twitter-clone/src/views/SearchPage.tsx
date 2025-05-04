@@ -7,6 +7,7 @@ import axios from "axios";
 const MainPage = () => {
   const { query } = useParams<{ query: string }>();
   const { user, isLoggedIn, setUser, setIsLoggedIn } = useAuth();
+  console.log(user);
 
   const handleFollow = async (id: string) => {
     if (user) {

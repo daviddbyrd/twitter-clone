@@ -20,6 +20,28 @@ const pool = new Pool({
   port: 5432,
 });
 
+app.get("/posts-from-followees/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const sql_query = `
+      SELECT p.id, p.content, p.user_id, u.username, u.display_name
+      FROM posts p
+      JOIN users u ON p.user_id = u.id
+      WHERE p.user_id = $1
+        OR p.user_id IN (
+          SELECT followee_id FROM follows WHERE follower_id = $1
+        )
+      ORDER BY p.created_at
+      LIMIT 20;
+    `;
+    const response = await pool.query(sql_query, [user_id]);
+    res.status(200).json(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error getting posts by followees" });
+  }
+});
+
 const getUsersByQuery = async (query) => {
   try {
     const sql_query = `
@@ -200,7 +222,7 @@ app.post("/login", async (req, res) => {
     if (response.success) {
       const payload = { id: response.id };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
       res.json({ token });
       return;

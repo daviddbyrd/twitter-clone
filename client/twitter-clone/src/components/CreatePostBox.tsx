@@ -1,21 +1,20 @@
-import { useState, useContext, ChangeEvent } from "react";
-import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
+import { useState, ChangeEvent } from "react";
+import { makePostParams } from "../views/MainPage";
 
-const CreatePostBox = () => {
-  const auth = useContext(AuthContext);
+interface CreatePostBoxProps {
+  makePost: (params: makePostParams) => void;
+}
+
+const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
   const [postText, setPostText] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPostText(e.target.value);
   };
 
-  const makePost = async () => {
-    const response = await axios.post("http://localhost:3001/make-post", {
-      userId: auth.user.id,
-      content: postText,
-    });
-    console.log(response.data.message);
+  const handleMakePost = async () => {
+    console.log(postText);
+    await makePost({ post: postText });
     setPostText("");
   };
 
@@ -42,17 +41,13 @@ const CreatePostBox = () => {
         <div className="ml-auto mr-5">
           <button
             className="bg-black text-white rounded-full h-10 w-20 cursor-pointer"
-            onClick={makePost}
+            onClick={handleMakePost}
           >
             Post
           </button>
         </div>
       </div>
     </div>
-    // <div>
-    //   <input type="text" value={postText} onChange={(e) => handleChange(e)} />
-    //   <button onClick={makePost}>Make Post</button>
-    // </div>
   );
 };
 

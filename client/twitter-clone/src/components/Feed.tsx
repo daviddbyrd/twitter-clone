@@ -1,43 +1,11 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import axios from "axios";
 import Post from "./Post";
+import { PostModel } from "../views/MainPage";
 
-interface Post {
-  id: string;
-  user_id: string;
-  username: string;
-  display_name: string;
-  content: string;
-  created_at: string;
+interface FeedProps {
+  posts: PostModel[];
 }
 
-const Feed = () => {
-  const { user, isLoggedIn, setUser, setIsLoggedIn } = useAuth();
-  const [posts, setPosts] = useState<Post[]>([]);
-  console.log(`user start: ${user}`);
-
-  useEffect(() => {
-    getPosts();
-  }, [isLoggedIn]);
-
-  const getPosts = async () => {
-    try {
-      console.log(`user in getPosts: ${user}`);
-      if (user) {
-        const response = await axios.get(
-          `http://localhost:3001/posts-from-followees/${user.id}`
-        );
-        console.log("response", response.data);
-        if (response.status === 200) {
-          setPosts(response.data);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+const Feed: React.FC<FeedProps> = ({ posts }) => {
   return (
     <div className="w-full h-full flex flex-col">
       {posts.map((post) => {

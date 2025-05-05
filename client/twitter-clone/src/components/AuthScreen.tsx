@@ -10,6 +10,10 @@ const AuthScreen = () => {
     setAuthMode(newMode);
   };
 
+  const close = () => {
+    setAuthMode(null);
+  };
+
   return (
     <div className="flex flex-row w-full h-full">
       <div className="flex-1">
@@ -25,6 +29,7 @@ const AuthScreen = () => {
             <button
               onClick={() => handleModeChange("login")}
               className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm"
+              close={close}
             >
               Create Account
             </button>

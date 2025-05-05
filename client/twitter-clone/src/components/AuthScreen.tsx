@@ -4,15 +4,15 @@ const AuthScreen = () => {
   return (
     <div className="flex flex-row w-full h-full">
       <div className="flex-1">
-        <div className="flex items-center justify-center h-full ml-30">
+        <div className="flex items-center justify-center h-full ml-30 pb-20">
           <img src="/images/logo.svg" alt="logo" className="w-80 h-80" />
         </div>
       </div>
       <div className="flex-1">
         <div className="flex flex-col m-20 h-full">
-          <h1 className="text-7xl font-bold pb-10">Happening now</h1>
+          <h1 className="text-7xl font-bold pb-5">Happening now</h1>
           <div className="pb-20">
-            <h2 className="text-3xl font-bold py-4">Join today.</h2>
+            <h2 className="text-3xl font-bold py-8">Join today.</h2>
             <Link to="/signup">
               <button className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm">
                 Create Account

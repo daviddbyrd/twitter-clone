@@ -31,7 +31,9 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
   };
 
   const handleUsernameOrEmailInput = () => {
-    setStep("password");
+    if (logInForm.usernameOrEmail) {
+      setStep("password");
+    }
   };
 
   const handleLogIn = async () => {
@@ -91,7 +93,10 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
         )}
         {step === "password" && (
           <div className="relative flex flex-col h-full w-full items-center">
-            <button onClick={close} className="absolute top-3 left-5 w-10 h-10">
+            <button
+              onClick={close}
+              className="absolute top-3 left-5 w-10 h-10 cursor-pointer"
+            >
               <AiOutlineClose size={20} />
             </button>
             <div className="flex items-center justify-center mt-5">
@@ -128,6 +133,7 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
             <button
               name="signup"
               className="text-white bg-black rounded-full my-8 h-10 w-80 cursor-pointer border-2 border-gray-200 font-bold text-sm"
+              onClick={handleLogIn}
             >
               Next
             </button>

@@ -27,9 +27,8 @@ const AuthScreen = () => {
           <div className="pb-20">
             <h2 className="text-3xl font-bold py-8">Join today.</h2>
             <button
-              onClick={() => handleModeChange("login")}
+              onClick={() => handleModeChange("signup")}
               className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm"
-              close={close}
             >
               Create Account
             </button>
@@ -38,7 +37,7 @@ const AuthScreen = () => {
             <h2 className="text-md font-bold py-2">Already have an Account?</h2>
             <button
               name="signup"
-              onClick={() => handleModeChange("signup")}
+              onClick={() => handleModeChange("login")}
               className="text-sky-500 rounded-full h-9 w-70 cursor-pointer border-2 border-gray-200 font-bold text-sm"
             >
               Sign In
@@ -46,7 +45,7 @@ const AuthScreen = () => {
           </div>
         </div>
       </div>
-      {authMode === "login" && <LogIn />}
+      {authMode === "login" && <LogIn close={close} />}
       {authMode === "signup" && <SignUp />}
     </div>
   );

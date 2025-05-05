@@ -4,6 +4,8 @@ import Feed from "../components/Feed";
 import SearchBox from "../components/SearchBox";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import OptionsBar from "../components/OptionsBar";
+import { useNavigate } from "react-router-dom";
 
 export interface PostModel {
   id: string;
@@ -20,7 +22,8 @@ export interface makePostParams {
 
 const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
-  const { user } = useAuth();
+  const { user, setUser, setIsLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getPosts();
@@ -54,10 +57,23 @@ const MainPage = () => {
     await getPosts();
   };
 
+  const handleLogOut = () => {
+    try {
+      localStorage.removeItem("token");
+      setUser(null);
+      setIsLoggedIn(false);
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
-      <div className="h-full w-2/10"></div>
-      <div className="h-full w-4/10 flex flex-col">
+      <div className="h-full flex-1">
+        <OptionsBar handleLogOut={handleLogOut} />
+      </div>
+      <div className="h-full w-5/10 flex flex-col">
         <div>
           <CreatePostBox makePost={makePost} />
         </div>
@@ -65,7 +81,7 @@ const MainPage = () => {
           <Feed posts={posts} />
         </div>
       </div>
-      <div className="h-full w-2/10 flex flex-col">
+      <div className="h-full flex-1 flex flex-col">
         <SearchBox />
       </div>
     </div>

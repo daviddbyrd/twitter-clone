@@ -19,7 +19,7 @@ const SearchFeed = ({ query, handleFollow }: SearchFeedProps) => {
 
   useEffect(() => {
     fetchResults();
-  }, []);
+  }, [query]);
 
   const fetchResults = async () => {
     try {

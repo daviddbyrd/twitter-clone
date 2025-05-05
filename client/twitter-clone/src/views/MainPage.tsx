@@ -70,7 +70,7 @@ const MainPage = () => {
 
   return (
     <div className="h-screen w-screen flex justify-center">
-      <div className="h-full flex-1">
+      <div className="fixed top-0 left-0 h-full w-2/10">
         <OptionsBar handleLogOut={handleLogOut} />
       </div>
       <div className="h-full w-5/10 flex flex-col">
@@ -81,7 +81,7 @@ const MainPage = () => {
           <Feed posts={posts} />
         </div>
       </div>
-      <div className="h-full flex-1 flex flex-col">
+      <div className="fixed top-0 right-0 h-full w-2/10">
         <SearchBox />
       </div>
     </div>

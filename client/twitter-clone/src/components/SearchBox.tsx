@@ -21,7 +21,7 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="ml-10 mt-5 h-8 w-full rounded-full border-2 border-gray-200 flex flex-row items-center justify-center">
+    <div className="mt-5 h-8 w-60 rounded-full border-2 border-gray-200 flex flex-row items-center justify-center">
       <FaSearch className="w-5 h-5 text-gray-300 mr-auto ml-2" />
       <input
         className="w-full pl-2 focus:outline-none"

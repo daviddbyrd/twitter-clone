@@ -1,6 +1,15 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import LogIn from "./LogIn";
+import SignUp from "./SignUp";
 
 const AuthScreen = () => {
+  const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
+
+  const handleModeChange = (newMode: "login" | "signup") => {
+    setAuthMode(newMode);
+  };
+
   return (
     <div className="flex flex-row w-full h-full">
       <div className="flex-1">
@@ -13,22 +22,27 @@ const AuthScreen = () => {
           <h1 className="text-7xl font-bold pb-5">Happening now</h1>
           <div className="pb-20">
             <h2 className="text-3xl font-bold py-8">Join today.</h2>
-            <Link to="/signup">
-              <button className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm">
-                Create Account
-              </button>
-            </Link>
+            <button
+              onClick={() => handleModeChange("login")}
+              className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm"
+            >
+              Create Account
+            </button>
           </div>
           <div>
             <h2 className="text-md font-bold py-2">Already have an Account?</h2>
-            <Link to="/login">
-              <button className="text-sky-500 rounded-full h-9 w-70 cursor-pointer border-2 border-gray-200 font-bold text-sm">
-                Sign In
-              </button>
-            </Link>
+            <button
+              name="signup"
+              onClick={() => handleModeChange("signup")}
+              className="text-sky-500 rounded-full h-9 w-70 cursor-pointer border-2 border-gray-200 font-bold text-sm"
+            >
+              Sign In
+            </button>
           </div>
         </div>
       </div>
+      {authMode === "login" && <LogIn />}
+      {authMode === "signup" && <SignUp />}
     </div>
   );
 };

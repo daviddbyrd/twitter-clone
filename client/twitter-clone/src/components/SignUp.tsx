@@ -2,7 +2,7 @@ import { useState } from "react";
 import { validateSignUp } from "../utils/SignUpValidation";
 import axios from "axios";
 
-const SignUpScreen = () => {
+const SignUp = () => {
   const [logInForm, setLogInForm] = useState({
     email: "",
     username: "",
@@ -139,4 +139,4 @@ const SignUpScreen = () => {
   );
 };
 
-export default SignUpScreen;
+export default SignUp;

@@ -22,22 +22,6 @@ function App() {
             }
           />
           <Route
-            path="/login"
-            element={
-              <RequireLoggedOut>
-                <LogInPage />
-              </RequireLoggedOut>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <RequireLoggedOut>
-                <SignUpPage />
-              </RequireLoggedOut>
-            }
-          />
-          <Route
             path="/mainpage"
             element={
               <RequireAuth>

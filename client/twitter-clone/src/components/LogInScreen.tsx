@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { User, useAuth } from "../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 const LogInScreen = () => {
   const [logInForm, setLogInForm] = useState({
     usernameOrEmail: "",
     password: "",
   });
+  const { setUser, setIsLoggedIn, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/mainpage", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogInForm({ ...logInForm, [e.target.name]: e.target.value });
@@ -17,12 +28,11 @@ const LogInScreen = () => {
         usernameOrEmail: logInForm.usernameOrEmail,
         password: logInForm.password,
       });
-
       const token = response.data.token;
       localStorage.setItem("token", token);
-      console.log(token);
-      console.log("Login successful, token stored!");
-      
+      const decoded = jwtDecode<User>(token);
+      setUser(decoded);
+      setIsLoggedIn(true);
     } catch (err) {
       console.error(err);
     }

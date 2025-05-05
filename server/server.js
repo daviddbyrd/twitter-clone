@@ -71,6 +71,7 @@ app.get("/users/:query", async (req, res) => {
   try {
     const { query } = req.params;
     const users = await getUsersByQuery(query);
+    console.log(users);
     res.status(200).json(users);
   } catch (err) {
     console.error(err);

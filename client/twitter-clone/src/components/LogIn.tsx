@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { User, useAuth } from "../context/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import { AiOutlineClose } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 interface LogInProps {
   close: () => void;
@@ -15,10 +15,10 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
     password: "",
   });
   const { setUser, setIsLoggedIn, isLoggedIn } = useAuth();
-  const navigate = useNavigate();
   const [step, setStep] = useState<"usernameOrEmail" | "password">(
     "usernameOrEmail"
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -69,7 +69,7 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
               <input
                 type="text"
                 id="usernameOrEmail"
-                className="peer w-80 h-14 border border-gray-300 rounded-sm px-2 pt-5 pb-2 placeholder-transparent focus:outline-none focus:border-blue-500"
+                className="peer w-80 h-14 border border-gray-300 rounded-sm px-3 pt-5 pb-2 placeholder-transparent focus:outline-none focus:border-blue-500"
                 name="usernameOrEmail"
                 placeholder="Username or email address"
                 value={logInForm.usernameOrEmail}
@@ -83,7 +83,6 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
               </label>
             </div>
             <button
-              name="signup"
               className="text-white bg-black rounded-full my-8 h-10 w-80 cursor-pointer border-2 border-gray-200 font-bold text-sm"
               onClick={handleUsernameOrEmailInput}
             >
@@ -124,7 +123,7 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
                 onChange={(e) => handleChange(e)}
               />
               <label
-                htmlFor="usernameOrEmail"
+                htmlFor="password"
                 className="absolute left-3 top-3 transform -translate-y-1/2 text-gray-200 text-xs transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-xs peer-focus:text-sky-500"
               >
                 Password

@@ -46,7 +46,7 @@ const AuthScreen = () => {
         </div>
       </div>
       {authMode === "login" && <LogIn close={close} />}
-      {authMode === "signup" && <SignUp />}
+      {authMode === "signup" && <SignUp close={close} />}
     </div>
   );
 };

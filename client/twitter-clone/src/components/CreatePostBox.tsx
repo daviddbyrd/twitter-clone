@@ -20,7 +20,7 @@ const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
 
   return (
     <div className="w-full bg-white border-3 border-gray-100 flex flex-col items-center rounded-lg m-4">
-      <div className="w-full h-40 flex flex-row items-center items-start">
+      <div className="w-full h-28 flex flex-row items-center items-start">
         <div className="w-20 h-20 flex items-center justify-center">
           <img
             src="/images/profilepic.png"
@@ -28,7 +28,7 @@ const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
             className="w-12 h-12 rounded-full mr-auto ml-5"
           />
         </div>
-        <div className="w-full ml-auto mr-5 pl-5 pt-5 h-25">
+        <div className="w-full ml-auto mr-5 pl-5 pt-5 h-24">
           <textarea
             className="w-full h-30 focus:outline-none resize-none"
             placeholder="What happening?"

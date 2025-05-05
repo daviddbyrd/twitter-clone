@@ -42,16 +42,18 @@ const LogIn = () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 h-140 w-130 rounded-lg bg-white flex flex-col items-center justify-around">
+      <div className="relative z-50 h-140 w-130 rounded-xl bg-white flex flex-col items-center justify-start">
         {step === 0 && (
-          <div className="p-2 flex flex-col justify-items">
-            <h1 className="text-lx font-bold">Sign In</h1>
-            <h1>Username or email address:</h1>
+          <div className="flex flex-col h-full w-full items-center">
+            <div className="flex items-center justify-center mt-5">
+              <img src="/images/logo.svg" alt="logo" className="w-10 h-10" />
+            </div>
+            <h1 className="text-4xl font-bold mb-15 mt-10 mr-50">Sign In</h1>
             <div className="relative">
               <input
                 type="text"
                 id="usernameOrEmail"
-                className="peer w-full border border-gray-300 rounded-md px-2 pt-5 pb-2 placeholder-transparent focus:outline-none focus:border-blue-500"
+                className="peer w-80 border border-gray-300 rounded-sm px-2 pt-5 pb-2 placeholder-transparent focus:outline-none focus:border-blue-500"
                 name="usernameOrEmail"
                 placeholder="Username or email address"
                 value={logInForm.usernameOrEmail}
@@ -64,6 +66,12 @@ const LogIn = () => {
                 Username or email
               </label>
             </div>
+            <button
+              name="signup"
+              className="text-white bg-black rounded-full my-8 h-10 w-80 cursor-pointer border-2 border-gray-200 font-bold text-sm"
+            >
+              Next
+            </button>
           </div>
         )}
         {step == 1 && (
@@ -77,12 +85,6 @@ const LogIn = () => {
             />
           </div>
         )}
-        <button
-          className="p-2 border-2 border-blue-300 rounded-md bg-blue-100"
-          onClick={handleLogIn}
-        >
-          Sign Up
-        </button>
       </div>
     </div>
   );

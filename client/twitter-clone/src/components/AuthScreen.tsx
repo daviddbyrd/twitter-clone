@@ -2,22 +2,31 @@ import { Link } from "react-router-dom";
 
 const AuthScreen = () => {
   return (
-    <div className="flex items-center justify-center w-screen h-screen">
-      <div className="h-70 w-70 rounded-lg border-2 border-black bg-gray-200 flex flex-col items-center justify-around">
-        <div>
-          <Link to="/signup">
-            <button className="bg-blue-100 rounded-md border-2 border-blue-300 h-8 w-40">
-              Create Account
-            </button>
-          </Link>
+    <div className="flex flex-row w-full h-full">
+      <div className="flex-1">
+        <div className="flex items-center justify-center h-full ml-30">
+          <img src="/images/logo.svg" alt="logo" className="w-80 h-80" />
         </div>
-        <div className="flex flex-col items-center justify-around h-3/10">
-          <p>Already have an Account?</p>
-          <Link to="/login">
-            <button className="bg-blue-100 rounded-md border-2 border-blue-300 h-8 w-40">
-              Sign In
-            </button>
-          </Link>
+      </div>
+      <div className="flex-1">
+        <div className="flex flex-col m-20 h-full">
+          <h1 className="text-7xl font-bold pb-10">Happening now</h1>
+          <div className="pb-20">
+            <h2 className="text-3xl font-bold py-4">Join today.</h2>
+            <Link to="/signup">
+              <button className="bg-sky-500 text-white rounded-full h-9 w-70 cursor-pointer font-bold text-sm">
+                Create Account
+              </button>
+            </Link>
+          </div>
+          <div>
+            <h2 className="text-md font-bold py-2">Already have an Account?</h2>
+            <Link to="/login">
+              <button className="text-sky-500 rounded-full h-9 w-70 cursor-pointer border-2 border-gray-200 font-bold text-sm">
+                Sign In
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

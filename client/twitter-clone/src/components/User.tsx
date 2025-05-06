@@ -34,14 +34,14 @@ const User = ({
         {isFollowing ? (
           <button
             onClick={() => handleFollow(id)}
-            className="text-black rounded-md h-10 w-20 cursor-pointer"
+            className="text-black font-bold text-sm border-1 border-gray-100 rounded-md h-10 w-20 cursor-pointer"
           >
             Unfollow
           </button>
         ) : (
           <button
             onClick={() => handleFollow(id)}
-            className="bg-black text-white rounded-md h-10 w-20 cursor-pointer"
+            className="bg-black font-bold text-sm text-white rounded-md h-10 w-20 cursor-pointer"
           >
             Follow
           </button>

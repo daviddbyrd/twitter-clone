@@ -42,24 +42,30 @@ app.get("/posts-from-followees/:user_id", async (req, res) => {
   }
 });
 
-const getUsersByQuery = async (query) => {
+const getUsersByQuery = async (query, user_id) => {
   try {
     const sql_query = `
       SELECT
-        id,
-        username,
-        display_name,
+        u.id,
+        u.username,
+        u.display_name,
         GREATEST(
-            similarity(username, $1),
-            similarity(display_name, $1)
-        ) AS sim
-      FROM users
-      WHERE username % $1 OR display_name % $1
+          similarity(u.username, $1),
+          similarity(u.display_name, $1)
+        ) AS sim,
+        CASE
+          WHEN f.follower_id IS NOT NULL THEN true
+          ELSE false
+        END AS is_following
+      FROM users u    
+      LEFT JOIN follows f ON f.followee_id = u.id AND f.follower_id = $2
+      WHERE
+        (u.username % $1 OR u.display_name % $1)
       ORDER BY sim DESC
       LIMIT 10;
     `;
 
-    const response = await pool.query(sql_query, [query]);
+    const response = await pool.query(sql_query, [query, user_id]);
     return response.rows;
   } catch (err) {
     console.error(err);
@@ -67,11 +73,11 @@ const getUsersByQuery = async (query) => {
   }
 };
 
-app.get("/users/:query", async (req, res) => {
+app.get("/users/:query/:user_id", async (req, res) => {
   try {
-    const { query } = req.params;
-    const users = await getUsersByQuery(query);
-    console.log(users);
+    const { query, user_id } = req.params;
+    const users = await getUsersByQuery(query, user_id);
+    console.log("users:", users);
     res.status(200).json(users);
   } catch (err) {
     console.error(err);

@@ -77,6 +77,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
 
   const handleInfoStep = () => {
     if (signUpForm.username && signUpForm.email && signUpForm.dob) {
+      setLogInForm({ ...signUpForm, displayName: signUpForm.username });
       setStep("password");
     }
   };

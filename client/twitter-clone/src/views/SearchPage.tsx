@@ -8,7 +8,7 @@ import OptionsBar from "../components/OptionsBar";
 
 const MainPage = () => {
   const { query } = useParams<{ query: string }>();
-  const { user, isLoggedIn, setUser, setIsLoggedIn } = useAuth();
+  const { user, setUser, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const handleFollow = async (id: string) => {
@@ -39,8 +39,11 @@ const MainPage = () => {
         <OptionsBar handleLogOut={handleLogOut} />
       </div>
       <div className="h-full w-5/10 flex flex-col">
-        {user && `user: ${user.id}`}
-        <SearchFeed query={query} handleFollow={handleFollow} />
+        <SearchFeed
+          query={query}
+          handleFollow={handleFollow}
+          user_id={user.id}
+        />
       </div>
       <div className="fixed top-0 right-0 h-full w-2/10">
         <SearchBox />

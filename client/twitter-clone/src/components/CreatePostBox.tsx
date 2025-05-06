@@ -19,7 +19,7 @@ const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
   };
 
   return (
-    <div className="w-full bg-white border-3 border-gray-100 flex flex-col items-center rounded-lg m-4">
+    <div className="w-full bg-white border-1 border-gray-100 flex flex-col items-center p-4">
       <div className="w-full h-28 flex flex-row items-center items-start">
         <div className="w-20 h-20 flex items-center justify-center">
           <img

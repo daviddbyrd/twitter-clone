@@ -7,14 +7,16 @@ interface UserProps {
   username: string;
   display_name: string;
   sim: number;
+  is_following: boolean;
 }
 
 interface SearchFeedProps {
   query: string;
+  user_id: string;
   handleFollow: (id: string) => void;
 }
 
-const SearchFeed = ({ query, handleFollow }: SearchFeedProps) => {
+const SearchFeed = ({ query, user_id, handleFollow }: SearchFeedProps) => {
   const [results, setResults] = useState<UserProps[]>([]);
 
   useEffect(() => {
@@ -23,7 +25,9 @@ const SearchFeed = ({ query, handleFollow }: SearchFeedProps) => {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/users/${query}`);
+      const response = await axios.get(
+        `http://localhost:3001/users/${query}/${user_id}`
+      );
       console.log(response);
       if (response) {
         setResults(response.data);
@@ -43,6 +47,7 @@ const SearchFeed = ({ query, handleFollow }: SearchFeedProps) => {
             username={user.username}
             displayName={user.display_name}
             handleFollow={handleFollow}
+            isFollowing={user.is_following}
           />
         );
       })}

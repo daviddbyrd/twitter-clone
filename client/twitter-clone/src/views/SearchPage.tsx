@@ -1,8 +1,8 @@
 import SearchFeed from "../components/SearchFeed";
-import SearchBox from "../components/SearchBox";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import LargeSearchBox from "../components/LargeSearchBox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OptionsBar from "../components/OptionsBar";
@@ -85,21 +85,26 @@ const SearchPage = () => {
     }
   };
 
+  const back = () => {
+    navigate("/mainpage", { replace: true });
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center items-center">
       <div className="fixed top-0 left-0 h-full w-2/10">
         <OptionsBar handleLogOut={handleLogOut} />
       </div>
-      <div className="h-full w-5/10 flex flex-col">
+      <div className="h-full w-5/10 flex flex-col border-x-1 border-gray-100">
+        <div className="w-full flex items-center justify-center">
+          <LargeSearchBox back={back} />
+        </div>
         <SearchFeed
           handleFollow={handleFollow}
           handleUnfollow={handleUnfollow}
           results={results}
         />
       </div>
-      <div className="fixed top-0 right-0 h-full w-2/10">
-        <SearchBox />
-      </div>
+      <div className="fixed top-0 right-0 h-full w-2/10"></div>
     </div>
   );
 };

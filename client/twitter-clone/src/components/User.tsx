@@ -16,7 +16,7 @@ const User = ({
   isFollowing,
 }: UserProps) => {
   return (
-    <div className="w-full h-24 bg-white border-b-1 border-x-1 border-gray-100 y-divide flex flex-row items-center p-4">
+    <div className="w-full h-24 bg-white border-b-1 border-gray-100 y-divide flex flex-row items-center p-4">
       <div className="w-20 h-20 flex items-center justify-center">
         <img
           src="/images/profilepic.png"

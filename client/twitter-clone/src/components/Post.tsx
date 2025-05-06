@@ -22,7 +22,7 @@ const Post = ({
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
 
   return (
-    <div className="w-full bg-white border-gray-100 border-x-1 border-b-1 flex flex-col items-center p-4">
+    <div className="w-full bg-white border-gray-100 border-b-1 flex flex-col items-center p-4">
       <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <img

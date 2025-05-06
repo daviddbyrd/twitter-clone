@@ -65,7 +65,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
       await axios.post("http://localhost:3001/register", {
         email: signUpForm.email,
         username: signUpForm.username,
-        displayname: signUpForm.username,
+        displayName: signUpForm.username,
         dob: signUpForm.dob,
         password: signUpForm.password,
       });

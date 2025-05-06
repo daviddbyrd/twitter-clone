@@ -7,7 +7,7 @@ interface FeedProps {
 
 const Feed: React.FC<FeedProps> = ({ posts }) => {
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full min-h-screen flex flex-col border-x-1 border-gray-100">
       {posts
         .sort(
           (a, b) =>

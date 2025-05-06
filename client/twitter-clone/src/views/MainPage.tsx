@@ -77,7 +77,7 @@ const MainPage = () => {
         <div>
           <CreatePostBox makePost={makePost} />
         </div>
-        <div>
+        <div className="min-h-screen">
           <Feed posts={posts} />
         </div>
       </div>

@@ -95,6 +95,7 @@ app.post("/follow", async (req, res) => {
       ON CONFLICT (follower_id, followee_id) DO NOTHING;
     `;
     await pool.query(sql_query, [follower_id, followee_id]);
+    res.status(201).json({ message: "Follow successful." });
   } catch (err) {
     console.error(err);
   }

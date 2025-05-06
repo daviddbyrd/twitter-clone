@@ -1,7 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthPage from "./views/AuthPage";
-import LogInPage from "./views/LogInPage";
-import SignUpPage from "./views/SignUpPage";
 import MainPage from "./views/MainPage";
 import SearchPage from "./views/SearchPage";
 import RequireAuth from "./utils/RequireAuth";

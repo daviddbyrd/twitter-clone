@@ -3,6 +3,7 @@ interface UserProps {
   username: string;
   displayName: string;
   handleFollow: (id: string) => void;
+  handleUnfollow: (id: string) => void;
   isFollowing: boolean;
 }
 
@@ -11,6 +12,7 @@ const User = ({
   username,
   displayName,
   handleFollow,
+  handleUnfollow,
   isFollowing,
 }: UserProps) => {
   return (
@@ -33,7 +35,7 @@ const User = ({
       <div className="ml-auto mr-5">
         {isFollowing ? (
           <button
-            onClick={() => handleFollow(id)}
+            onClick={() => handleUnfollow(id)}
             className="text-black font-bold text-sm border-1 border-gray-100 rounded-md h-10 w-20 cursor-pointer"
           >
             Unfollow

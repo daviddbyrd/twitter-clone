@@ -42,6 +42,23 @@ const SearchPage = () => {
     }
   };
 
+  const handleUnfollow = async (id: string) => {
+    if (user) {
+      console.log(user.id);
+      console.log(id);
+      await axios.post("http://localhost:3001/unfollow", {
+        follower_id: user.id,
+        followee_id: id,
+      });
+      setResults((prevResults) =>
+        prevResults.map((user) =>
+          user.id === id ? { ...user, is_following: false } : user
+        )
+      );
+      console.log(results);
+    }
+  };
+
   const fetchResults = async () => {
     console.log("Ran fetchResults, query:", query, " user id:", user.id);
     try {
@@ -74,7 +91,11 @@ const SearchPage = () => {
         <OptionsBar handleLogOut={handleLogOut} />
       </div>
       <div className="h-full w-5/10 flex flex-col">
-        <SearchFeed handleFollow={handleFollow} results={results} />
+        <SearchFeed
+          handleFollow={handleFollow}
+          handleUnfollow={handleUnfollow}
+          results={results}
+        />
       </div>
       <div className="fixed top-0 right-0 h-full w-2/10">
         <SearchBox />

@@ -85,6 +85,20 @@ app.get("/users/:query/:user_id", async (req, res) => {
   }
 });
 
+app.post("/unfollow", async (req, res) => {
+  const { follower_id, followee_id } = req.body;
+  console.log(`follower: ${follower_id}, followee: ${followee_id}`);
+  try {
+    const sql_query = `
+      DELETE FROM follows f WHERE f.follower_id = $1 AND f.followee_id = $2;
+    `;
+    await pool.query(sql_query, [follower_id, followee_id]);
+    res.status(201).json({ message: "Follow successful." });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 app.post("/follow", async (req, res) => {
   const { follower_id, followee_id } = req.body;
   console.log(`follower: ${follower_id}, followee: ${followee_id}`);

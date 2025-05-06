@@ -10,10 +10,15 @@ interface UserProps {
 
 interface SearchFeedProps {
   handleFollow: (id: string) => void;
+  handleUnfollow: (id: string) => void;
   results: UserProps[];
 }
 
-const SearchFeed = ({ handleFollow, results }: SearchFeedProps) => {
+const SearchFeed = ({
+  handleFollow,
+  handleUnfollow,
+  results,
+}: SearchFeedProps) => {
   return (
     <div>
       {results.map((user) => {
@@ -24,6 +29,7 @@ const SearchFeed = ({ handleFollow, results }: SearchFeedProps) => {
             username={user.username}
             displayName={user.display_name}
             handleFollow={handleFollow}
+            handleUnfollow={handleUnfollow}
             isFollowing={user.is_following}
           />
         );

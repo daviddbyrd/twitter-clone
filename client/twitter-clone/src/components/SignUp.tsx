@@ -41,6 +41,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
           email: signUpForm.email,
         }
       );
+      console.log(response);
       if (response.status !== 200) {
         return false;
       }
@@ -123,7 +124,9 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
             <div className="flex items-center justify-center mt-5">
               <img src="/images/logo.svg" alt="logo" className="w-10 h-10" />
             </div>
-            <h1 className="text-4xl font-bold mb-10 mt-10 mr-50">Sign In</h1>
+            <h1 className="text-4xl font-bold mb-10 mt-10">
+              Create an account
+            </h1>
             <div className="relative mb-5">
               <input
                 type="text"
@@ -234,7 +237,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
               className="text-white bg-black rounded-full mt-auto mb-20 h-10 w-80 cursor-pointer border-2 border-gray-200 font-bold text-sm"
               onClick={handleSignUp}
             >
-              Next
+              Create Account
             </button>
           </div>
         )}

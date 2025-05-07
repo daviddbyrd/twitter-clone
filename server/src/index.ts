@@ -276,6 +276,7 @@ app.post(
 app.post(
   "/check-unique-email",
   asyncHandler(async (req: Request, res: Response) => {
+    console.log("hello");
     const { email } = req.body;
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
@@ -299,7 +300,7 @@ app.post(
       return res.status(400).json({ message: "Username already taken" });
     }
 
-    res.status(201).json({ message: "Username is available" });
+    res.status(200).json({ message: "Username is available" });
   })
 );
 

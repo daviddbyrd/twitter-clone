@@ -223,6 +223,7 @@ const checkValidEmailPassword = async (email: string, password: string) => {
     };
   } catch (err) {
     console.error(err);
+    return;
   }
 };
 
@@ -232,19 +233,21 @@ app.post(
     try {
       const { usernameOrEmail, password } = req.body;
       let response = await checkValidEmailPassword(usernameOrEmail, password);
+      if (!response) throw new Error("Error checking valid email");
       if (response.success) {
         const payload = { id: response.id };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
           expiresIn: "1d",
         });
         res.json({ token });
         return;
       }
       response = await checkValidUsernamePassword(usernameOrEmail, password);
+      if (!response) throw new Error("Error checking valid email");
       console.log(response);
       if (response.success) {
         const payload = { id: response.id };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
           expiresIn: "1h",
         });
         res.json({ token });

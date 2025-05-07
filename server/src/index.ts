@@ -1,10 +1,10 @@
-const express = require("express");
-const { Pool } = require("pg");
-const cors = require("cors");
-const bcrypt = require("bcrypt");
+import express, { Request, Response, NextFunction } from "express";
+import { Pool } from "pg";
+import cors from "cors";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 const saltRounds = 10;
-const jwt = require("jsonwebtoken");
-const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
@@ -20,8 +20,14 @@ const pool = new Pool({
   port: 5432,
 });
 
-app.get("/posts-from-followees/:user_id", async (req, res) => {
-  try {
+const asyncHandler =
+  (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+
+app.get(
+  "/posts-from-followees/:user_id",
+  asyncHandler(async (req: Request, res: Response) => {
     const { user_id } = req.params;
     const sql_query = `
       SELECT p.id, p.content, p.user_id, p.created_at, u.username, u.display_name
@@ -36,13 +42,10 @@ app.get("/posts-from-followees/:user_id", async (req, res) => {
     `;
     const response = await pool.query(sql_query, [user_id]);
     res.status(200).json(response.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error getting posts by followees" });
-  }
-});
+  })
+);
 
-const getUsersByQuery = async (query, user_id) => {
+const getUsersByQuery = async (query: string, user_id: string) => {
   try {
     const sql_query = `
       SELECT
@@ -73,105 +76,89 @@ const getUsersByQuery = async (query, user_id) => {
   }
 };
 
-app.get("/users/:query/:user_id", async (req, res) => {
-  try {
+app.get(
+  "/users/:query/:user_id",
+  asyncHandler(async (req: Request, res: Response) => {
     const { query, user_id } = req.params;
     const users = await getUsersByQuery(query, user_id);
-    console.log("users:", users);
+    if (!users) throw new Error("Error getting users by query");
     res.status(200).json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error getting users by id" });
-  }
-});
+  })
+);
 
-app.post("/unfollow", async (req, res) => {
-  const { follower_id, followee_id } = req.body;
-  console.log(`follower: ${follower_id}, followee: ${followee_id}`);
-  try {
+app.post(
+  "/unfollow",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { follower_id, followee_id } = req.body;
+    console.log(`follower: ${follower_id}, followee: ${followee_id}`);
     const sql_query = `
       DELETE FROM follows f WHERE f.follower_id = $1 AND f.followee_id = $2;
     `;
     await pool.query(sql_query, [follower_id, followee_id]);
     res.status(201).json({ message: "Follow successful." });
-  } catch (err) {
-    console.error(err);
-  }
-});
+  })
+);
 
-app.post("/follow", async (req, res) => {
-  const { follower_id, followee_id } = req.body;
-  console.log(`follower: ${follower_id}, followee: ${followee_id}`);
-  try {
-    const sql_query = `
+app.post(
+  "/follow",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { follower_id, followee_id } = req.body;
+    console.log(`follower: ${follower_id}, followee: ${followee_id}`);
+    try {
+      const sql_query = `
       INSERT INTO follows (follower_id, followee_id)
       VALUES ($1, $2)
       ON CONFLICT (follower_id, followee_id) DO NOTHING;
     `;
-    await pool.query(sql_query, [follower_id, followee_id]);
-    res.status(201).json({ message: "Follow successful." });
-  } catch (err) {
-    console.error(err);
-  }
-});
+      await pool.query(sql_query, [follower_id, followee_id]);
+      res.status(201).json({ message: "Follow successful." });
+    } catch (err) {
+      console.error(err);
+    }
+  })
+);
 
-app.post("/make-post", async (req, res) => {
-  const { userId, content } = req.body;
-
-  try {
+app.post(
+  "/make-post",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { userId, content } = req.body;
     await pool.query("INSERT INTO posts (user_id, content) VALUES ($1, $2)", [
       userId,
       content,
     ]);
     res.status(201).json({ message: "Post made successfully." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error making post" });
-  }
-});
+  })
+);
 
-app.post("/register", async (req, res) => {
-  const { email, username, displayName, dob, password } = req.body;
-
-  try {
+app.post(
+  "/register",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { email, username, displayName, dob, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     await pool.query(
       "INSERT INTO users (email, username, display_name, dob, password_hash) VALUES ($1, $2, $3, $4, $5)",
       [email, username, displayName, dob, hashedPassword]
     );
     res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error registering user" });
-  }
-});
+  })
+);
 
-app.post("/posts", async (req, res) => {
-  const { post } = req.body;
-
-  try {
+app.post(
+  "/posts",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { post } = req.body;
     const result = await pool.query(
       "INSERT INTO posts (post) VALUES ($1) RETURNING *",
       [post]
     );
     res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error inserting post");
-  }
-});
+  })
+);
 
-app.get("/posts", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM posts");
-    res.json(result.rows);
-    console.log(res);
-  } catch (err) {
-    res.status(500).send(err.toString());
-  }
-});
-
-const verifyPassword = async (enteredPassword, passwordHash) => {
+const verifyPassword = async (
+  enteredPassword: string,
+  passwordHash: string
+) => {
   try {
     const isMatch = await bcrypt.compare(enteredPassword, passwordHash);
     return isMatch;
@@ -180,7 +167,10 @@ const verifyPassword = async (enteredPassword, passwordHash) => {
   }
 };
 
-const checkValidUsernamePassword = async (username, password) => {
+const checkValidUsernamePassword = async (
+  username: string,
+  password: string
+) => {
   try {
     const response = await pool.query(
       "SELECT * FROM users WHERE username = $1",
@@ -209,7 +199,7 @@ const checkValidUsernamePassword = async (username, password) => {
   }
 };
 
-const checkValidEmailPassword = async (email, password) => {
+const checkValidEmailPassword = async (email: string, password: string) => {
   try {
     const response = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
@@ -236,74 +226,68 @@ const checkValidEmailPassword = async (email, password) => {
   }
 };
 
-app.post("/login", async (req, res) => {
-  try {
-    const { usernameOrEmail, password } = req.body;
-    let response = await checkValidEmailPassword(usernameOrEmail, password);
-    console.log(response);
-    if (response.success) {
-      const payload = { id: response.id };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
-      res.json({ token });
-      return;
+app.post(
+  "/login",
+  asyncHandler(async (req: Request, res: Response) => {
+    try {
+      const { usernameOrEmail, password } = req.body;
+      let response = await checkValidEmailPassword(usernameOrEmail, password);
+      if (response.success) {
+        const payload = { id: response.id };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
+        res.json({ token });
+        return;
+      }
+      response = await checkValidUsernamePassword(usernameOrEmail, password);
+      console.log(response);
+      if (response.success) {
+        const payload = { id: response.id };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+        res.json({ token });
+        return;
+      }
+      return res.status(401).json({ message: "Invalid credentials." });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error logging in." });
     }
-    response = await checkValidUsernamePassword(usernameOrEmail, password);
-    console.log(response);
-    if (response.success) {
-      const payload = { id: response.id };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-      res.json({ token });
-      return;
-    }
-    return res.status(401).json({ message: "Invalid credentials." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error logging in." });
-  }
-});
+  })
+);
 
-app.post("/users", async (req, res) => {
-  const { username, email, password } = req.body;
-
-  try {
+app.post(
+  "/users",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { username, email, password } = req.body;
     const result = await pool.query(
       "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
       [username, email, password]
     );
     res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.err(err);
-    res.status(500).json({ message: "Error adding user" });
-  }
-});
+  })
+);
 
-app.post("/check-unique-email", async (req, res) => {
-  const { email } = req.body;
-
-  try {
+app.post(
+  "/check-unique-email",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { email } = req.body;
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-
     if (result.rows.length > 0) {
       return res.status(400).json({ message: "Email already taken" });
     }
-
     res.status(200).json({ message: "Email is available" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error checking email" });
-  }
-});
+  })
+);
 
-app.post("/check-unique-username", async (req, res) => {
-  const { username } = req.body;
-
-  try {
+app.post(
+  "/check-unique-username",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { username } = req.body;
     const result = await pool.query("SELECT * FROM users WHERE username = $1", [
       username,
     ]);
@@ -312,27 +296,27 @@ app.post("/check-unique-username", async (req, res) => {
       return res.status(400).json({ message: "Username already taken" });
     }
 
-    res.status(200).json({ message: "Username is available" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error checking username" });
-  }
-});
+    res.status(201).json({ message: "Username is available" });
+  })
+);
 
-app.post("/posts", async (req, res) => {
-  const { post } = req.body;
+app.post(
+  "/posts",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { post } = req.body;
 
-  try {
-    const result = await pool.query(
-      "INSERT INTO posts (post) VALUES ($1) RETURNING *",
-      [post]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error inserting post");
-  }
-});
+    try {
+      const result = await pool.query(
+        "INSERT INTO posts (post) VALUES ($1) RETURNING *",
+        [post]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error inserting post");
+    }
+  })
+);
 
 app.listen(3001, () => {
   console.log("Server running on port 3001");

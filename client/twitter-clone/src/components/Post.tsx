@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import { AiFillHeart } from "react-icons/ai";
 
 interface PostProps {
   id: string;
@@ -42,6 +43,11 @@ const Post = ({
       </div>
       <div className="w-full px-4 pb-4">
         <div>{content}</div>
+      </div>
+      <div className="flex flex-row h-20 w-full">
+        <button className="w-20 h-20 rounded-full">
+          <AiFillHeart />
+        </button>
       </div>
     </div>
   );

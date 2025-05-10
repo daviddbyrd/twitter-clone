@@ -182,10 +182,17 @@ const MainPage = () => {
     }
   };
 
+  const handleProfileVisit = () => {
+    navigate(`/user/${user.id}`);
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
-        <OptionsBar handleLogOut={handleLogOut} />
+        <OptionsBar
+          handleLogOut={handleLogOut}
+          handleProfileVisit={handleProfileVisit}
+        />
       </div>
       <div className="h-full w-5/10 flex flex-col">
         <div>

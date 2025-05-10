@@ -2,12 +2,19 @@ import { AiOutlineUser } from "react-icons/ai";
 
 interface OptionsBarProps {
   handleLogOut: () => void;
+  handleProfileVisit: () => void;
 }
 
-const OptionsBar: React.FC<OptionsBarProps> = ({ handleLogOut }) => {
+const OptionsBar: React.FC<OptionsBarProps> = ({
+  handleLogOut,
+  handleProfileVisit,
+}) => {
   return (
     <div className="flex flex-col justify-end h-full w-full">
-      <button className="cursor-pointer flex flex-row mb-10 ml-10 mr-auto items-center w-full">
+      <button
+        className="cursor-pointer flex flex-row mb-10 ml-10 mr-auto items-center w-full"
+        onClick={handleProfileVisit}
+      >
         <AiOutlineUser size={30} />
         <span className="text-black font-bold text-lg ml-5">Profile</span>
       </button>

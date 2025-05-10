@@ -28,6 +28,12 @@ export interface LikePostParams {
   post_id: string;
 }
 
+export interface MakeReplyParams {
+  userId: string;
+  postId: string;
+  content: string;
+}
+
 const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
@@ -161,6 +167,19 @@ const MainPage = () => {
     }
   };
 
+  const makeReply = async ({ userId, postId, content }: MakeReplyParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/make-reply", {
+        userId,
+        postId,
+        content,
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
@@ -177,6 +196,7 @@ const MainPage = () => {
             unLikePost={unLikePost}
             repost={repost}
             removeRepost={removeRepost}
+            makeReply={makeReply}
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ import { LikePostParams } from "../views/MainPage";
 import { AiOutlineComment } from "react-icons/ai";
 import ReplyBox from "./ReplyBox";
 import { useState } from "react";
+import { MakeReplyParams } from "../views/MainPage";
 
 interface PostProps {
   id: string;
@@ -21,6 +22,7 @@ interface PostProps {
   userReposted: boolean;
   repost: (params: LikePostParams) => Promise<void>;
   removeRepost: (params: LikePostParams) => Promise<void>;
+  makeReply: (params: MakeReplyParams) => Promise<void>;
 }
 
 const Post = ({
@@ -38,6 +40,7 @@ const Post = ({
   userReposted,
   repost,
   removeRepost,
+  makeReply,
 }: PostProps) => {
   const timestamp = new Date(createdAt);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
@@ -128,10 +131,13 @@ const Post = ({
       {isReplying && (
         <ReplyBox
           close={close}
+          userId={user_id}
+          postId={id}
           displayName={displayName}
           username={username}
           content={content}
           relativeTime={relativeTime}
+          makeReply={makeReply}
         />
       )}
     </div>

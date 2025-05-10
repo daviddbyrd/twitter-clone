@@ -1,24 +1,31 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
+import { MakeReplyParams } from "../views/MainPage";
 
 interface ReplyBoxProps {
   close: () => void;
+  userId: string;
+  postId: string;
   displayName: string;
   username: string;
   content: string;
   relativeTime: string;
+  makeReply: (params: MakeReplyParams) => Promise<void>;
 }
 
 const ReplyBox = ({
   close,
+  userId,
+  postId,
   displayName,
   username,
   content,
   relativeTime,
+  makeReply,
 }: ReplyBoxProps) => {
   const [query, setQuery] = useState<string>("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuery(e.target.value);
   };
 
@@ -27,7 +34,10 @@ const ReplyBox = ({
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 h-140 w-130 rounded-xl bg-white flex flex-col items-center justify-start">
         <div className="flex flex-col h-full w-full items-center">
-          <button onClick={close} className="absolute top-3 left-5 w-10 h-10">
+          <button
+            onClick={close}
+            className="absolute top-3 left-5 w-10 h-10 cursor-pointer"
+          >
             <AiOutlineClose size={20} />
           </button>
 
@@ -74,14 +84,19 @@ const ReplyBox = ({
             </div>
 
             <div className="w-full h-full mt-5 mr-10 ml-5">
-              <input
-                className="w-full focus:outline-none"
+              <textarea
+                className="w-full h-60 focus:outline-none resize-none pr-5"
                 placeholder="Post your reply"
-              ></input>
+                value={query}
+                onChange={(e) => handleChange(e)}
+              />
             </div>
           </div>
         </div>
-        <button className="text-white bg-black rounded-full h-10 w-20 cursor-pointer font-bold text-md absolute bottom-5 right-5">
+        <button
+          className="text-white bg-black rounded-full h-10 w-20 cursor-pointer font-bold text-md absolute bottom-5 right-5"
+          onClick={() => makeReply({ postId, userId, content })}
+        >
           Reply
         </button>
       </div>

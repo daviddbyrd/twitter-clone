@@ -13,7 +13,6 @@ const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
   };
 
   const handleMakePost = async () => {
-    console.log(postText);
     await makePost({ post: postText });
     setPostText("");
   };

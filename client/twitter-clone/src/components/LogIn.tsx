@@ -42,7 +42,6 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
         usernameOrEmail: logInForm.usernameOrEmail,
         password: logInForm.password,
       });
-      console.log("response:", response);
       const token = response.data.token;
       localStorage.setItem("token", token);
       const decoded = jwtDecode<User>(token);

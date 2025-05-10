@@ -26,6 +26,19 @@ const asyncHandler =
   };
 
 app.post(
+  "/make-reply",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { userId, postId, content } = req.body;
+    let sql_query = `
+      INSERT INTO posts (user_id, content, parent_id)
+      VALUES ($1, $2, $3)
+    `;
+    const response = await pool.query(sql_query, [userId, content, postId]);
+    res.status(201).json({ message: "Reply added successfully" });
+  })
+);
+
+app.post(
   "/remove-repost",
   asyncHandler(async (req: Request, res: Response) => {
     const { user_id, post_id } = req.body;

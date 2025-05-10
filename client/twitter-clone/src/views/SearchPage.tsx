@@ -27,8 +27,6 @@ const SearchPage = () => {
 
   const handleFollow = async (id: string) => {
     if (user) {
-      console.log(user.id);
-      console.log(id);
       await axios.post("http://localhost:3001/follow", {
         follower_id: user.id,
         followee_id: id,
@@ -38,14 +36,11 @@ const SearchPage = () => {
           user.id === id ? { ...user, is_following: true } : user
         )
       );
-      console.log(results);
     }
   };
 
   const handleUnfollow = async (id: string) => {
     if (user) {
-      console.log(user.id);
-      console.log(id);
       await axios.post("http://localhost:3001/unfollow", {
         follower_id: user.id,
         followee_id: id,
@@ -55,17 +50,14 @@ const SearchPage = () => {
           user.id === id ? { ...user, is_following: false } : user
         )
       );
-      console.log(results);
     }
   };
 
   const fetchResults = async () => {
-    console.log("Ran fetchResults, query:", query, " user id:", user.id);
     try {
       const response = await axios.get(
         `http://localhost:3001/users/${query}/${user.id}`
       );
-      console.log(response);
       if (response) {
         setResults(response.data);
       }

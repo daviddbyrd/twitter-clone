@@ -14,6 +14,10 @@ interface PostProps {
   userLiked: boolean;
   likePost: (params: LikePostParams) => Promise<void>;
   unLikePost: (params: LikePostParams) => Promise<void>;
+  repostCount: number;
+  userReposted: boolean;
+  repost: (params: LikePostParams) => Promise<void>;
+  removeRepost: (params: LikePostParams) => Promise<void>;
 }
 
 const Post = ({
@@ -27,8 +31,11 @@ const Post = ({
   userLiked,
   likePost,
   unLikePost,
+  repostCount,
+  userReposted,
+  repost,
+  removeRepost,
 }: PostProps) => {
-  console.log("created at", createdAt);
   const timestamp = new Date(createdAt);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
 
@@ -56,9 +63,22 @@ const Post = ({
       </div>
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
-          <button className="cursor-pointer">
-            <AiOutlineRetweet className="w-7 h-7 text-black" />
-          </button>
+          <h3 className="mr-2 text-xl">{repostCount}</h3>
+          {userReposted ? (
+            <button
+              className="rounded-full cursor-pointer"
+              onClick={() => removeRepost({ post_id: id })}
+            >
+              <AiOutlineRetweet className="w-7 h-7 text-red-500" />
+            </button>
+          ) : (
+            <button
+              className="cursor-pointer"
+              onClick={() => repost({ post_id: id })}
+            >
+              <AiOutlineRetweet className="w-7 h-7 text-black" />
+            </button>
+          )}
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{likeCount}</h3>

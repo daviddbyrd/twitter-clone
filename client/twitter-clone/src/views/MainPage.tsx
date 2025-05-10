@@ -16,6 +16,8 @@ export interface PostModel {
   created_at: string;
   like_count: number;
   user_liked: boolean;
+  repost_count: number;
+  user_reposted: boolean;
 }
 
 export interface makePostParams {
@@ -37,12 +39,10 @@ const MainPage = () => {
 
   const getPosts = async () => {
     try {
-      console.log(`user in getPosts: ${user}`);
       if (user) {
         const response = await axios.get(
           `http://localhost:3001/posts-from-followees/${user.id}`
         );
-        console.log("response", response.data);
         if (response.status === 200) {
           setPosts(response.data);
         }
@@ -53,13 +53,10 @@ const MainPage = () => {
   };
 
   const makePost = async ({ post }: makePostParams): Promise<void> => {
-    console.log("user", user);
-    console.log("content", post);
     const response = await axios.post("http://localhost:3001/make-post", {
       userId: user.id,
       content: post,
     });
-    console.log(response.data.message);
     await getPosts();
   };
 
@@ -74,14 +71,62 @@ const MainPage = () => {
     }
   };
 
+  const repost = async ({ post_id }: LikePostParams) => {
+    try {
+      console.log("hello");
+      const response = await axios.post("http://localhost:3001/repost", {
+        user_id: user.id,
+        post_id: post_id,
+      });
+      console.log("repost response:", response);
+      if (response.data.message === "Repost added") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? {
+                  ...post,
+                  repost_count: post.repost_count + 1,
+                  user_reposted: true,
+                }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const removeRepost = async ({ post_id }: LikePostParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/remove-repost", {
+        user_id: user.id,
+        post_id: post_id,
+      });
+      if (response.data.message === "Repost removed") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? {
+                  ...post,
+                  repost_count: post.repost_count - 1,
+                  user_reposted: false,
+                }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const likePost = async ({ post_id }: LikePostParams) => {
     try {
-      console.log("user id:", user.id);
       const response = await axios.post("http://localhost:3001/like", {
         user_id: user.id,
         post_id: post_id,
       });
-      console.log("response", response);
       if (response.data.message === "Like added") {
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
@@ -126,7 +171,13 @@ const MainPage = () => {
           <CreatePostBox makePost={makePost} />
         </div>
         <div className="min-h-screen">
-          <Feed posts={posts} likePost={likePost} unLikePost={unLikePost} />
+          <Feed
+            posts={posts}
+            likePost={likePost}
+            unLikePost={unLikePost}
+            repost={repost}
+            removeRepost={removeRepost}
+          />
         </div>
       </div>
       <div className="fixed top-0 right-0 h-full w-1/4">

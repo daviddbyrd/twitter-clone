@@ -26,6 +26,52 @@ const asyncHandler =
   };
 
 app.post(
+  "/remove-repost",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { user_id, post_id } = req.body;
+    let sql_query = `
+      SELECT * FROM reposts
+      WHERE user_id = $1 AND post_id = $2;
+    `;
+    let response = await pool.query(sql_query, [user_id, post_id]);
+    if (response.rows.length === 0) {
+      res.status(201).json({ message: "User has not reposted" });
+      return;
+    }
+    sql_query = `
+    DELETE FROM reposts 
+    WHERE user_id = $1 AND post_id = $2;
+    `;
+    await pool.query(sql_query, [user_id, post_id]);
+    res.status(201).json({ message: "Repost removed" });
+  })
+);
+
+app.post(
+  "/repost",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { user_id, post_id } = req.body;
+    let sql_query = `
+      SELECT * FROM reposts
+      WHERE user_id = $1 AND post_id = $2;
+    `;
+    let response = await pool.query(sql_query, [user_id, post_id]);
+    console.log(response);
+    if (response.rows.length !== 0) {
+      res.status(201).json({ message: "User already reposted" });
+      return;
+    }
+    sql_query = `
+    INSERT INTO reposts (user_id, post_id)
+    VALUES ($1, $2)
+    ON CONFLICT (user_id, post_id) DO NOTHING;
+    `;
+    await pool.query(sql_query, [user_id, post_id]);
+    res.status(201).json({ message: "Repost added" });
+  })
+);
+
+app.post(
   "/like",
   asyncHandler(async (req: Request, res: Response) => {
     const { user_id, post_id } = req.body;
@@ -83,24 +129,30 @@ app.get(
         u.username, 
         u.display_name, 
         CAST(COUNT(l.user_id) AS INTEGER) AS like_count,
+        CAST(COUNT(r.user_id) AS INTEGER) AS repost_count,
         CASE
           WHEN ul.user_id IS NOT NULL THEN TRUE
           ELSE FALSE
-        END AS user_liked 
+        END AS user_liked,
+        CASE
+          WHEN ur.user_id IS NOT NULL THEN TRUE
+          ELSE FALSE
+        END AS user_reposted 
       FROM posts p
       JOIN users u ON p.user_id = u.id
       LEFT JOIN likes l ON l.post_id = p.id
       LEFT JOIN likes ul ON ul.post_id = p.id AND ul.user_id = $1
+      LEFT JOIN reposts r ON r.post_id = p.id
+      LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1
       WHERE p.user_id = $1
         OR p.user_id IN (
           SELECT followee_id FROM follows WHERE follower_id = $1
         )
-      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, user_liked 
+      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, user_liked, user_reposted 
       ORDER BY p.created_at
       LIMIT 20;
     `;
     const response = await pool.query(sql_query, [user_id]);
-    console.log(response.rows);
     res.status(200).json(response.rows);
   })
 );
@@ -150,7 +202,6 @@ app.post(
   "/unfollow",
   asyncHandler(async (req: Request, res: Response) => {
     const { follower_id, followee_id } = req.body;
-    console.log(`follower: ${follower_id}, followee: ${followee_id}`);
     const sql_query = `
       DELETE FROM follows f WHERE f.follower_id = $1 AND f.followee_id = $2;
     `;
@@ -163,7 +214,6 @@ app.post(
   "/follow",
   asyncHandler(async (req: Request, res: Response) => {
     const { follower_id, followee_id } = req.body;
-    console.log(`follower: ${follower_id}, followee: ${followee_id}`);
     try {
       const sql_query = `
       INSERT INTO follows (follower_id, followee_id)
@@ -243,7 +293,6 @@ const checkValidUsernamePassword = async (
         id: null,
       };
     }
-    console.log(rows);
     if (!verifyPassword(password, rows[0].password_hash)) {
       return {
         success: false,
@@ -304,7 +353,6 @@ app.post(
       }
       response = await checkValidUsernamePassword(usernameOrEmail, password);
       if (!response) throw new Error("Error checking valid email");
-      console.log(response);
       if (response.success) {
         const payload = { id: response.id };
         const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
@@ -336,7 +384,6 @@ app.post(
 app.post(
   "/check-unique-email",
   asyncHandler(async (req: Request, res: Response) => {
-    console.log("hello");
     const { email } = req.body;
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,

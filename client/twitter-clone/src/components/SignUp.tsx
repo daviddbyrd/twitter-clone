@@ -41,7 +41,6 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
           email: signUpForm.email,
         }
       );
-      console.log(response);
       if (response.status !== 200) {
         return false;
       }
@@ -70,7 +69,6 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
         dob: signUpForm.dob,
         password: signUpForm.password,
       });
-      console.log("Successfully added user.");
     } catch (err) {
       console.error(err);
     }
@@ -102,7 +100,6 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
   const handleSignUp = async () => {
     const errors = validateSignUp(signUpForm);
     if (errors.length > 0) {
-      console.log(errors);
       return;
     }
     const response = await checkAvailability();

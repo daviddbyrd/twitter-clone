@@ -21,7 +21,7 @@ function App() {
             }
           />
           <Route
-            path="/mainpage"
+            path="/:query"
             element={
               <RequireAuth>
                 <MainPage />
@@ -33,14 +33,6 @@ function App() {
             element={
               <RequireAuth>
                 <SearchPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/user/:userId"
-            element={
-              <RequireAuth>
-                <UserPage />
               </RequireAuth>
             }
           />

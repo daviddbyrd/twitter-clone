@@ -58,6 +58,7 @@ const SearchPage = () => {
       const response = await axios.get(
         `http://localhost:3001/users/${query}/${user.id}`
       );
+      console.log(response);
       if (response) {
         setResults(response.data);
       }
@@ -78,7 +79,7 @@ const SearchPage = () => {
   };
 
   const back = () => {
-    navigate("/mainpage", { replace: true });
+    navigate("/home", { replace: true });
   };
 
   return (

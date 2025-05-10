@@ -5,7 +5,7 @@ import SearchBox from "../components/SearchBox";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import OptionsBar from "../components/OptionsBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export interface PostModel {
   id: string;
@@ -39,6 +39,7 @@ const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { query } = useParams<{ query: string }>();
 
   useEffect(() => {
     getPosts();
@@ -183,7 +184,7 @@ const MainPage = () => {
   };
 
   const handleProfileVisit = () => {
-    navigate(`/user/${user.id}`);
+    navigate(`/${user.id}`);
   };
 
   return (
@@ -194,21 +195,23 @@ const MainPage = () => {
           handleProfileVisit={handleProfileVisit}
         />
       </div>
-      <div className="h-full w-5/10 flex flex-col">
-        <div>
-          <CreatePostBox makePost={makePost} />
+      {query === "home" && (
+        <div className="h-full w-5/10 flex flex-col">
+          <div>
+            <CreatePostBox makePost={makePost} />
+          </div>
+          <div className="min-h-screen">
+            <Feed
+              posts={posts}
+              likePost={likePost}
+              unLikePost={unLikePost}
+              repost={repost}
+              removeRepost={removeRepost}
+              makeReply={makeReply}
+            />
+          </div>
         </div>
-        <div className="min-h-screen">
-          <Feed
-            posts={posts}
-            likePost={likePost}
-            unLikePost={unLikePost}
-            repost={repost}
-            removeRepost={removeRepost}
-            makeReply={makeReply}
-          />
-        </div>
-      </div>
+      )}
       <div className="fixed top-0 right-0 h-full w-1/4">
         <SearchBox />
       </div>

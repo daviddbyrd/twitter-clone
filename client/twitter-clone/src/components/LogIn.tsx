@@ -22,7 +22,7 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/mainpage", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [isLoggedIn, navigate]);
 

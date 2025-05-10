@@ -25,7 +25,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/mainpage", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [isLoggedIn, navigate]);
 

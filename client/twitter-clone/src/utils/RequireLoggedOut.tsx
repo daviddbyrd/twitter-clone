@@ -14,7 +14,7 @@ const RequireAuth: React.FC<{ children: React.JSX.Element }> = ({
   }
 
   if (isLoggedIn) {
-    return <Navigate to="/mainpage" state={{ from: location }} replace />;
+    return <Navigate to="/home" state={{ from: location }} replace />;
   }
 
   return children;

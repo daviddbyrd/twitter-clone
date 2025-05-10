@@ -44,15 +44,27 @@ app.get(
   asyncHandler(async (req: Request, res: Response) => {
     const { user_id } = req.params;
     const sql_query = `
-      SELECT p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, COUNT(l.user_id) AS like_count
+      SELECT 
+        p.id, 
+        p.content, 
+        p.user_id, 
+        p.created_at, 
+        u.username, 
+        u.display_name, 
+        COUNT(l.user_id) AS like_count,
+        CASE
+          WHEN ul.user_id IS NOT NULL THEN TRUE
+          ELSE FALSE
+        END AS user_liked 
       FROM posts p
       JOIN users u ON p.user_id = u.id
       LEFT JOIN likes l ON l.post_id = p.id
+      LEFT JOIN likes ul ON ul.post_id = p.id AND ul.user_id = $1
       WHERE p.user_id = $1
         OR p.user_id IN (
           SELECT followee_id FROM follows WHERE follower_id = $1
         )
-      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name 
+      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, user_liked 
       ORDER BY p.created_at
       LIMIT 20;
     `;

@@ -25,6 +25,7 @@ const Feed: React.FC<FeedProps> = ({ posts, likePost }) => {
               content={post.content}
               createdAt={post.created_at}
               likeCount={post.like_count}
+              userLiked={post.user_liked}
               likePost={likePost}
             />
           );

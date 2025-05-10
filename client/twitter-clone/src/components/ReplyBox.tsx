@@ -29,6 +29,15 @@ const ReplyBox = ({
     setQuery(e.target.value);
   };
 
+  const handleSubmit = async () => {
+    try {
+      await makeReply({ postId, userId, content });
+      close();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
       <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -95,7 +104,7 @@ const ReplyBox = ({
         </div>
         <button
           className="text-white bg-black rounded-full h-10 w-20 cursor-pointer font-bold text-md absolute bottom-5 right-5"
-          onClick={() => makeReply({ postId, userId, content })}
+          onClick={handleSubmit}
         >
           Reply
         </button>

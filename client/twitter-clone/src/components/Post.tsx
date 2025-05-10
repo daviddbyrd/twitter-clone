@@ -75,21 +75,12 @@ const Post = ({
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{repostCount}</h3>
-          {userReposted ? (
-            <button
-              className="rounded-full cursor-pointer"
-              onClick={() => setIsReplying(true)}
-            >
-              <AiOutlineComment className="w-7 h-7 text-red-500" />
-            </button>
-          ) : (
-            <button
-              className="cursor-pointer"
-              onClick={() => setIsReplying(true)}
-            >
-              <AiOutlineComment className="w-7 h-7 text-black" />
-            </button>
-          )}
+          <button
+            className="rounded-full cursor-pointer"
+            onClick={() => setIsReplying(true)}
+          >
+            <AiOutlineComment className="w-7 h-7 text-gray-500" />
+          </button>
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{repostCount}</h3>

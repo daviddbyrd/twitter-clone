@@ -23,6 +23,7 @@ interface PostProps {
   repost: (params: LikePostParams) => Promise<void>;
   removeRepost: (params: LikePostParams) => Promise<void>;
   makeReply: (params: MakeReplyParams) => Promise<void>;
+  replyCount: number;
 }
 
 const Post = ({
@@ -41,6 +42,7 @@ const Post = ({
   repost,
   removeRepost,
   makeReply,
+  replyCount,
 }: PostProps) => {
   const timestamp = new Date(createdAt);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
@@ -74,7 +76,7 @@ const Post = ({
       </div>
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
-          <h3 className="mr-2 text-xl">{repostCount}</h3>
+          <h3 className="mr-2 text-xl">{replyCount}</h3>
           <button
             className="rounded-full cursor-pointer"
             onClick={() => setIsReplying(true)}

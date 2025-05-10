@@ -39,6 +39,7 @@ const Feed: React.FC<FeedProps> = ({
               userLiked={post.user_liked}
               repostCount={post.repost_count}
               userReposted={post.user_reposted}
+              replyCount={post.reply_count}
               likePost={likePost}
               unLikePost={unLikePost}
               repost={repost}

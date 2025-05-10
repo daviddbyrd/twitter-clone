@@ -18,6 +18,7 @@ export interface PostModel {
   user_liked: boolean;
   repost_count: number;
   user_reposted: boolean;
+  reply_count: number;
 }
 
 export interface makePostParams {
@@ -49,6 +50,7 @@ const MainPage = () => {
         const response = await axios.get(
           `http://localhost:3001/posts-from-followees/${user.id}`
         );
+        console.log(response);
         if (response.status === 200) {
           setPosts(response.data);
         }

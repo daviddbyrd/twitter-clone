@@ -150,13 +150,15 @@ app.get(
         CASE
           WHEN ur.user_id IS NOT NULL THEN TRUE
           ELSE FALSE
-        END AS user_reposted 
+        END AS user_reposted,
+        CAST(COUNT(reply.id) AS INTEGER) as reply_count
       FROM posts p
       JOIN users u ON p.user_id = u.id
       LEFT JOIN likes l ON l.post_id = p.id
       LEFT JOIN likes ul ON ul.post_id = p.id AND ul.user_id = $1
       LEFT JOIN reposts r ON r.post_id = p.id
       LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1
+      LEFT JOIN posts reply ON reply.parent_id = p.id
       WHERE p.user_id = $1
         OR p.user_id IN (
           SELECT followee_id FROM follows WHERE follower_id = $1

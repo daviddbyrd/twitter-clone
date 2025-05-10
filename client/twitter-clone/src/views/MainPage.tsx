@@ -20,6 +20,10 @@ export interface makePostParams {
   post: string;
 }
 
+export interface LikePostParams {
+  post_id: string;
+}
+
 const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
@@ -68,6 +72,18 @@ const MainPage = () => {
     }
   };
 
+  const likePost = async ({ post_id }: LikePostParams) => {
+    try {
+      console.log("user id:", user.id);
+      await axios.post("http://localhost:3001/like", {
+        user_id: user.id,
+        post_id: post_id,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
@@ -78,7 +94,7 @@ const MainPage = () => {
           <CreatePostBox makePost={makePost} />
         </div>
         <div className="min-h-screen">
-          <Feed posts={posts} />
+          <Feed posts={posts} likePost={likePost} />
         </div>
       </div>
       <div className="fixed top-0 right-0 h-full w-1/4">

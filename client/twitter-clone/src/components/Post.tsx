@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { AiFillHeart } from "react-icons/ai";
+import { LikePostParams } from "../views/MainPage";
 
 interface PostProps {
   id: string;
@@ -8,6 +9,7 @@ interface PostProps {
   username: string;
   content: string;
   createdAt: string;
+  likePost: (params: LikePostParams) => Promise<void>;
 }
 
 const Post = ({
@@ -17,6 +19,7 @@ const Post = ({
   username,
   content,
   createdAt,
+  likePost,
 }: PostProps) => {
   console.log("created at", createdAt);
   const timestamp = new Date(createdAt);
@@ -41,12 +44,15 @@ const Post = ({
           </div>
         </div>
       </div>
-      <div className="w-full px-4 pb-4">
+      <div className="w-full px-4">
         <div>{content}</div>
       </div>
       <div className="flex flex-row h-20 w-full">
-        <button className="w-20 h-20 rounded-full">
-          <AiFillHeart />
+        <button
+          className="w-20 h-20 rounded-full cursor-pointer ml-auto"
+          onClick={() => likePost({ post_id: id })}
+        >
+          <AiFillHeart className="w-7 h-7 black" />
         </button>
       </div>
     </div>

@@ -25,18 +25,34 @@ const asyncHandler =
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
+app.post(
+  "/like",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { user_id, post_id } = req.body;
+    const sql_query = `
+    INSERT INTO likes (user_id, post_id)
+    VALUES ($1, $2)
+    ON CONFLICT (user_id, post_id) DO NOTHING;
+    `;
+    await pool.query(sql_query, [user_id, post_id]);
+    res.status(201);
+  })
+);
+
 app.get(
   "/posts-from-followees/:user_id",
   asyncHandler(async (req: Request, res: Response) => {
     const { user_id } = req.params;
     const sql_query = `
-      SELECT p.id, p.content, p.user_id, p.created_at, u.username, u.display_name
+      SELECT p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, COUNT(l.user_id) AS like_count
       FROM posts p
       JOIN users u ON p.user_id = u.id
+      LEFT JOIN likes l ON l.post_id = p.id
       WHERE p.user_id = $1
         OR p.user_id IN (
           SELECT followee_id FROM follows WHERE follower_id = $1
         )
+      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name 
       ORDER BY p.created_at
       LIMIT 20;
     `;
@@ -179,14 +195,14 @@ const checkValidUsernamePassword = async (
     const rows = response.rows;
     if (rows.length === 0) {
       return {
-        success: true,
+        success: false,
         id: null,
       };
     }
     console.log(rows);
     if (!verifyPassword(password, rows[0].password_hash)) {
       return {
-        success: true,
+        success: false,
         id: null,
       };
     }

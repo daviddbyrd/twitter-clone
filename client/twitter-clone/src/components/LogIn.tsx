@@ -42,6 +42,7 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
         usernameOrEmail: logInForm.usernameOrEmail,
         password: logInForm.password,
       });
+      console.log("response:", response);
       const token = response.data.token;
       localStorage.setItem("token", token);
       const decoded = jwtDecode<User>(token);
@@ -132,9 +133,9 @@ const LogIn: React.FC<LogInProps> = ({ close }) => {
             <button
               name="signup"
               className="text-white bg-black rounded-full my-8 h-10 w-80 cursor-pointer border-2 border-gray-200 font-bold text-sm"
-              onClick={handleLogIn}
+              onClick={() => handleLogIn()}
             >
-              Next
+              Log In
             </button>
           </div>
         )}

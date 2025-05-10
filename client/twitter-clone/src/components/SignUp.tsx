@@ -172,7 +172,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
                 onChange={(e) => handleChange(e)}
               />
               <label className="absolute left-2 top-3 transform -translate-y-1/2 text-gray-400 text-xs">
-                Password
+                Date of birth
               </label>
             </div>
             <button

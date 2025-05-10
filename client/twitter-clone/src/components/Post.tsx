@@ -9,6 +9,7 @@ interface PostProps {
   username: string;
   content: string;
   createdAt: string;
+  likeCount: number;
   likePost: (params: LikePostParams) => Promise<void>;
 }
 
@@ -19,6 +20,7 @@ const Post = ({
   username,
   content,
   createdAt,
+  likeCount,
   likePost,
 }: PostProps) => {
   console.log("created at", createdAt);
@@ -48,12 +50,15 @@ const Post = ({
         <div>{content}</div>
       </div>
       <div className="flex flex-row h-20 w-full">
-        <button
-          className="w-20 h-20 rounded-full cursor-pointer ml-auto"
-          onClick={() => likePost({ post_id: id })}
-        >
-          <AiFillHeart className="w-7 h-7 black" />
-        </button>
+        <div className="w-40 h-20 ml-auto flex flex-row items-center justify-center">
+          <h3 className="mr-2 text-xl">{likeCount}</h3>
+          <button
+            className="rounded-full cursor-pointer"
+            onClick={() => likePost({ post_id: id })}
+          >
+            <AiFillHeart className="w-7 h-7 black" />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -57,6 +57,7 @@ app.get(
       LIMIT 20;
     `;
     const response = await pool.query(sql_query, [user_id]);
+    console.log(response.rows);
     res.status(200).json(response.rows);
   })
 );

@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { AiFillHeart } from "react-icons/ai";
+import { AiOutlineRetweet } from "react-icons/ai";
 import { LikePostParams } from "../views/MainPage";
 
 interface PostProps {
@@ -53,8 +54,13 @@ const Post = ({
       <div className="w-full px-4">
         <div>{content}</div>
       </div>
-      <div className="flex flex-row h-20 w-full">
-        <div className="w-40 h-20 ml-auto flex flex-row items-center justify-center">
+      <div className="flex flex-row h-20 w-full items-center justify-end">
+        <div className="w-40 h-20 flex flex-row items-center justify-center">
+          <button className="cursor-pointer">
+            <AiOutlineRetweet className="w-7 h-7 text-black" />
+          </button>
+        </div>
+        <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{likeCount}</h3>
           {userLiked ? (
             <button
@@ -65,7 +71,7 @@ const Post = ({
             </button>
           ) : (
             <button
-              className="rounded-full cursor-pointer"
+              className="cursor-pointer"
               onClick={() => likePost({ post_id: id })}
             >
               <AiFillHeart className="w-7 h-7 text-black" />

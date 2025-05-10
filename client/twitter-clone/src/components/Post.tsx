@@ -12,6 +12,7 @@ interface PostProps {
   likeCount: number;
   userLiked: boolean;
   likePost: (params: LikePostParams) => Promise<void>;
+  unLikePost: (params: LikePostParams) => Promise<void>;
 }
 
 const Post = ({
@@ -24,6 +25,7 @@ const Post = ({
   likeCount,
   userLiked,
   likePost,
+  unLikePost,
 }: PostProps) => {
   console.log("created at", createdAt);
   const timestamp = new Date(createdAt);
@@ -57,7 +59,7 @@ const Post = ({
           {userLiked ? (
             <button
               className="rounded-full cursor-pointer"
-              onClick={() => likePost({ post_id: id })}
+              onClick={() => unLikePost({ post_id: id })}
             >
               <AiFillHeart className="w-7 h-7 text-red-500" />
             </button>

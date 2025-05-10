@@ -14,6 +14,8 @@ export interface PostModel {
   display_name: string;
   content: string;
   created_at: string;
+  like_count: number;
+  user_liked: boolean;
 }
 
 export interface makePostParams {
@@ -75,10 +77,40 @@ const MainPage = () => {
   const likePost = async ({ post_id }: LikePostParams) => {
     try {
       console.log("user id:", user.id);
-      await axios.post("http://localhost:3001/like", {
+      const response = await axios.post("http://localhost:3001/like", {
         user_id: user.id,
         post_id: post_id,
       });
+      console.log("response", response);
+      if (response.data.message === "Like added") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? { ...post, like_count: post.like_count + 1, user_liked: true }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const unLikePost = async ({ post_id }: LikePostParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/unlike", {
+        user_id: user.id,
+        post_id: post_id,
+      });
+      if (response.data.message === "Like removed") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? { ...post, like_count: post.like_count - 1, user_liked: false }
+              : post
+          )
+        );
+      }
     } catch (err) {
       console.error(err);
     }
@@ -94,7 +126,7 @@ const MainPage = () => {
           <CreatePostBox makePost={makePost} />
         </div>
         <div className="min-h-screen">
-          <Feed posts={posts} likePost={likePost} />
+          <Feed posts={posts} likePost={likePost} unLikePost={unLikePost} />
         </div>
       </div>
       <div className="fixed top-0 right-0 h-full w-1/4">

@@ -4,9 +4,10 @@ import { PostModel, LikePostParams } from "../views/MainPage";
 interface FeedProps {
   posts: PostModel[];
   likePost: (params: LikePostParams) => Promise<void>;
+  unLikePost: (params: LikePostParams) => Promise<void>;
 }
 
-const Feed: React.FC<FeedProps> = ({ posts, likePost }) => {
+const Feed: React.FC<FeedProps> = ({ posts, likePost, unLikePost }) => {
   return (
     <div className="w-full min-h-screen flex flex-col border-x-1 border-gray-100">
       {posts
@@ -27,6 +28,7 @@ const Feed: React.FC<FeedProps> = ({ posts, likePost }) => {
               likeCount={post.like_count}
               userLiked={post.user_liked}
               likePost={likePost}
+              unLikePost={unLikePost}
             />
           );
         })}

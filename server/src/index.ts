@@ -29,13 +29,44 @@ app.post(
   "/like",
   asyncHandler(async (req: Request, res: Response) => {
     const { user_id, post_id } = req.body;
-    const sql_query = `
+    let sql_query = `
+    SELECT * FROM likes 
+    WHERE user_id = $1 AND post_id = $2;
+    `;
+    let response = await pool.query(sql_query, [user_id, post_id]);
+    if (response.rows.length !== 0) {
+      res.status(201).json({ message: "User already liked" });
+      return;
+    }
+    sql_query = `
     INSERT INTO likes (user_id, post_id)
     VALUES ($1, $2)
     ON CONFLICT (user_id, post_id) DO NOTHING;
     `;
     await pool.query(sql_query, [user_id, post_id]);
-    res.status(201);
+    res.status(201).json({ message: "Like added" });
+  })
+);
+
+app.post(
+  "/unlike",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { user_id, post_id } = req.body;
+    let sql_query = `
+    SELECT * FROM likes 
+    WHERE user_id = $1 AND post_id = $2;
+    `;
+    let response = await pool.query(sql_query, [user_id, post_id]);
+    if (response.rows.length === 0) {
+      res.status(201).json({ message: "User had not liked" });
+      return;
+    }
+    sql_query = `
+    DELETE FROM likes
+    WHERE user_id = $1 AND post_id = $2;
+    `;
+    await pool.query(sql_query, [user_id, post_id]);
+    res.status(201).json({ message: "Like removed" });
   })
 );
 
@@ -51,7 +82,7 @@ app.get(
         p.created_at, 
         u.username, 
         u.display_name, 
-        COUNT(l.user_id) AS like_count,
+        CAST(COUNT(l.user_id) AS INTEGER) AS like_count,
         CASE
           WHEN ul.user_id IS NOT NULL THEN TRUE
           ELSE FALSE

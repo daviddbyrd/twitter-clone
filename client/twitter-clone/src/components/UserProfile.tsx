@@ -42,18 +42,18 @@ const UserProfile = ({
             className="rounded-full w-30 h-30 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2"
           />
         </div>
-        <div className="w-full h-15 flex flex-row justify-end items-center pt-10 pr-10">
+        <div className="w-full h-15 flex flex-row justify-end items-center pt-2 pr-10">
           {userInfo.isFollowing ? (
             <button
               onClick={() => handleUnfollow(userInfo.id)}
-              className="text-black font-bold text-sm border-1 border-gray-100 rounded-md h-10 w-20 cursor-pointer"
+              className="text-black font-bold text-sm border-1 border-gray-100 rounded-full h-10 w-24 cursor-pointer"
             >
               Unfollow
             </button>
           ) : (
             <button
               onClick={() => handleFollow(userInfo.id)}
-              className="bg-black font-bold text-sm text-white rounded-md h-10 w-20 cursor-pointer"
+              className="bg-black font-bold text-sm text-white rounded-full h-10 w-24 cursor-pointer"
             >
               Follow
             </button>

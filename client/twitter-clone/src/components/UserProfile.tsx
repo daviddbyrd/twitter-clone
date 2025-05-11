@@ -1,6 +1,7 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
+import { useState } from "react";
 
 interface UserProfileProps {
   userInfo: UserInfoModel;
@@ -13,6 +14,7 @@ const UserProfile = ({
   handleFollow,
   handleUnfollow,
 }: UserProfileProps) => {
+  const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
 
   const back = () => {
@@ -73,6 +75,32 @@ const UserProfile = ({
           <span className="text-gray-400 ml-1">Following</span>
           <span className="font-bold ml-5">{userInfo.numFollowers}</span>
           <span className="text-gray-400 ml-1"> Followers</span>
+        </div>
+        <div className="w-full h-15 grid grid-cols-3 border-b border-gray-100">
+          <button
+            className={`cursor-pointer text-lg hover:bg-gray-100 ${
+              mode === "posts" && "font-bold border-b-3 border-sky-400"
+            }`}
+            onClick={() => setMode("posts")}
+          >
+            Posts
+          </button>
+          <button
+            className={`cursor-pointer text-lg hover:bg-gray-100 ${
+              mode === "replies" && "font-bold border-b-3 border-sky-400"
+            }`}
+            onClick={() => setMode("replies")}
+          >
+            Replies
+          </button>
+          <button
+            className={`cursor-pointer text-lg hover:bg-gray-100 ${
+              mode === "media" && "font-bold border-b-3 border-sky-400"
+            }`}
+            onClick={() => setMode("media")}
+          >
+            Media
+          </button>
         </div>
       </div>
     </div>

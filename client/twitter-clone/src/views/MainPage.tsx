@@ -112,10 +112,10 @@ const MainPage = () => {
         dob: info.dob,
         createdAt: info.created_at,
         isFollowing: true,
-        profileDescription: "Hello my name is Mark Zuckerberg",
-        numPosts: 10,
-        numFollowing: 100,
-        numFollowers: 29,
+        profileDescription: info.description,
+        numPosts: info.post_count,
+        numFollowing: info.following_count,
+        numFollowers: info.follower_count,
       });
     } catch (err) {
       console.error(err);

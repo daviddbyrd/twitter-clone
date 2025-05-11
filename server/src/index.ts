@@ -91,8 +91,32 @@ app.get(
   asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const sql_query = `
-      SELECT * FROM users
-      WHERE id = $1;
+      WITH user_stats AS (
+        SELECT
+          u.id,
+          COUNT(DISTINCT following.followee_id) AS following_count,
+          COUNT(DISTINCT followers.follower_id) AS follower_count,
+          COUNT(DISTINCT p.id) AS post_count
+        FROM users u
+        LEFT JOIN follows following ON following.follower_id = u.id
+        LEFT JOIN follows followers ON followers.followee_id = u.id 
+        LEFT JOIN posts p ON p.user_id = u.id 
+        WHERE u.id = $1
+        GROUP BY u.id
+      )
+      SELECT 
+        u.id,
+        u.display_name,
+        u.username,
+        u.dob,
+        u.created_at,
+        u.description,
+        us.following_count,
+        us.follower_count,
+        us.post_count
+      FROM users u
+      LEFT JOIN user_stats us ON us.id = u.id
+      WHERE u.id = $1;
     `;
     const response = await pool.query(sql_query, [id]);
     console.log(response.rows);

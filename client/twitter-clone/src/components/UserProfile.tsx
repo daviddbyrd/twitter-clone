@@ -22,8 +22,8 @@ const UserProfile = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-full border-x border-gray-100">
-      <div className="flex flex-row justify-start items-center w-full h-12 border-b border-gray-100">
+    <div className="relative flex flex-col w-full h-full border-x border-gray-100">
+      <div className="absolute top-0 z-50 bg-white opacity-80 flex flex-row justify-start items-center w-full h-12 border-b border-gray-100">
         <button
           className="h-10 w-10 ml-3 flex items-center justify-center cursor-pointer"
           onClick={back}
@@ -35,7 +35,7 @@ const UserProfile = ({
           <div className="text-gray-400 text-sm">{`${userInfo.numPosts} posts`}</div>
         </div>
       </div>
-      <div className="w-full h-40 relative">
+      <div className="w-full h-40 relative mt-12">
         <img className="w-full h-full" src="/images/background.jpeg" />
         <div className="">
           <img

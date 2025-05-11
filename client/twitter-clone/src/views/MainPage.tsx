@@ -45,6 +45,8 @@ export interface UserInfoModel {
   isFollowing: boolean;
   profileDescription: string;
   numPosts: number;
+  numFollowing: number;
+  numFollowers: number;
 }
 
 const emptyUser: UserInfoModel = {
@@ -56,6 +58,8 @@ const emptyUser: UserInfoModel = {
   isFollowing: false,
   profileDescription: "",
   numPosts: 0,
+  numFollowing: 0,
+  numFollowers: 0,
 };
 
 const MainPage = () => {
@@ -108,6 +112,8 @@ const MainPage = () => {
         isFollowing: true,
         profileDescription: "Hello my name is Mark Zuckerberg",
         numPosts: 10,
+        numFollowing: 100,
+        numFollowers: 29,
       });
     } catch (err) {
       console.error(err);

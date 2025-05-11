@@ -68,6 +68,12 @@ const UserProfile = ({
         <div className="w-full px-5 pt-5 text-md">
           {userInfo.profileDescription}
         </div>
+        <div className="w-full h-15 flex flex-row justify-start items-center text-md">
+          <span className="font-bold ml-5">{userInfo.numFollowing}</span>
+          <span className="text-gray-400 ml-1">Following</span>
+          <span className="font-bold ml-5">{userInfo.numFollowers}</span>
+          <span className="text-gray-400 ml-1"> Followers</span>
+        </div>
       </div>
     </div>
   );

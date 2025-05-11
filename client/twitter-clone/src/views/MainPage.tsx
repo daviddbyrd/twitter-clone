@@ -20,6 +20,7 @@ export interface PostModel {
   repost_count: number;
   user_reposted: boolean;
   reply_count: number;
+  parent_id: string;
 }
 
 export interface makePostParams {

@@ -1,7 +1,7 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Feed from "./Feed";
 import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
 
@@ -30,6 +30,19 @@ const UserProfile = ({
 }: UserProfileProps) => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
+
+  const filteredPosts = useMemo(() => {
+    switch (mode) {
+      case "posts":
+        return posts.filter((post) => !post.parent_id);
+      case "replies":
+        return posts.filter((post) => post.parent_id);
+      case "media":
+        return posts;
+      default:
+        return posts;
+    }
+  }, [posts, mode]);
 
   const back = () => {
     navigate("/home", { replace: true });
@@ -116,16 +129,14 @@ const UserProfile = ({
             Media
           </button>
         </div>
-        {mode === "posts" && (
-          <Feed
-            posts={posts}
-            likePost={likePost}
-            unLikePost={unLikePost}
-            repost={repost}
-            removeRepost={removeRepost}
-            makeReply={makeReply}
-          />
-        )}
+        <Feed
+          posts={filteredPosts}
+          likePost={likePost}
+          unLikePost={unLikePost}
+          repost={repost}
+          removeRepost={removeRepost}
+          makeReply={makeReply}
+        />
       </div>
     </div>
   );

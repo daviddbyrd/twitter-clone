@@ -31,7 +31,7 @@ const ReplyBox = ({
 
   const handleSubmit = async () => {
     try {
-      await makeReply({ postId, userId, content });
+      await makeReply({ postId, userId, content: query });
       close();
     } catch (err) {
       console.error(err);

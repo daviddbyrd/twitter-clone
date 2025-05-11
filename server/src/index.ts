@@ -44,7 +44,8 @@ app.get(
       )
       SELECT 
       p.id, 
-      p.content, 
+      p.content,
+      p.parent_id,
       p.user_id, 
       p.created_at, 
       u.username, 
@@ -213,6 +214,7 @@ app.get(
         p.content, 
         p.user_id, 
         p.created_at, 
+        p.parent_id,
         u.username, 
         u.display_name, 
         CAST(COUNT(l.user_id) AS INTEGER) AS like_count,

@@ -25,6 +25,20 @@ const asyncHandler =
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
+app.get(
+  "/user-info/:id",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const sql_query = `
+      SELECT * FROM users
+      WHERE id = $1;
+    `;
+    const response = await pool.query(sql_query, [id]);
+    console.log(response.rows);
+    res.status(200).json(response.rows);
+  })
+);
+
 app.post(
   "/make-reply",
   asyncHandler(async (req: Request, res: Response) => {

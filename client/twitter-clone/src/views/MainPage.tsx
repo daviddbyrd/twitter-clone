@@ -36,19 +36,54 @@ export interface MakeReplyParams {
   content: string;
 }
 
+export interface UserInfoModel {
+  id: string;
+  displayName: string;
+  username: string;
+  dob: string;
+  createdAt: string;
+}
+
+const emptyUser: UserInfoModel = {
+  id: "",
+  displayName: "",
+  username: "",
+  dob: "",
+  createdAt: "",
+};
+
 const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
   const { query } = useParams<{ query: string }>();
+  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
 
   useEffect(() => {
     if (query === "home") {
       getPostsFromFollowees();
     } else {
-      console.log("Get user info");
+      getUserInfo();
     }
   }, [query]);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/user-info/${user.id}`
+      );
+      const info = response.data[0];
+      setUserInfo({
+        id: info.id,
+        displayName: info.display_name,
+        username: info.username,
+        dob: info.dob,
+        createdAt: info.created_at,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getPostsFromFollowees = async () => {
     try {
@@ -220,7 +255,7 @@ const MainPage = () => {
       )}
       {query && query !== "home" && (
         <div className="h-full w-5/10">
-          <UserProfile id={user.id} />
+          <UserProfile userInfo={userInfo} />
         </div>
       )}
       <div className="fixed top-0 right-0 h-full w-1/4">

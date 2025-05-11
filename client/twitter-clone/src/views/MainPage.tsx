@@ -44,6 +44,7 @@ export interface UserInfoModel {
   createdAt: string;
   isFollowing: boolean;
   profileDescription: string;
+  numPosts: number;
 }
 
 const emptyUser: UserInfoModel = {
@@ -54,6 +55,7 @@ const emptyUser: UserInfoModel = {
   createdAt: "",
   isFollowing: false,
   profileDescription: "",
+  numPosts: 0,
 };
 
 const MainPage = () => {
@@ -105,6 +107,7 @@ const MainPage = () => {
         createdAt: info.created_at,
         isFollowing: true,
         profileDescription: "Hello my name is Mark Zuckerberg",
+        numPosts: 10,
       });
     } catch (err) {
       console.error(err);

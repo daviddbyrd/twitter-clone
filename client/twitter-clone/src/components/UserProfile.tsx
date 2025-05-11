@@ -27,6 +27,16 @@ const UserProfile = ({ userInfo }: UserProfileProps) => {
           <h1 className="text-sky-500">{`@${userInfo.username}`}</h1>
         </div>
       </div>
+      <div className="w-full h-50 relative">
+        <img className="w-full h-full" src="/images/background.jpeg" />
+        <div className="">
+          <img
+            src="/images/profilepic.png"
+            alt="Profile picture"
+            className="rounded-full w-30 h-30 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2"
+          />
+        </div>
+      </div>
     </div>
   );
 };

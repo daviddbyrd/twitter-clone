@@ -59,6 +59,12 @@ const UserProfile = ({
             </button>
           )}
         </div>
+        <div className="w-full h-30 mt-5">
+          <div className="flex flex-col h-full w-50 ml-10">
+            <h1 className="font-bold text-3xl">{userInfo.displayName}</h1>
+            <h1 className="text-sky-500 text-xl">{`@${userInfo.username}`}</h1>
+          </div>
+        </div>
       </div>
     </div>
   );

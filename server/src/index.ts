@@ -25,6 +25,52 @@ const asyncHandler =
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
+app.get(
+  "/posts/:id",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const sql_query = `
+      WITH post_stats AS (
+      SELECT 
+        p.id,
+        COUNT(DISTINCT l.user_id) AS like_count,
+        COUNT(DISTINCT r.user_id) AS repost_count,
+        COUNT(DISTINCT reply.id) AS reply_count
+      FROM posts p
+      LEFT JOIN likes l ON l.post_id = p.id
+      LEFT JOIN reposts r ON r.post_id = p.id
+      LEFT JOIN posts reply ON reply.parent_id = p.id
+      GROUP BY p.id
+      )
+      SELECT 
+      p.id, 
+      p.content, 
+      p.user_id, 
+      p.created_at, 
+      u.username, 
+      u.display_name, 
+      ps.like_count,
+      ps.repost_count,
+      ps.reply_count,
+      (ul.user_id IS NOT NULL) AS user_liked,
+      (ur.user_id IS NOT NULL) AS user_reposted
+      FROM posts p
+      JOIN users u ON p.user_id = u.id
+      LEFT JOIN post_stats ps ON ps.id = p.id
+      LEFT JOIN likes ul ON ul.post_id = p.id AND ul.user_id = $1 
+      LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1 
+      WHERE p.user_id = $1 OR ur.user_id IS NOT NULL
+      ORDER BY p.created_at DESC
+      LIMIT 20;
+    `;
+    const response = await pool.query(sql_query, [id]);
+    if (response) {
+      console.log(response.rows);
+      res.status(200).json(response.rows);
+    }
+  })
+);
+
 app.post(
   "/change-description",
   asyncHandler(async (req: Request, res: Response) => {

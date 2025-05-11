@@ -2,17 +2,31 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
 import { useState } from "react";
+import Feed from "./Feed";
+import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
 
 interface UserProfileProps {
   userInfo: UserInfoModel;
   handleFollow: (id: string) => void;
   handleUnfollow: (id: string) => void;
+  posts: PostModel[];
+  likePost: (params: LikePostParams) => Promise<void>;
+  unLikePost: (params: LikePostParams) => Promise<void>;
+  repost: (params: LikePostParams) => Promise<void>;
+  removeRepost: (params: LikePostParams) => Promise<void>;
+  makeReply: (params: MakeReplyParams) => Promise<void>;
 }
 
 const UserProfile = ({
   userInfo,
   handleFollow,
   handleUnfollow,
+  posts,
+  likePost,
+  unLikePost,
+  repost,
+  removeRepost,
+  makeReply,
 }: UserProfileProps) => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
@@ -23,7 +37,7 @@ const UserProfile = ({
 
   return (
     <div className="relative flex flex-col w-full h-full border-x border-gray-100">
-      <div className="absolute top-0 z-50 bg-white opacity-80 flex flex-row justify-start items-center w-full h-12 border-b border-gray-100">
+      <div className="fixed backdrop-blur top-0 z-50 bg-white/80 flex flex-row justify-start items-center w-full h-12 border-b border-gray-100">
         <button
           className="h-10 w-10 ml-3 flex items-center justify-center cursor-pointer"
           onClick={back}
@@ -102,6 +116,16 @@ const UserProfile = ({
             Media
           </button>
         </div>
+        {mode === "posts" && (
+          <Feed
+            posts={posts}
+            likePost={likePost}
+            unLikePost={unLikePost}
+            repost={repost}
+            removeRepost={removeRepost}
+            makeReply={makeReply}
+          />
+        )}
       </div>
     </div>
   );

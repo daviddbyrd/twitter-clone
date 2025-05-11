@@ -74,6 +74,7 @@ const MainPage = () => {
       getPostsFromFollowees();
     } else {
       getUserInfo();
+      getPostsFromUser();
     }
   }, [query]);
 
@@ -115,6 +116,21 @@ const MainPage = () => {
         numFollowing: 100,
         numFollowers: 29,
       });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getPostsFromUser = async () => {
+    try {
+      if (user) {
+        const response = await axios.get(
+          `http://localhost:3001/posts/${user.id}`
+        );
+        if (response.status === 200) {
+          setPosts(response.data);
+        }
+      }
     } catch (err) {
       console.error(err);
     }
@@ -294,6 +310,12 @@ const MainPage = () => {
             userInfo={userInfo}
             handleFollow={handleFollow}
             handleUnfollow={handleUnfollow}
+            posts={posts}
+            likePost={likePost}
+            unLikePost={unLikePost}
+            repost={repost}
+            removeRepost={removeRepost}
+            makeReply={makeReply}
           />
         </div>
       )}

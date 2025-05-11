@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import OptionsBar from "../components/OptionsBar";
 import { useNavigate, useParams } from "react-router-dom";
+import UserProfile from "../components/UserProfile";
 
 export interface PostModel {
   id: string;
@@ -42,10 +43,14 @@ const MainPage = () => {
   const { query } = useParams<{ query: string }>();
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    if (query === "home") {
+      getPostsFromFollowees();
+    } else {
+      console.log("Get user info");
+    }
+  }, [query]);
 
-  const getPosts = async () => {
+  const getPostsFromFollowees = async () => {
     try {
       if (user) {
         const response = await axios.get(
@@ -184,6 +189,7 @@ const MainPage = () => {
   };
 
   const handleProfileVisit = () => {
+    console.log("user id:", user.id);
     navigate(`/${user.id}`);
   };
 
@@ -210,6 +216,11 @@ const MainPage = () => {
               makeReply={makeReply}
             />
           </div>
+        </div>
+      )}
+      {query && query !== "home" && (
+        <div className="h-full w-5/10">
+          <UserProfile id={user.id} />
         </div>
       )}
       <div className="fixed top-0 right-0 h-full w-1/4">

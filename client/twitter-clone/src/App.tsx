@@ -4,7 +4,6 @@ import MainPage from "./views/MainPage";
 import SearchPage from "./views/SearchPage";
 import RequireAuth from "./utils/RequireAuth";
 import RequireLoggedOut from "./utils/RequireLoggedOut";
-import UserPage from "./views/UserPage";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {

@@ -25,6 +25,20 @@ const asyncHandler =
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
+app.post(
+  "/change-description",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id, description } = req.body;
+    const sql_query = `
+      UPDATE users
+      SET description = $2
+      WHERE id = $1;  
+    `;
+    const response = await pool.query(sql_query, [id, description]);
+    res.status(201).json({ message: "Description added successfully." });
+  })
+);
+
 app.get(
   "/user-info/:id",
   asyncHandler(async (req: Request, res: Response) => {

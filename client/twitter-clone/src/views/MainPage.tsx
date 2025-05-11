@@ -43,6 +43,7 @@ export interface UserInfoModel {
   dob: string;
   createdAt: string;
   isFollowing: boolean;
+  profileDescription: string;
 }
 
 const emptyUser: UserInfoModel = {
@@ -52,6 +53,7 @@ const emptyUser: UserInfoModel = {
   dob: "",
   createdAt: "",
   isFollowing: false,
+  profileDescription: "",
 };
 
 const MainPage = () => {
@@ -101,7 +103,8 @@ const MainPage = () => {
         username: info.username,
         dob: info.dob,
         createdAt: info.created_at,
-        isFolowing: true,
+        isFollowing: true,
+        profileDescription: "Hello my name is Mark Zuckerberg",
       });
     } catch (err) {
       console.error(err);

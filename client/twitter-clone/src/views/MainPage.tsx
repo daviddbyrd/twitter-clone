@@ -42,6 +42,7 @@ export interface UserInfoModel {
   username: string;
   dob: string;
   createdAt: string;
+  isFollowing: boolean;
 }
 
 const emptyUser: UserInfoModel = {
@@ -50,6 +51,7 @@ const emptyUser: UserInfoModel = {
   username: "",
   dob: "",
   createdAt: "",
+  isFollowing: false,
 };
 
 const MainPage = () => {
@@ -67,6 +69,26 @@ const MainPage = () => {
     }
   }, [query]);
 
+  const handleFollow = async (id: string) => {
+    if (user) {
+      await axios.post("http://localhost:3001/follow", {
+        follower_id: user.id,
+        followee_id: id,
+      });
+      setUserInfo((prev) => ({ ...prev, isFollowing: true }));
+    }
+  };
+
+  const handleUnfollow = async (id: string) => {
+    if (user) {
+      await axios.post("http://localhost:3001/unfollow", {
+        follower_id: user.id,
+        followee_id: id,
+      });
+      setUserInfo((prev) => ({ ...prev, isFollowing: false }));
+    }
+  };
+
   const getUserInfo = async () => {
     try {
       const response = await axios.get(
@@ -79,6 +101,7 @@ const MainPage = () => {
         username: info.username,
         dob: info.dob,
         createdAt: info.created_at,
+        isFolowing: true,
       });
     } catch (err) {
       console.error(err);
@@ -106,7 +129,7 @@ const MainPage = () => {
       userId: user.id,
       content: post,
     });
-    await getPosts();
+    await getPostsFromFollowees();
   };
 
   const handleLogOut = () => {
@@ -255,7 +278,11 @@ const MainPage = () => {
       )}
       {query && query !== "home" && (
         <div className="h-full w-5/10">
-          <UserProfile userInfo={userInfo} />
+          <UserProfile
+            userInfo={userInfo}
+            handleFollow={handleFollow}
+            handleUnfollow={handleUnfollow}
+          />
         </div>
       )}
       <div className="fixed top-0 right-0 h-full w-1/4">

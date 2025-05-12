@@ -1,5 +1,6 @@
 import express from "express";
 import { asyncHandler } from "../utils/asyncHandler";
+import { upload } from "../middleware/upload";
 import {
   changeProfile,
   changeDescription,
@@ -8,6 +9,7 @@ import {
   unfollow,
   follow,
   createUser,
+  updateProfilePicture,
 } from "../controllers/userController";
 
 const router = express.Router();
@@ -19,5 +21,10 @@ router.get("/users/:query/:user_id", asyncHandler(getUsersByQuery));
 router.post("/unfollow", asyncHandler(unfollow));
 router.post("/follow", asyncHandler(follow));
 router.post("/users", asyncHandler(createUser));
+router.post(
+  "/upload-profile-picture",
+  upload.single("profilePic"),
+  asyncHandler(updateProfilePicture)
+);
 
 export default router;

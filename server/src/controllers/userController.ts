@@ -120,3 +120,19 @@ export const createUser = async (req: Request, res: Response) => {
   );
   res.status(201).json(result.rows[0]);
 };
+
+export const updateProfilePicture = async (req: Request, res: Response) => {
+  const userId = req.body.userId;
+  const file = req.file;
+
+  if (!file) throw new Error("No file uploaded.");
+
+  const imageUrl = `/uploads/${file.filename}`;
+
+  const sql_query = ` 
+      UPDATE users SET profile_picture_url = $1
+      WHERE id = $2
+    `;
+  await pool.query(sql_query, [file, userId]);
+  res.json({ imageUrl });
+};

@@ -1,11 +1,13 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Feed from "./Feed";
 import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
+import EditProfileBox from "./EditProfileBox";
 
 interface UserProfileProps {
+  id: string;
   userInfo: UserInfoModel;
   handleFollow: (id: string) => void;
   handleUnfollow: (id: string) => void;
@@ -15,9 +17,11 @@ interface UserProfileProps {
   repost: (params: LikePostParams) => Promise<void>;
   removeRepost: (params: LikePostParams) => Promise<void>;
   makeReply: (params: MakeReplyParams) => Promise<void>;
+  handleEdit: () => void;
 }
 
 const UserProfile = ({
+  id,
   userInfo,
   handleFollow,
   handleUnfollow,
@@ -29,6 +33,7 @@ const UserProfile = ({
   makeReply,
 }: UserProfileProps) => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const filteredPosts = useMemo(() => {
@@ -44,13 +49,21 @@ const UserProfile = ({
     }
   }, [posts, mode]);
 
+  useEffect(() => {
+    document.body.style.overflow = isEditing ? "hidden" : "auto";
+  }, [isEditing]);
+
   const back = () => {
     navigate("/home", { replace: true });
   };
 
+  const stopEditing = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="relative flex flex-col w-full h-full border-x border-gray-100">
-      <div className="fixed backdrop-blur top-0 z-50 bg-white/80 flex flex-row justify-start items-center w-full h-12 border-b border-gray-100">
+      <div className="fixed backdrop-blur top-0 z-10 bg-white/80 flex flex-row justify-start items-center w-5/10 h-12 border-b border-gray-100">
         <button
           className="h-10 w-10 ml-3 flex items-center justify-center cursor-pointer"
           onClick={back}
@@ -64,25 +77,31 @@ const UserProfile = ({
       </div>
       <div className="w-full h-40 relative mt-12">
         <img className="w-full h-full" src="/images/background.jpeg" />
-        <div className="">
-          <img
-            src="/images/profilepic.png"
-            alt="Profile picture"
-            className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 border-white border-4"
-          />
-        </div>
+        <img
+          src="/images/profilepic.png"
+          alt="Profile picture"
+          className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 border-white border-4"
+        />
+
         <div className="w-full h-15 flex flex-row justify-end items-center pt-2 pr-10">
-          {userInfo.isFollowing ? (
+          {userInfo.id === id ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-black font-bold text-md border-1 border-gray-200 rounded-full h-10 w-32 cursor-pointer"
+            >
+              Edit Profile
+            </button>
+          ) : userInfo.isFollowing ? (
             <button
               onClick={() => handleUnfollow(userInfo.id)}
-              className="text-black font-bold text-sm border-1 border-gray-100 rounded-full h-10 w-24 cursor-pointer"
+              className="text-black font-bold text-md border-1 border-gray-200 rounded-full h-10 w-32 cursor-pointer"
             >
               Unfollow
             </button>
           ) : (
             <button
               onClick={() => handleFollow(userInfo.id)}
-              className="bg-black font-bold text-sm text-white rounded-full h-10 w-24 cursor-pointer"
+              className="bg-black font-bold text-md text-white rounded-full h-10 w-32 cursor-pointer"
             >
               Follow
             </button>
@@ -138,6 +157,7 @@ const UserProfile = ({
           makeReply={makeReply}
         />
       </div>
+      {isEditing && <EditProfileBox close={stopEditing} />}
     </div>
   );
 };

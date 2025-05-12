@@ -69,6 +69,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { query } = useParams<{ query: string }>();
   const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
     if (query === "home") {
@@ -308,6 +309,7 @@ const MainPage = () => {
       {query && query !== "home" && (
         <div className="h-full w-5/10">
           <UserProfile
+            id={user.id}
             userInfo={userInfo}
             handleFollow={handleFollow}
             handleUnfollow={handleUnfollow}

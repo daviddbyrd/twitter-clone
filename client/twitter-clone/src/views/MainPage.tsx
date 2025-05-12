@@ -7,6 +7,7 @@ import axios from "axios";
 import OptionsBar from "../components/OptionsBar";
 import { useNavigate, useParams } from "react-router-dom";
 import UserProfile from "../components/UserProfile";
+import EditProfileBox from "../components/EditProfileBox";
 
 export interface PostModel {
   id: string;
@@ -63,6 +64,12 @@ const emptyUser: UserInfoModel = {
   numFollowers: 0,
 };
 
+export interface SubmitProfileChangeParams {
+  id: string;
+  displayName: string;
+  description: string;
+}
+
 const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
@@ -79,6 +86,10 @@ const MainPage = () => {
       getPostsFromUser();
     }
   }, [query]);
+
+  useEffect(() => {
+    document.body.style.overflow = isEditing ? "hidden" : "auto";
+  }, [isEditing]);
 
   const handleFollow = async (id: string) => {
     if (user) {
@@ -281,6 +292,42 @@ const MainPage = () => {
     navigate(`/${user.id}`);
   };
 
+  const submitProfileChange = async ({
+    id,
+    displayName,
+    description,
+  }: SubmitProfileChangeParams) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/change-profile",
+        {
+          id: id,
+          display_name: displayName,
+          description: description,
+        }
+      );
+      if (response.status === 201) {
+        setUserInfo((prev) => ({
+          ...prev,
+          displayName: displayName,
+          profileDescription: description,
+        }));
+        console.log(userInfo);
+        setIsEditing(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const stopEditing = () => {
+    setIsEditing(false);
+  };
+
+  const startEditing = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
@@ -319,12 +366,22 @@ const MainPage = () => {
             repost={repost}
             removeRepost={removeRepost}
             makeReply={makeReply}
+            startEditing={startEditing}
           />
         </div>
       )}
       <div className="fixed top-0 right-0 h-full w-1/4">
         <SearchBox />
       </div>
+      {isEditing && (
+        <EditProfileBox
+          close={stopEditing}
+          id={userInfo.id}
+          displayName={userInfo.displayName}
+          description={userInfo.profileDescription}
+          submitProfileChange={submitProfileChange}
+        />
+      )}
     </div>
   );
 };

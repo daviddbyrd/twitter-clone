@@ -4,7 +4,6 @@ import { UserInfoModel } from "../views/MainPage";
 import { useState, useMemo, useEffect } from "react";
 import Feed from "./Feed";
 import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
-import EditProfileBox from "./EditProfileBox";
 
 interface UserProfileProps {
   id: string;
@@ -17,7 +16,7 @@ interface UserProfileProps {
   repost: (params: LikePostParams) => Promise<void>;
   removeRepost: (params: LikePostParams) => Promise<void>;
   makeReply: (params: MakeReplyParams) => Promise<void>;
-  handleEdit: () => void;
+  startEditing: () => void;
 }
 
 const UserProfile = ({
@@ -31,9 +30,9 @@ const UserProfile = ({
   repost,
   removeRepost,
   makeReply,
+  startEditing,
 }: UserProfileProps) => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const filteredPosts = useMemo(() => {
@@ -49,16 +48,8 @@ const UserProfile = ({
     }
   }, [posts, mode]);
 
-  useEffect(() => {
-    document.body.style.overflow = isEditing ? "hidden" : "auto";
-  }, [isEditing]);
-
   const back = () => {
     navigate("/home", { replace: true });
-  };
-
-  const stopEditing = () => {
-    setIsEditing(false);
   };
 
   return (
@@ -86,7 +77,7 @@ const UserProfile = ({
         <div className="w-full h-15 flex flex-row justify-end items-center pt-2 pr-10">
           {userInfo.id === id ? (
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={startEditing}
               className="text-black font-bold text-md border-1 border-gray-200 rounded-full h-10 w-32 cursor-pointer"
             >
               Edit Profile
@@ -157,7 +148,6 @@ const UserProfile = ({
           makeReply={makeReply}
         />
       </div>
-      {isEditing && <EditProfileBox close={stopEditing} />}
     </div>
   );
 };

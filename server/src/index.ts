@@ -25,6 +25,24 @@ const asyncHandler =
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 
+app.post(
+  "/change-profile",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id, display_name, description } = req.body;
+    const sql_query = `
+      UPDATE users
+      SET display_name = $2, description = $3
+      WHERE id = $1
+    `;
+    const response = await pool.query(sql_query, [
+      id,
+      display_name,
+      description,
+    ]);
+    res.status(201).json({ message: "Profile updated successfully." });
+  })
+);
+
 app.get(
   "/posts/:id",
   asyncHandler(async (req: Request, res: Response) => {

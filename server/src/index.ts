@@ -8,9 +8,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/auth", authRoutes);
+// To refactor, make it like this and change paths in frontend:
+// app.use("/api/users", userRoutes);
+// app.use("/api/posts", postRoutes);
+// app.use("/api/auth", authRoutes);
+// Also, add a .env file to frontend with the base url
+
+app.use("/", userRoutes);
+app.use("/", postRoutes);
+app.use("/", authRoutes);
 
 const PORT = parseInt(process.env.PORT || "3001");
 

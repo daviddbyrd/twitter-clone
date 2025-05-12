@@ -386,18 +386,6 @@ app.post(
   })
 );
 
-app.post(
-  "/posts",
-  asyncHandler(async (req: Request, res: Response) => {
-    const { post } = req.body;
-    const result = await pool.query(
-      "INSERT INTO posts (post) VALUES ($1) RETURNING *",
-      [post]
-    );
-    res.status(201).json(result.rows[0]);
-  })
-);
-
 const verifyPassword = async (
   enteredPassword: string,
   passwordHash: string

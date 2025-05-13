@@ -13,6 +13,8 @@ interface EditProfileBoxProps {
 interface ProfileInfoModel {
   displayName: string;
   description: string;
+  profilePicture: File | null;
+  backgroundPicture: File | null;
 }
 
 const EditProfileBox = ({
@@ -25,6 +27,8 @@ const EditProfileBox = ({
   const [profileInfo, setProfileInfo] = useState<ProfileInfoModel>({
     displayName: displayName,
     description: description,
+    profilePicture: null,
+    backgroundPicture: null,
   });
 
   const handleChange = (
@@ -64,12 +68,33 @@ const EditProfileBox = ({
             </button>
           </div>
           <div className="w-full h-40 relative mt-15 px-3">
-            <img className="w-full h-full" src="/images/background.jpeg" />
-            <img
-              src="/images/profilepic.png"
-              alt="Profile picture"
-              className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 border-white border-4"
-            />
+            <div className="w-full h-full">
+              <input
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                type="file"
+                name="backgroundPicture"
+                accept="image/*"
+                onChange={handleChange}
+              />
+              <img
+                className="w-full h-full object-cover cursor-pointer"
+                src="/images/background.jpeg"
+              />
+            </div>
+            <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2">
+              <input
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                type="file"
+                name="backgroundPicture"
+                accept="image/*"
+                onChange={handleChange}
+              />
+              <img
+                src="/images/profilepic.png"
+                alt="Profile picture"
+                className="rounded-full w-36 h-36 border-4 border-white"
+              />
+            </div>
           </div>
           <div className="w-full px-5 mt-24 h-14">
             <div className="relative w-full h-full">

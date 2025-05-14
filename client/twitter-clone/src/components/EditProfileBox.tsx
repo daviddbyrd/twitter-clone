@@ -70,7 +70,7 @@ const EditProfileBox = ({
           <div className="w-full h-40 relative mt-15 px-3">
             <div className="w-full h-full relative z-10">
               <div className="flex items-center justify-center absolute w-full h-full z-20">
-                <div className="h-14 w-14 rounded-full bg-black opacity-50 flex items-center justify-center relative">
+                <div className="h-14 w-14 rounded-full bg-black opacity-50 flex items-center justify-center relative hover:bg-gray-500">
                   <AiOutlineCamera
                     size={30}
                     className="absolute z-0 text-white"
@@ -84,22 +84,29 @@ const EditProfileBox = ({
                   />
                 </div>
               </div>
-              <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10"></div>
               <img
                 className="w-full h-full object-cover cursor-pointer z-10"
                 src="/images/background.jpeg"
               />
             </div>
             <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 absolute z-20">
-              <div className="w-full h-full">
-                <input
-                  className="absolute inset-0 opacity-0 cursor-pointer rounded-full"
-                  type="file"
-                  name="profilePicture"
-                  accept="image/*"
-                  onChange={handleChange}
-                ></input>
+              <div className="flex items-center justify-center absolute w-full h-full z-20">
+                <div className="h-12 w-12 rounded-full bg-black opacity-50 flex items-center justify-center relative hover:bg-gray-500">
+                  <AiOutlineCamera
+                    size={30}
+                    className="absolute z-0 text-white"
+                  />
+                  <input
+                    className="absolute h-12 w-12 rounded-full opacity-0 cursor-pointer"
+                    type="file"
+                    name="profilePicture"
+                    accept="image/*"
+                    onChange={handleChange}
+                  ></input>
+                </div>
               </div>
+
+              <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10 rounded-full border-4 border-white"></div>
               <img
                 src="/images/profilepic.png"
                 alt="Profile picture"

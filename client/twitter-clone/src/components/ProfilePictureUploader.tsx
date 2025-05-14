@@ -64,7 +64,7 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
       <div className="absolute inset-0 bg-black opacity-70 z-50"></div>
-      <div className="relative z-100 h-160 w-150 rounded-xl bg-white flex flex-col items-center justify-start overflow-y-auto">
+      <div className="relative z-1id h-160 w-150 rounded-xl bg-white flex flex-col items-center justify-start overflow-y-auto">
         <form onSubmit={handleSubmit} className="space-y-4">
           <input type="file" accept="image/*" onChange={handleFileChange} />
           {previewUrl && (

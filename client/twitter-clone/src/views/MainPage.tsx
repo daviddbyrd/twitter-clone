@@ -8,7 +8,6 @@ import OptionsBar from "../components/OptionsBar";
 import { useNavigate, useParams } from "react-router-dom";
 import UserProfile from "../components/UserProfile";
 import EditProfileBox from "../components/EditProfileBox";
-import ProfilePictureUploader from "../components/ProfilePictureUploader";
 
 export interface PostModel {
   id: string;
@@ -383,7 +382,6 @@ const MainPage = () => {
           submitProfileChange={submitProfileChange}
         />
       )}
-      <ProfilePictureUploader userId={userInfo.id} />
     </div>
   );
 };

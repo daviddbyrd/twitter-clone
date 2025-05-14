@@ -1,6 +1,6 @@
-import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 import { SubmitProfileChangeParams } from "../views/MainPage";
+import { AiOutlineCamera, AiOutlineClose } from "react-icons/ai";
 
 interface EditProfileBoxProps {
   close: () => void;
@@ -51,9 +51,9 @@ const EditProfileBox = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
-      <div className="absolute inset-0 bg-black opacity-70 z-50"></div>
-      <div className="relative z-50 h-160 w-150 rounded-xl bg-white flex flex-col items-center justify-start overflow-y-auto">
+    <div className="fixed inset-0 flex items-center justify-center w-screen h-screen z-10">
+      <div className="absolute inset-0 bg-black opacity-70"></div>
+      <div className="relative h-160 w-150 rounded-xl bg-white flex flex-col items-center justify-start overflow-y-auto">
         <div className="flex flex-col h-full w-full items-center relative">
           <div className="flex flex-row w-150 h-16 items-center justify-start absolute top-0 left-0 ">
             <button onClick={close} className="w-10 h-15 cursor-pointer ml-5">
@@ -68,27 +68,38 @@ const EditProfileBox = ({
             </button>
           </div>
           <div className="w-full h-40 relative mt-15 px-3">
-            <div className="w-full h-full">
-              <input
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                type="file"
-                name="backgroundPicture"
-                accept="image/*"
-                onChange={handleChange}
-              />
+            <div className="w-full h-full relative z-10">
+              <div className="flex items-center justify-center absolute w-full h-full z-20">
+                <div className="h-14 w-14 rounded-full bg-black opacity-50 flex items-center justify-center relative">
+                  <AiOutlineCamera
+                    size={30}
+                    className="absolute z-0 text-white"
+                  />
+                  <input
+                    className="absolute h-15 w-15 rounded-full opacity-0 cursor-pointer z-10"
+                    type="file"
+                    name="backgroundPicture"
+                    accept="image/*"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10"></div>
               <img
-                className="w-full h-full object-cover cursor-pointer"
+                className="w-full h-full object-cover cursor-pointer z-10"
                 src="/images/background.jpeg"
               />
             </div>
-            <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2">
-              <input
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                type="file"
-                name="backgroundPicture"
-                accept="image/*"
-                onChange={handleChange}
-              />
+            <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 absolute z-20">
+              <div className="w-full h-full">
+                <input
+                  className="absolute inset-0 opacity-0 cursor-pointer rounded-full"
+                  type="file"
+                  name="profilePicture"
+                  accept="image/*"
+                  onChange={handleChange}
+                ></input>
+              </div>
               <img
                 src="/images/profilepic.png"
                 alt="Profile picture"

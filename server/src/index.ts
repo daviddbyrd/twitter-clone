@@ -3,6 +3,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import authRoutes from "./routes/authRoutes";
+import path from "path";
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/", userRoutes);
 app.use("/", postRoutes);
 app.use("/", authRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 const PORT = parseInt(process.env.PORT || "3001");
 

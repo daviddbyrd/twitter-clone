@@ -49,6 +49,8 @@ export interface UserInfoModel {
   numPosts: number;
   numFollowing: number;
   numFollowers: number;
+  profilePicURL: string;
+  backgroundPicURL: string;
 }
 
 const emptyUser: UserInfoModel = {
@@ -62,6 +64,8 @@ const emptyUser: UserInfoModel = {
   numPosts: 0,
   numFollowing: 0,
   numFollowers: 0,
+  profilePicURL: "",
+  backgroundPicURL: "",
 };
 
 export interface SubmitProfileChangeParams {
@@ -118,19 +122,7 @@ const MainPage = () => {
       const response = await axios.get(
         `http://localhost:3001/user-info/${user.id}`
       );
-      const info = response.data[0];
-      setUserInfo({
-        id: info.id,
-        displayName: info.display_name,
-        username: info.username,
-        dob: info.dob,
-        createdAt: info.created_at,
-        isFollowing: true,
-        profileDescription: info.description,
-        numPosts: info.post_count,
-        numFollowing: info.following_count,
-        numFollowers: info.follower_count,
-      });
+      setUserInfo(response.data);
     } catch (err) {
       console.error(err);
     }

@@ -7,8 +7,6 @@ export const changeProfile = async (req: Request, res: Response) => {
   let profilePictureFilename = null;
   let backgroundPictureFilename = null;
 
-  console.log(req);
-
   if (req.files && !Array.isArray(req.files)) {
     const profilePicture = req.files["profilePicture"]?.[0];
     const backgroundPicture = req.files["backgroundPicture"]?.[0];
@@ -18,7 +16,6 @@ export const changeProfile = async (req: Request, res: Response) => {
       ? backgroundPicture.filename
       : null;
   }
-  console.log("Background file name: ", backgroundPictureFilename);
 
   const sql_query = `
       UPDATE users
@@ -73,6 +70,8 @@ export const getUserInfo = async (req: Request, res: Response) => {
         u.dob,
         u.created_at,
         u.description,
+        u.profile_picture_url,
+        u.background_picture_url,
         us.following_count,
         us.follower_count,
         us.post_count
@@ -81,8 +80,37 @@ export const getUserInfo = async (req: Request, res: Response) => {
       WHERE u.id = $1;
     `;
   const response = await pool.query(sql_query, [id]);
-  console.log(response.rows);
-  res.status(200).json(response.rows);
+  console.log(response.rows[0]);
+  let profilePictureFullURL = "";
+  let backgroundPictureFullURL = "";
+
+  if (response.rows[0].profile_picture_url) {
+    profilePictureFullURL = `${req.protocol}://${req.get("host")}/uploads/${
+      response.rows[0].profile_picture_url
+    }`;
+  }
+
+  if (response.rows[0].background_picture_url) {
+    backgroundPictureFullURL = `${req.protocol}://${req.get("host")}/uploads/${
+      response.rows[0].background_picture_url
+    }`;
+  }
+
+  console.log(backgroundPictureFullURL);
+  res.status(200).json({
+    id: response.rows[0].id,
+    displayName: response.rows[0].display_name,
+    username: response.rows[0].username,
+    dob: response.rows[0].dob,
+    createdAt: response.rows[0].created_at,
+    isFollowing: response.rows[0].is_following,
+    profileDescription: response.rows[0].description,
+    numPosts: response.rows[0].numPosts,
+    numFollowing: response.rows[0].numFollowing,
+    numFollowers: response.rows[0].numFollowers,
+    profilePicURL: profilePictureFullURL,
+    backgroundPicURL: backgroundPictureFullURL,
+  });
 };
 
 export const getUsersByQuery = async (req: Request, res: Response) => {

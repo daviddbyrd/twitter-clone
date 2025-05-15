@@ -67,9 +67,12 @@ const UserProfile = ({
         </div>
       </div>
       <div className="w-full h-40 relative mt-12">
-        <img className="w-full h-full" src="/images/background.jpeg" />
         <img
-          src="/images/profilepic.png"
+          className="w-full h-full"
+          src={userInfo.backgroundPicURL || "images/defaultBackground.png"}
+        />
+        <img
+          src={userInfo.profilePicURL || "images/default.jpg"}
           alt="Profile picture"
           className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 border-white border-4"
         />

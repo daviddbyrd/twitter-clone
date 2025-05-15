@@ -40,7 +40,6 @@ export const getPostsById = async (req: Request, res: Response) => {
     `;
   const response = await pool.query(sql_query, [id]);
   if (response) {
-    console.log(response.rows);
     res.status(200).json(response.rows);
   }
 };
@@ -81,7 +80,6 @@ export const repost = async (req: Request, res: Response) => {
       WHERE user_id = $1 AND post_id = $2;
     `;
   let response = await pool.query(sql_query, [user_id, post_id]);
-  console.log(response);
   if (response.rows.length !== 0) {
     res.status(201).json({ message: "User already reposted" });
     return;

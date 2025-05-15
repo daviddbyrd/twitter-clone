@@ -4,17 +4,28 @@ import { Request, Response } from "express";
 export const changeProfile = async (req: Request, res: Response) => {
   const { id, display_name, description, backgroundPicture } = req.body;
 
-  let profilePictureFilename = null;
-  let backgroundPictureFilename = null;
+  const currentFilenames = await pool.query(
+    "SELECT profile_picture_url, background_picture_url FROM users WHERE id = $1",
+    [id]
+  );
+
+  // To add: error checking for not found user
+
+  let profilePictureFilename = currentFilenames.rows[0].profile_picture_url;
+  let backgroundPictureFilename =
+    currentFilenames.rows[0].background_picture_url;
 
   if (req.files && !Array.isArray(req.files)) {
     const profilePicture = req.files["profilePicture"]?.[0];
     const backgroundPicture = req.files["backgroundPicture"]?.[0];
 
-    profilePictureFilename = profilePicture ? profilePicture.filename : null;
-    backgroundPictureFilename = backgroundPicture
-      ? backgroundPicture.filename
-      : null;
+    if (profilePicture) {
+      profilePictureFilename = profilePicture.filename;
+    }
+
+    if (backgroundPicture) {
+      backgroundPictureFilename = backgroundPicture.filename;
+    }
   }
 
   const sql_query = `
@@ -105,9 +116,9 @@ export const getUserInfo = async (req: Request, res: Response) => {
     createdAt: response.rows[0].created_at,
     isFollowing: response.rows[0].is_following,
     profileDescription: response.rows[0].description,
-    numPosts: response.rows[0].numPosts,
-    numFollowing: response.rows[0].numFollowing,
-    numFollowers: response.rows[0].numFollowers,
+    numPosts: response.rows[0].post_count,
+    numFollowing: response.rows[0].following_count,
+    numFollowers: response.rows[0].follower_count,
     profilePicURL: profilePictureFullURL,
     backgroundPicURL: backgroundPictureFullURL,
   });

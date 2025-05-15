@@ -34,18 +34,15 @@ const EditProfileBox = ({
     newProfilePic: null,
     newBackgroundPic: null,
   });
-  console.log("profile url: ", profilePicURL);
-  console.log("background url: ", backgroundPicURL);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { name, type } = e.target;
-
+    console.log(name, type, profileInfo);
     if (type === "file") {
       const fileInput = e.target as HTMLInputElement;
       const file = fileInput.files?.[0] || null;
-
       setProfileInfo((prev) => ({ ...prev, [name]: file }));
     } else {
       const value = e.target.value;
@@ -55,6 +52,7 @@ const EditProfileBox = ({
 
   const handleSubmit = async () => {
     try {
+      console.log("background: ", profileInfo.newBackgroundPic);
       submitProfileChange({
         id: id,
         displayName: profileInfo.displayName,
@@ -95,7 +93,7 @@ const EditProfileBox = ({
                   <input
                     className="absolute h-15 w-15 rounded-full opacity-0 cursor-pointer z-10"
                     type="file"
-                    name="backgroundPicture"
+                    name="newBackgroundPic"
                     accept="image/*"
                     onChange={handleChange}
                   />
@@ -116,7 +114,7 @@ const EditProfileBox = ({
                   <input
                     className="absolute h-12 w-12 rounded-full opacity-0 cursor-pointer"
                     type="file"
-                    name="profilePicture"
+                    name="newProfilePic"
                     accept="image/*"
                     onChange={handleChange}
                   ></input>

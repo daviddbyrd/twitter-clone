@@ -121,7 +121,7 @@ const MainPage = () => {
   const getUserInfo = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/user-info/${user.id}`
+        `http://localhost:3001/user-info/${query}`
       );
       setUserInfo(response.data);
     } catch (err) {

@@ -24,6 +24,7 @@ interface PostProps {
   removeRepost: (params: LikePostParams) => Promise<void>;
   makeReply: (params: MakeReplyParams) => Promise<void>;
   replyCount: number;
+  profilePicURL: string;
 }
 
 const Post = ({
@@ -43,6 +44,7 @@ const Post = ({
   removeRepost,
   makeReply,
   replyCount,
+  profilePicURL,
 }: PostProps) => {
   const timestamp = new Date(createdAt);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
@@ -57,7 +59,7 @@ const Post = ({
       <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <img
-            src="/images/profilepic.png"
+            src={profilePicURL || "/images/default.jpg"}
             alt="Profile picture"
             className="w-12 h-12 rounded-full mr-auto ml-5"
           />

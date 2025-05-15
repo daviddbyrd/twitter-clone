@@ -143,6 +143,7 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
         p.parent_id,
         u.username, 
         u.display_name, 
+        u.profile_picture_url,
         CAST(COUNT(l.user_id) AS INTEGER) AS like_count,
         CAST(COUNT(r.user_id) AS INTEGER) AS repost_count,
         CASE
@@ -165,12 +166,22 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
         OR p.user_id IN (
           SELECT followee_id FROM follows WHERE follower_id = $1
         )
-      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, user_liked, user_reposted 
+      GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, u.profile_picture_url, user_liked, user_reposted 
       ORDER BY p.created_at
       LIMIT 20;
     `;
   const response = await pool.query(sql_query, [user_id]);
-  res.status(200).json(response.rows);
+
+  const updatedRows = response.rows.map((row) => {
+    if (row.profile_picture_url) {
+      row.profile_picture_url = `${req.protocol}://${req.get("host")}/uploads/${
+        row.profile_picture_url
+      }`;
+    }
+    return row;
+  });
+
+  res.status(200).json(updatedRows);
 };
 
 export const makePost = async (req: Request, res: Response) => {

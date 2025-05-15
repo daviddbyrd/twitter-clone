@@ -22,6 +22,7 @@ export interface PostModel {
   user_reposted: boolean;
   reply_count: number;
   parent_id: string;
+  profile_picture_url: string;
 }
 
 export interface makePostParams {

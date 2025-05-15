@@ -34,8 +34,17 @@ const EditProfileBox = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const { name, value } = e.target;
-    setProfileInfo((prev) => ({ ...prev, [name]: value }));
+    const { name, type } = e.target;
+
+    if (type === "file") {
+      const fileInput = e.target as HTMLInputElement;
+      const file = fileInput.files?.[0] || null;
+
+      setProfileInfo((prev) => ({ ...prev, [name]: file }));
+    } else {
+      const value = e.target.value;
+      setProfileInfo((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -44,6 +53,8 @@ const EditProfileBox = ({
         id: id,
         displayName: profileInfo.displayName,
         description: profileInfo.description,
+        profilePicture: profileInfo.profilePicture,
+        backgroundPicture: profileInfo.backgroundPicture,
       });
     } catch (err) {
       console.error(err);

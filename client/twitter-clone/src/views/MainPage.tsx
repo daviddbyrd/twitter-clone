@@ -68,6 +68,8 @@ export interface SubmitProfileChangeParams {
   id: string;
   displayName: string;
   description: string;
+  profilePicture: File | null;
+  backgroundPicture: File | null;
 }
 
 const MainPage = () => {
@@ -296,16 +298,40 @@ const MainPage = () => {
     id,
     displayName,
     description,
+    profilePicture,
+    backgroundPicture,
   }: SubmitProfileChangeParams) => {
     try {
+      console.log(backgroundPicture);
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("display_name", displayName);
+      formData.append("description", description);
+
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture);
+      }
+      if (backgroundPicture) {
+        formData.append("backgroundPicture", backgroundPicture);
+      }
+
+      console.log("profilePicture type:", typeof profilePicture);
+      console.log("backgroundPicture type:", typeof backgroundPicture);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
       const response = await axios.post(
         "http://localhost:3001/change-profile",
+        formData,
         {
-          id: id,
-          display_name: displayName,
-          description: description,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
+
       if (response.status === 201) {
         setUserInfo((prev) => ({
           ...prev,

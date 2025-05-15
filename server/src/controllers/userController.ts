@@ -2,13 +2,40 @@ import { pool } from "../db/pool";
 import { Request, Response } from "express";
 
 export const changeProfile = async (req: Request, res: Response) => {
-  const { id, display_name, description } = req.body;
+  const { id, display_name, description, backgroundPicture } = req.body;
+
+  let profilePictureFilename = null;
+  let backgroundPictureFilename = null;
+
+  console.log(req);
+
+  if (req.files && !Array.isArray(req.files)) {
+    const profilePicture = req.files["profilePicture"]?.[0];
+    const backgroundPicture = req.files["backgroundPicture"]?.[0];
+
+    profilePictureFilename = profilePicture ? profilePicture.filename : null;
+    backgroundPictureFilename = backgroundPicture
+      ? backgroundPicture.filename
+      : null;
+  }
+  console.log("Background file name: ", backgroundPictureFilename);
+
   const sql_query = `
       UPDATE users
-      SET display_name = $2, description = $3
+      SET 
+        display_name = $2, 
+        description = $3, 
+        profile_picture_url = $4,
+        background_picture_url = $5
       WHERE id = $1
     `;
-  const response = await pool.query(sql_query, [id, display_name, description]);
+  const response = await pool.query(sql_query, [
+    id,
+    display_name,
+    description,
+    profilePictureFilename,
+    backgroundPictureFilename,
+  ]);
   res.status(201).json({ message: "Profile updated successfully." });
 };
 
@@ -119,20 +146,4 @@ export const createUser = async (req: Request, res: Response) => {
     [username, email, password]
   );
   res.status(201).json(result.rows[0]);
-};
-
-export const updateProfilePicture = async (req: Request, res: Response) => {
-  const userId = req.body.userId;
-  const file = req.file;
-
-  if (!file) throw new Error("No file uploaded.");
-
-  const imageUrl = `/uploads/${file.filename}`;
-
-  const sql_query = ` 
-      UPDATE users SET profile_picture_url = $1
-      WHERE id = $2
-    `;
-  await pool.query(sql_query, [file, userId]);
-  res.json({ imageUrl });
 };

@@ -105,7 +105,7 @@ const EditProfileBox = ({
                 src={
                   profileInfo.newBackgroundPic
                     ? URL.createObjectURL(profileInfo.newBackgroundPic)
-                    : profilePicURL || "/images/defaultBackground.png"
+                    : backgroundPicURL || "/images/defaultBackground.png"
                 }
               />
             </div>
@@ -132,7 +132,7 @@ const EditProfileBox = ({
                 src={
                   profileInfo.newProfilePic
                     ? URL.createObjectURL(profileInfo.newProfilePic)
-                    : backgroundPicURL || "/images/default.jpeg"
+                    : profilePicURL || "/images/default.jpeg"
                 }
                 alt="Profile picture"
                 className="rounded-full w-36 h-36 border-4 border-white"

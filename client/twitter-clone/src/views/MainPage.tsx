@@ -324,13 +324,10 @@ const MainPage = () => {
         }
       );
 
+      console.log("response alright: ", response);
+
       if (response.status === 201) {
-        setUserInfo((prev) => ({
-          ...prev,
-          displayName: displayName,
-          profileDescription: description,
-        }));
-        console.log(userInfo);
+        await getUserInfo();
         setIsEditing(false);
       }
     } catch (err) {

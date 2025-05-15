@@ -99,11 +99,17 @@ const EditProfileBox = ({
                   />
                 </div>
               </div>
+              <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10 border-4 border-white"></div>
               <img
                 className="w-full h-full object-cover cursor-pointer z-10"
-                src={backgroundPicURL || "images/defaultBackground.png"}
+                src={
+                  profileInfo.newBackgroundPic
+                    ? URL.createObjectURL(profileInfo.newBackgroundPic)
+                    : profilePicURL || "/images/defaultBackground.png"
+                }
               />
             </div>
+            <img />
             <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 absolute z-20">
               <div className="flex items-center justify-center absolute w-full h-full z-20">
                 <div className="h-12 w-12 rounded-full bg-black opacity-50 flex items-center justify-center relative hover:bg-gray-500">
@@ -123,7 +129,11 @@ const EditProfileBox = ({
 
               <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10 rounded-full border-4 border-white"></div>
               <img
-                src={profilePicURL || "images/default.jpg"}
+                src={
+                  profileInfo.newProfilePic
+                    ? URL.createObjectURL(profileInfo.newProfilePic)
+                    : backgroundPicURL || "/images/default.jpeg"
+                }
                 alt="Profile picture"
                 className="rounded-full w-36 h-36 border-4 border-white"
               />

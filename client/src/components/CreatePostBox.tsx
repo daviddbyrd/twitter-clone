@@ -1,12 +1,14 @@
 import { useState, ChangeEvent } from "react";
 import { makePostParams } from "../views/MainPage";
+import { useOutletContext } from "react-router-dom";
 
-interface CreatePostBoxProps {
+interface ContextType {
   makePost: (params: makePostParams) => void;
 }
 
-const CreatePostBox: React.FC<CreatePostBoxProps> = ({ makePost }) => {
+const CreatePostBox = () => {
   const [postText, setPostText] = useState<string>("");
+  const { makePost } = useOutletContext<ContextType>();
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPostText(e.target.value);

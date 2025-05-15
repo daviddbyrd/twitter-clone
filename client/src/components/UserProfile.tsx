@@ -1,39 +1,24 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Feed from "./Feed";
-import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
+import { PostModel } from "../views/MainPage";
 
-interface UserProfileProps {
+interface ContextType {
   id: string;
   userInfo: UserInfoModel;
   handleFollow: (id: string) => void;
   handleUnfollow: (id: string) => void;
   posts: PostModel[];
-  likePost: (params: LikePostParams) => Promise<void>;
-  unLikePost: (params: LikePostParams) => Promise<void>;
-  repost: (params: LikePostParams) => Promise<void>;
-  removeRepost: (params: LikePostParams) => Promise<void>;
-  makeReply: (params: MakeReplyParams) => Promise<void>;
   startEditing: () => void;
 }
 
-const UserProfile = ({
-  id,
-  userInfo,
-  handleFollow,
-  handleUnfollow,
-  posts,
-  likePost,
-  unLikePost,
-  repost,
-  removeRepost,
-  makeReply,
-  startEditing,
-}: UserProfileProps) => {
+const UserProfile = () => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
+  const { id, userInfo, handleFollow, handleUnfollow, posts, startEditing } =
+    useOutletContext<ContextType>();
 
   const filteredPosts = useMemo(() => {
     switch (mode) {
@@ -142,14 +127,7 @@ const UserProfile = ({
             Media
           </button>
         </div>
-        <Feed
-          posts={filteredPosts}
-          likePost={likePost}
-          unLikePost={unLikePost}
-          repost={repost}
-          removeRepost={removeRepost}
-          makeReply={makeReply}
-        />
+        <Feed posts={filteredPosts} />
       </div>
     </div>
   );

@@ -1,13 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
-interface UserProps {
-  id: string;
-  username: string;
-  displayName: string;
-  profilePicURL: string;
+interface contextType {
   handleFollow: (id: string) => void;
   handleUnfollow: (id: string) => void;
-  isFollowing: boolean;
 }
 
 const User = ({
@@ -15,11 +10,10 @@ const User = ({
   username,
   displayName,
   profilePicURL,
-  handleFollow,
-  handleUnfollow,
   isFollowing,
 }: UserProps) => {
   const navigate = useNavigate();
+  const { handleFollow, handleUnfollow } = useOutletContext<contextType>();
 
   const goToProfile = () => {
     navigate(`/${id}`, { replace: true });

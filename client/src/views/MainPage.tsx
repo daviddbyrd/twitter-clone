@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import CreatePostBox from "../components/CreatePostBox";
-import Feed from "../components/Feed";
 import SearchBox from "../components/SearchBox";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import OptionsBar from "../components/OptionsBar";
 import { useNavigate, useParams } from "react-router-dom";
-import UserProfile from "../components/UserProfile";
 import EditProfileBox from "../components/EditProfileBox";
+import { Outlet } from "react-router-dom";
 
 export interface PostModel {
   id: string;
@@ -120,9 +118,11 @@ const MainPage = () => {
 
   const getUserInfo = async () => {
     try {
+      console.log(query);
       const response = await axios.get(
         `http://localhost:3001/user-info/${query}`
       );
+      console.log("user info:", response);
       setUserInfo(response.data);
     } catch (err) {
       console.error(err);
@@ -183,7 +183,7 @@ const MainPage = () => {
     try {
       console.log("hello");
       const response = await axios.post("http://localhost:3001/repost", {
-        user_id: user.id,
+        user_id: user?.id,
         post_id: post_id,
       });
       console.log("repost response:", response);
@@ -208,7 +208,7 @@ const MainPage = () => {
   const removeRepost = async ({ post_id }: LikePostParams) => {
     try {
       const response = await axios.post("http://localhost:3001/remove-repost", {
-        user_id: user.id,
+        user_id: user?.id,
         post_id: post_id,
       });
       if (response.data.message === "Repost removed") {
@@ -232,7 +232,7 @@ const MainPage = () => {
   const likePost = async ({ post_id }: LikePostParams) => {
     try {
       const response = await axios.post("http://localhost:3001/like", {
-        user_id: user.id,
+        user_id: user?.id,
         post_id: post_id,
       });
       if (response.data.message === "Like added") {
@@ -252,7 +252,7 @@ const MainPage = () => {
   const unLikePost = async ({ post_id }: LikePostParams) => {
     try {
       const response = await axios.post("http://localhost:3001/unlike", {
-        user_id: user.id,
+        user_id: user?.id,
         post_id: post_id,
       });
       if (response.data.message === "Like removed") {
@@ -283,8 +283,8 @@ const MainPage = () => {
   };
 
   const handleProfileVisit = () => {
-    console.log("user id:", user.id);
-    navigate(`/${user.id}`);
+    console.log("user id:", user?.id);
+    navigate(`/${user?.id}`);
   };
 
   const submitProfileChange = async ({
@@ -352,40 +352,24 @@ const MainPage = () => {
           handleProfileVisit={handleProfileVisit}
         />
       </div>
-      {query === "home" && (
-        <div className="h-full w-5/10 flex flex-col">
-          <div>
-            <CreatePostBox makePost={makePost} />
-          </div>
-          <div className="min-h-screen">
-            <Feed
-              posts={posts}
-              likePost={likePost}
-              unLikePost={unLikePost}
-              repost={repost}
-              removeRepost={removeRepost}
-              makeReply={makeReply}
-            />
-          </div>
-        </div>
-      )}
-      {query && query !== "home" && (
-        <div className="h-full w-5/10">
-          <UserProfile
-            id={user.id}
-            userInfo={userInfo}
-            handleFollow={handleFollow}
-            handleUnfollow={handleUnfollow}
-            posts={posts}
-            likePost={likePost}
-            unLikePost={unLikePost}
-            repost={repost}
-            removeRepost={removeRepost}
-            makeReply={makeReply}
-            startEditing={startEditing}
-          />
-        </div>
-      )}
+      <div className="h-full w-5/10 flex flex-col">
+        <Outlet
+          context={{
+            makePost,
+            posts,
+            likePost,
+            unLikePost,
+            repost,
+            removeRepost,
+            makeReply,
+            id: user?.id,
+            userInfo,
+            handleFollow,
+            handleUnfollow,
+            startEditing,
+          }}
+        />
+      </div>
       <div className="fixed top-0 right-0 h-full w-1/4">
         <SearchBox />
       </div>

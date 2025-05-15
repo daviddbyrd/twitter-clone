@@ -1,23 +1,7 @@
 import Post from "./Post";
-import { PostModel, LikePostParams, MakeReplyParams } from "../views/MainPage";
+import { PostModel } from "../views/MainPage";
 
-interface FeedProps {
-  posts: PostModel[];
-  likePost: (params: LikePostParams) => Promise<void>;
-  unLikePost: (params: LikePostParams) => Promise<void>;
-  repost: (params: LikePostParams) => Promise<void>;
-  removeRepost: (params: LikePostParams) => Promise<void>;
-  makeReply: (params: MakeReplyParams) => Promise<void>;
-}
-
-const Feed: React.FC<FeedProps> = ({
-  posts,
-  likePost,
-  unLikePost,
-  repost,
-  removeRepost,
-  makeReply,
-}) => {
+const Feed = ({ posts }: { posts: PostModel[] }) => {
   return (
     <div className="w-full min-h-screen flex flex-col border-x-1 border-gray-100">
       {posts
@@ -41,11 +25,6 @@ const Feed: React.FC<FeedProps> = ({
               userReposted={post.user_reposted}
               replyCount={post.reply_count}
               profilePicURL={post.profile_picture_url}
-              likePost={likePost}
-              unLikePost={unLikePost}
-              repost={repost}
-              removeRepost={removeRepost}
-              makeReply={makeReply}
             />
           );
         })}

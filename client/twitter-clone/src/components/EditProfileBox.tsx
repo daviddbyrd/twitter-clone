@@ -7,14 +7,16 @@ interface EditProfileBoxProps {
   id: string;
   displayName: string;
   description: string;
+  profilePicURL: string;
+  backgroundPicURL: string;
   submitProfileChange: (params: SubmitProfileChangeParams) => Promise<void>;
 }
 
 interface ProfileInfoModel {
   displayName: string;
   description: string;
-  profilePicture: File | null;
-  backgroundPicture: File | null;
+  newProfilePic: File | null;
+  newBackgroundPic: File | null;
 }
 
 const EditProfileBox = ({
@@ -22,14 +24,18 @@ const EditProfileBox = ({
   id,
   displayName,
   description,
+  profilePicURL,
+  backgroundPicURL,
   submitProfileChange,
 }: EditProfileBoxProps) => {
   const [profileInfo, setProfileInfo] = useState<ProfileInfoModel>({
     displayName: displayName,
     description: description,
-    profilePicture: null,
-    backgroundPicture: null,
+    newProfilePic: null,
+    newBackgroundPic: null,
   });
+  console.log("profile url: ", profilePicURL);
+  console.log("background url: ", backgroundPicURL);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -53,8 +59,8 @@ const EditProfileBox = ({
         id: id,
         displayName: profileInfo.displayName,
         description: profileInfo.description,
-        profilePicture: profileInfo.profilePicture,
-        backgroundPicture: profileInfo.backgroundPicture,
+        profilePicture: profileInfo.newProfilePic,
+        backgroundPicture: profileInfo.newBackgroundPic,
       });
     } catch (err) {
       console.error(err);
@@ -97,7 +103,7 @@ const EditProfileBox = ({
               </div>
               <img
                 className="w-full h-full object-cover cursor-pointer z-10"
-                src="/images/background.jpeg"
+                src={backgroundPicURL || "images/defaultBackground.png"}
               />
             </div>
             <div className="rounded-full w-36 h-36 flex items-center justify-center absolute left-12 bottom-0 transform translate-y-1/2 absolute z-20">
@@ -119,7 +125,7 @@ const EditProfileBox = ({
 
               <div className="absolute w-full h-full bg-gray-400 opacity-20 z-10 rounded-full border-4 border-white"></div>
               <img
-                src="/images/profilepic.png"
+                src={profilePicURL || "images/default.jpg"}
                 alt="Profile picture"
                 className="rounded-full w-36 h-36 border-4 border-white"
               />

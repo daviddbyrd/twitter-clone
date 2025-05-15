@@ -397,6 +397,8 @@ const MainPage = () => {
           id={userInfo.id}
           displayName={userInfo.displayName}
           description={userInfo.profileDescription}
+          profilePicURL={userInfo.profilePicURL}
+          backgroundPicURL={userInfo.backgroundPicURL}
           submitProfileChange={submitProfileChange}
         />
       )}

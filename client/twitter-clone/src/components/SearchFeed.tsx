@@ -28,6 +28,7 @@ const SearchFeed = ({
             id={user.id}
             username={user.username}
             displayName={user.display_name}
+            profilePicURL={user.profile_picture_url}
             handleFollow={handleFollow}
             handleUnfollow={handleUnfollow}
             isFollowing={user.is_following}

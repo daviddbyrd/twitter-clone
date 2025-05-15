@@ -13,6 +13,7 @@ interface UserProps {
   display_name: string;
   sim: number;
   is_following: boolean;
+  profile_picture_url: string;
 }
 
 const SearchPage = () => {

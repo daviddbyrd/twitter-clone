@@ -132,6 +132,8 @@ export const getUsersByQuery = async (req: Request, res: Response) => {
     u.id,
     u.username,
     u.display_name,
+    u.profile_picture_url,
+    u.background_picture_url,
     GREATEST(
       similarity(u.username, $1),
       similarity(u.display_name, $1)
@@ -149,7 +151,15 @@ export const getUsersByQuery = async (req: Request, res: Response) => {
 `;
 
   const response = await pool.query(sql_query, [query, user_id]);
-  const users = response.rows;
+  const users = response.rows.map((row) => {
+    if (row.profile_picture_url) {
+      row.profile_picture_url = `${req.protocol}://${req.get("host")}/uploads/${
+        row.profile_picture_url
+      }`;
+    }
+    return row;
+  });
+  console.log("response: ", users);
   if (!users) throw new Error("Error getting users by query");
   res.status(200).json(users);
 };

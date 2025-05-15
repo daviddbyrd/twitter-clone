@@ -2,6 +2,7 @@ interface UserProps {
   id: string;
   username: string;
   displayName: string;
+  profilePicURL: string;
   handleFollow: (id: string) => void;
   handleUnfollow: (id: string) => void;
   isFollowing: boolean;
@@ -11,6 +12,7 @@ const User = ({
   id,
   username,
   displayName,
+  profilePicURL,
   handleFollow,
   handleUnfollow,
   isFollowing,
@@ -19,7 +21,7 @@ const User = ({
     <div className="w-full h-24 bg-white border-b-1 border-gray-100 y-divide flex flex-row items-center p-4">
       <div className="w-20 h-20 flex items-center justify-center">
         <img
-          src="/images/profilepic.png"
+          src={profilePicURL || "/images/default.jpg"}
           alt="Profile picture"
           className="w-12 h-12 rounded-full mr-auto ml-2"
         />

@@ -1,19 +1,24 @@
 import User from "./User.tsx";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface UserProps {
   id: string;
   username: string;
-  displayName: string;
-  profilePicURL: string;
-  isFollowing: string;
+  display_name: string;
+  profile_picture_url: string;
+  is_following: boolean;
+}
+
+interface ContextType {
+  id: string;
 }
 
 const SearchFeed = () => {
   const { query } = useParams<{ query: string }>();
   const [results, setResults] = useState<UserProps[]>([]);
+  const { id } = useOutletContext<ContextType>();
 
   useEffect(() => {
     fetchResults();
@@ -22,7 +27,7 @@ const SearchFeed = () => {
   const fetchResults = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/users/${query}/${user.id}`
+        `http://localhost:3001/users/${query}/${id}`
       );
       console.log(response);
       if (response) {
@@ -36,7 +41,15 @@ const SearchFeed = () => {
   return (
     <div>
       {results.map((user) => {
-        return <User key={user.id} />;
+        return (
+          <User
+            key={user.id}
+            username={user.username}
+            displayName={user.display_name}
+            profilePicURL={user.profile_picture_url}
+            isFollowing={user.is_following}
+          />
+        );
       })}
     </div>
   );

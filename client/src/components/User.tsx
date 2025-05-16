@@ -5,6 +5,14 @@ interface contextType {
   handleUnfollow: (id: string) => void;
 }
 
+interface UserProps {
+  id: string;
+  username: string;
+  displayName: string;
+  profilePicURL: string;
+  isFollowing: boolean;
+}
+
 const User = ({
   id,
   username,

@@ -31,9 +31,8 @@ function App() {
             }
           >
             <Route path="home" element={<Home />} />
-            <Route path=":query" element={<UserProfile />}>
-              <Route path="status/:postId" element={<PostPage />} />
-            </Route>
+            <Route path=":query" element={<UserProfile />} />
+            <Route path=":userId/status/:postId" element={<PostPage />} />
             <Route path="search/:query" element={<SearchFeed />}></Route>
           </Route>
         </Routes>

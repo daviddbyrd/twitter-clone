@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 
-interface LargeSearchBoxProps {
+interface ContextType {
   back: () => void;
 }
 
-const LargeSearchBox = ({ back }: LargeSearchBoxProps) => {
+const LargeSearchBox = () => {
   const [query, setQuery] = useState<string>("");
   const navigate = useNavigate();
+  const { back } = useOutletContext<ContextType>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);

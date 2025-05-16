@@ -8,7 +8,7 @@ import { LikePostParams, MakeReplyParams } from "../views/MainPage";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 interface PostProps {
-  id: string;
+  postId: string;
   user_id: string;
   displayName: string;
   username: string;
@@ -23,6 +23,7 @@ interface PostProps {
 }
 
 interface ContextType {
+  id: string;
   likePost: (params: LikePostParams) => Promise<void>;
   unLikePost: (params: LikePostParams) => Promise<void>;
   repost: (params: LikePostParams) => Promise<void>;
@@ -31,7 +32,7 @@ interface ContextType {
 }
 
 const Post = ({
-  id,
+  postId,
   user_id,
   displayName,
   username,
@@ -48,7 +49,7 @@ const Post = ({
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
   const navigate = useNavigate();
-  const { likePost, unLikePost, repost, removeRepost, makeReply } =
+  const { id, likePost, unLikePost, repost, removeRepost, makeReply } =
     useOutletContext<ContextType>();
 
   const goToProfile = () => {
@@ -59,8 +60,15 @@ const Post = ({
     setIsReplying(false);
   };
 
+  const handleClick = () => {
+    navigate(`/${id}/status/${postId}`);
+  };
+
   return (
-    <div className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4">
+    <div
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <span onClick={goToProfile} className="cursor-pointer">

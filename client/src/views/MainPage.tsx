@@ -344,6 +344,10 @@ const MainPage = () => {
     setIsEditing(true);
   };
 
+  const back = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
@@ -367,6 +371,7 @@ const MainPage = () => {
             handleFollow,
             handleUnfollow,
             startEditing,
+            back,
           }}
         />
       </div>

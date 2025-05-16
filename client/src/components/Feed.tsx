@@ -12,7 +12,7 @@ const Feed = ({ posts }: { posts: PostModel[] }) => {
         .map((post) => {
           return (
             <Post
-              id={post.id}
+              postId={post.id}
               user_id={post.user_id}
               key={post.id}
               displayName={post.display_name}

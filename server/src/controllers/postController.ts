@@ -192,3 +192,23 @@ export const makePost = async (req: Request, res: Response) => {
   ]);
   res.status(201).json({ message: "Post made successfully." });
 };
+
+export const getPost = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const sql_query = `
+    SELECT * FROM posts 
+    WHERE id = $1;
+  `;
+  const response = await pool.query(sql_query, [id]);
+  res.status(200).json(response.rows);
+};
+
+export const getReplies = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const sql_query = `
+    SELECT * FROM posts
+    WHERE parent_id = $1; 
+  `;
+  const response = await pool.query(sql_query, [id]);
+  res.status(200).json(response.rows);
+};

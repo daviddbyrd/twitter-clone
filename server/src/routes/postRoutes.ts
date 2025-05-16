@@ -9,6 +9,8 @@ import {
   unlike,
   postsFromFollowees,
   makePost,
+  getPost,
+  getReplies,
 } from "../controllers/postController";
 
 const router = express.Router();
@@ -21,5 +23,7 @@ router.post("/like", asyncHandler(like));
 router.post("/unlike", asyncHandler(unlike));
 router.get("/posts-from-followees/:user_id", asyncHandler(postsFromFollowees));
 router.post("/make-post", asyncHandler(makePost));
+router.get("get-post/:id", asyncHandler(getPost));
+router.get("get-replies/:id", asyncHandler(getReplies));
 
 export default router;

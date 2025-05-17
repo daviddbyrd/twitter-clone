@@ -15,7 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/"
+            path="/auth"
             element={
               <RequireLoggedOut>
                 <AuthPage />

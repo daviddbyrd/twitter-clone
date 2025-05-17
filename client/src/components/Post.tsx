@@ -52,8 +52,10 @@ const Post = ({
   const { id, likePost, unLikePost, repost, removeRepost, makeReply } =
     useOutletContext<ContextType>();
 
-  const goToProfile = () => {
+  const goToProfile = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate(`/${user_id}`, { replace: true });
+    console.log("clicked");
+    e.stopPropagation();
   };
 
   const close = () => {

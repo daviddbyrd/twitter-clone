@@ -1,12 +1,38 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { PostModel } from "../views/MainPage";
+import axios from "axios";
 
 interface ContextType {
+  id: string;
   back: () => void;
 }
 
 const PostPage = () => {
-  const { back } = useOutletContext<ContextType>();
+  const { id, back } = useOutletContext<ContextType>();
+  const { postId } = useParams();
+  const [post, setPost] = useState<PostModel>();
+  const [replies, setReplies] = useState<PostModel[]>([]);
+
+  useEffect(() => {
+    getPost();
+    getReplies();
+  }, [postId, id]);
+
+  const getPost = async () => {
+    const response = await axios.post(
+      `http://localhost:3001/get-post/${id}/${postId}`
+    );
+    console.log(response);
+  };
+
+  const getReplies = async () => {
+    const response = await axios.post(
+      `http://localhost:3001/get-replies/${id}/${postId}`
+    );
+    console.log(response);
+  };
 
   return (
     <div>

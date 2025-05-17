@@ -118,7 +118,7 @@ const MainPage = () => {
 
   const getUserInfo = async () => {
     try {
-      console.log(query);
+      console.log("query:", query);
       const response = await axios.get(
         `http://localhost:3001/user-info/${query}`
       );

@@ -1,14 +1,48 @@
 import CreatePostBox from "./CreatePostBox";
 import Feed from "./Feed";
-import { useOutletContext } from "react-router-dom";
-import { PostModel } from "../views/MainPage";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
-interface ContextType {
-  posts: PostModel[];
+export interface PostModel {
+  id: string;
+  user_id: string;
+  username: string;
+  display_name: string;
+  content: string;
+  created_at: string;
+  like_count: number;
+  user_liked: boolean;
+  repost_count: number;
+  user_reposted: boolean;
+  reply_count: number;
+  parent_id: string;
+  profile_picture_url: string;
 }
 
 const Home = () => {
-  const { posts } = useOutletContext<ContextType>();
+  const { user } = useAuth();
+  const [posts, setPosts] = useState<PostModel[]>([]);
+
+  useEffect(() => {
+    getPostsFromFollowees();
+  }, []);
+
+  const getPostsFromFollowees = async () => {
+    try {
+      if (user) {
+        const response = await axios.get(
+          `http://localhost:3001/posts-from-followees/${user.id}`
+        );
+        console.log(response);
+        if (response.status === 200) {
+          setPosts(response.data);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="h-full w-full flex flex-col">

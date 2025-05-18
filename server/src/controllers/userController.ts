@@ -60,6 +60,7 @@ export const changeDescription = async (req: Request, res: Response) => {
 
 export const getUserInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
+  console.log("id: ", id);
   const sql_query = `
       WITH user_stats AS (
         SELECT

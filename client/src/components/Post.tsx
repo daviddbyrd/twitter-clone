@@ -6,24 +6,10 @@ import ReplyBox from "./ReplyBox";
 import { useState } from "react";
 import { LikePostParams, MakeReplyParams } from "../views/MainPage";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { PostModel } from "./UserProfile";
 
 interface PostProps {
-  postId: string;
-  user_id: string;
-  displayName: string;
-  username: string;
-  content: string;
-  createdAt: string;
-  likeCount: number;
-  userLiked: boolean;
-  repostCount: number;
-  userReposted: boolean;
-  replyCount: number;
-  profilePicURL: string;
-}
-
-interface ContextType {
-  id: string;
+  post: PostModel;
   likePost: (params: LikePostParams) => Promise<void>;
   unLikePost: (params: LikePostParams) => Promise<void>;
   repost: (params: LikePostParams) => Promise<void>;
@@ -32,28 +18,20 @@ interface ContextType {
 }
 
 const Post = ({
-  postId,
-  user_id,
-  displayName,
-  username,
-  content,
-  createdAt,
-  likeCount,
-  userLiked,
-  repostCount,
-  userReposted,
-  replyCount,
-  profilePicURL,
+  post,
+  likePost,
+  unLikePost,
+  repost,
+  removeRepost,
+  makeReply,
 }: PostProps) => {
-  const timestamp = new Date(createdAt);
+  const timestamp = new Date(post.created_at);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
   const navigate = useNavigate();
-  const { id, likePost, unLikePost, repost, removeRepost, makeReply } =
-    useOutletContext<ContextType>();
 
   const goToProfile = (e: React.MouseEvent<HTMLDivElement>) => {
-    navigate(`/${user_id}`, { replace: true });
+    navigate(`/${post.user_id}`, { replace: true });
     console.log("clicked");
     e.stopPropagation();
   };
@@ -63,7 +41,7 @@ const Post = ({
   };
 
   const handleClick = () => {
-    navigate(`/${id}/status/${postId}`);
+    navigate(`/${post.user_id}/status/${post.id}`);
   };
 
   return (
@@ -75,7 +53,7 @@ const Post = ({
         <div className="w-20 h-20 flex items-center justify-center">
           <span onClick={goToProfile} className="cursor-pointer">
             <img
-              src={profilePicURL || "/images/default.jpg"}
+              src={post.profile_picture_url || "/images/default.jpg"}
               alt="Profile picture"
               className="w-12 h-12 rounded-full mr-auto ml-5"
             />
@@ -84,22 +62,22 @@ const Post = ({
         <div className="flex flex-col ml-2">
           <div>
             <span onClick={goToProfile} className="cursor-pointer">
-              <h1 className="text-lg font-bold">{displayName}</h1>
+              <h1 className="text-lg font-bold">{post.display_name}</h1>
             </span>
           </div>
           <div>
             <span onClick={goToProfile} className="cursor-pointer">
-              <h2 className="text-md text-gray-500">{`@${username} • ${relativeTime}`}</h2>
+              <h2 className="text-md text-gray-500">{`@${post.username} • ${relativeTime}`}</h2>
             </span>
           </div>
         </div>
       </div>
       <div className="w-full px-4">
-        <div>{content}</div>
+        <div>{post.content}</div>
       </div>
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
-          <h3 className="mr-2 text-xl">{replyCount}</h3>
+          <h3 className="mr-2 text-xl">{post.reply_count}</h3>
           <button
             className="rounded-full cursor-pointer"
             onClick={() => setIsReplying(true)}
@@ -108,29 +86,29 @@ const Post = ({
           </button>
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
-          <h3 className="mr-2 text-xl">{repostCount}</h3>
-          {userReposted ? (
+          <h3 className="mr-2 text-xl">{post.repost_count}</h3>
+          {post.user_reposted ? (
             <button
               className="rounded-full cursor-pointer"
-              onClick={() => removeRepost({ post_id: id })}
+              onClick={() => removeRepost({ post_id: post.id })}
             >
               <AiOutlineRetweet className="w-7 h-7 text-red-500" />
             </button>
           ) : (
             <button
               className="cursor-pointer"
-              onClick={() => repost({ post_id: id })}
+              onClick={() => repost({ post_id: post.id })}
             >
               <AiOutlineRetweet className="w-7 h-7 text-black" />
             </button>
           )}
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
-          <h3 className="mr-2 text-xl">{likeCount}</h3>
-          {userLiked ? (
+          <h3 className="mr-2 text-xl">{post.like_count}</h3>
+          {post.user_liked ? (
             <button
               className="rounded-full cursor-pointer"
-              onClick={() => unLikePost({ post_id: id })}
+              onClick={() => unLikePost({ post_id: post.id })}
             >
               <AiFillHeart className="w-7 h-7 text-red-500" />
             </button>
@@ -147,11 +125,11 @@ const Post = ({
       {isReplying && (
         <ReplyBox
           close={close}
-          userId={user_id}
-          postId={id}
-          displayName={displayName}
-          username={username}
-          content={content}
+          userId={post.user_id}
+          postId={post.id}
+          displayName={post.display_name}
+          username={post.username}
+          content={post.content}
           relativeTime={relativeTime}
           makeReply={makeReply}
         />

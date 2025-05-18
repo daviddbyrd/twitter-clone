@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RightSideBar from "../components/RightSideBar";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import LeftSideBar from "../components/LeftSidesBar";
-import { useNavigate, useParams } from "react-router-dom";
-import EditProfileBox from "../components/EditProfileBox";
+import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 export interface PostModel {
@@ -79,70 +78,6 @@ const MainPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const { user, setUser, setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const { query } = useParams<{ query: string }>();
-  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (query === "home") {
-      getPostsFromFollowees();
-    } else {
-      getUserInfo();
-      getPostsFromUser();
-    }
-  }, [query]);
-
-  useEffect(() => {
-    document.body.style.overflow = isEditing ? "hidden" : "auto";
-  }, [isEditing]);
-
-  const handleFollow = async (id: string) => {
-    if (user) {
-      await axios.post("http://localhost:3001/follow", {
-        follower_id: user.id,
-        followee_id: id,
-      });
-      setUserInfo((prev) => ({ ...prev, isFollowing: true }));
-    }
-  };
-
-  const handleUnfollow = async (id: string) => {
-    if (user) {
-      await axios.post("http://localhost:3001/unfollow", {
-        follower_id: user.id,
-        followee_id: id,
-      });
-      setUserInfo((prev) => ({ ...prev, isFollowing: false }));
-    }
-  };
-
-  const getUserInfo = async () => {
-    try {
-      console.log("query:", query);
-      const response = await axios.get(
-        `http://localhost:3001/user-info/${query}`
-      );
-      console.log("user info:", response);
-      setUserInfo(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getPostsFromUser = async () => {
-    try {
-      if (user) {
-        const response = await axios.get(
-          `http://localhost:3001/posts/${user.id}`
-        );
-        if (response.status === 200) {
-          setPosts(response.data);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const getPostsFromFollowees = async () => {
     try {
@@ -287,63 +222,6 @@ const MainPage = () => {
     navigate(`/${user?.id}`);
   };
 
-  const submitProfileChange = async ({
-    id,
-    displayName,
-    description,
-    profilePicture,
-    backgroundPicture,
-  }: SubmitProfileChangeParams) => {
-    try {
-      console.log(backgroundPicture);
-      const formData = new FormData();
-      formData.append("id", id);
-      formData.append("display_name", displayName);
-      formData.append("description", description);
-
-      if (profilePicture) {
-        formData.append("profilePicture", profilePicture);
-      }
-      if (backgroundPicture) {
-        formData.append("backgroundPicture", backgroundPicture);
-      }
-
-      console.log("profilePicture type:", typeof profilePicture);
-      console.log("backgroundPicture type:", typeof backgroundPicture);
-
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
-      const response = await axios.post(
-        "http://localhost:3001/change-profile",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      console.log("response alright: ", response);
-
-      if (response.status === 201) {
-        await getUserInfo();
-        setIsEditing(false);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const stopEditing = () => {
-    setIsEditing(false);
-  };
-
-  const startEditing = () => {
-    setIsEditing(true);
-  };
-
   const back = () => {
     navigate(-1);
   };
@@ -367,10 +245,6 @@ const MainPage = () => {
             removeRepost,
             makeReply,
             id: user?.id,
-            userInfo,
-            handleFollow,
-            handleUnfollow,
-            startEditing,
             back,
           }}
         />
@@ -378,17 +252,6 @@ const MainPage = () => {
       <div className="fixed top-0 right-0 h-full w-1/4">
         <RightSideBar />
       </div>
-      {isEditing && (
-        <EditProfileBox
-          close={stopEditing}
-          id={userInfo.id}
-          displayName={userInfo.displayName}
-          description={userInfo.profileDescription}
-          profilePicURL={userInfo.profilePicURL}
-          backgroundPicURL={userInfo.backgroundPicURL}
-          submitProfileChange={submitProfileChange}
-        />
-      )}
     </div>
   );
 };

@@ -1,7 +1,27 @@
 import Post from "./Post";
-import { PostModel } from "../views/MainPage";
+import {
+  PostModel,
+  LikePostParams,
+  MakeReplyParams,
+} from "../components/UserProfile";
 
-const Feed = ({ posts }: { posts: PostModel[] }) => {
+interface FeedProps {
+  posts: PostModel[];
+  likePost: (params: LikePostParams) => Promise<void>;
+  unLikePost: (params: LikePostParams) => Promise<void>;
+  repost: (params: LikePostParams) => Promise<void>;
+  removeRepost: (params: LikePostParams) => Promise<void>;
+  makeReply: (params: MakeReplyParams) => Promise<void>;
+}
+
+const Feed = ({
+  posts,
+  likePost,
+  unLikePost,
+  repost,
+  removeRepost,
+  makeReply,
+}: FeedProps) => {
   return (
     <div className="w-full min-h-screen flex flex-col border-x-1 border-gray-100">
       {posts
@@ -12,19 +32,12 @@ const Feed = ({ posts }: { posts: PostModel[] }) => {
         .map((post) => {
           return (
             <Post
-              postId={post.id}
-              user_id={post.user_id}
-              key={post.id}
-              displayName={post.display_name}
-              username={post.username}
-              content={post.content}
-              createdAt={post.created_at}
-              likeCount={post.like_count}
-              userLiked={post.user_liked}
-              repostCount={post.repost_count}
-              userReposted={post.user_reposted}
-              replyCount={post.reply_count}
-              profilePicURL={post.profile_picture_url}
+              post={post}
+              likePost={likePost}
+              unLikePost={unLikePost}
+              repost={repost}
+              removeRepost={removeRepost}
+              makeReply={makeReply}
             />
           );
         })}

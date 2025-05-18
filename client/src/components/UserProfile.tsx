@@ -1,28 +1,87 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { UserInfoModel } from "../views/MainPage";
-import { useState, useMemo, use } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useState, useMemo, useEffect } from "react";
 import Feed from "./Feed";
-import { PostModel } from "../views/MainPage";
-import { getPostsFromUser } from "../api/user";
-import { useEffect } from "react";
+import axios from "axios";
+import EditProfileBox from "./EditProfileBox";
 
-interface ContextType {
-  id: string;
-  userInfo: UserInfoModel;
-  handleFollow: (id: string) => void;
-  handleUnfollow: (id: string) => void;
-  posts: PostModel[];
-  startEditing: () => void;
+interface GetPostsFromUserProps {
+  userId: string;
 }
+
+export interface PostModel {
+  id: string;
+  user_id: string;
+  username: string;
+  display_name: string;
+  content: string;
+  created_at: string;
+  like_count: number;
+  user_liked: boolean;
+  repost_count: number;
+  user_reposted: boolean;
+  reply_count: number;
+  parent_id: string;
+  profile_picture_url: string;
+}
+
+export interface UserInfoModel {
+  id: string;
+  displayName: string;
+  username: string;
+  dob: string;
+  createdAt: string;
+  isFollowing: boolean;
+  profileDescription: string;
+  numPosts: number;
+  numFollowing: number;
+  numFollowers: number;
+  profilePicURL: string;
+  backgroundPicURL: string;
+}
+
+export interface SubmitProfileChangeParams {
+  id: string;
+  displayName: string;
+  description: string;
+  profilePicture: File | null;
+  backgroundPicture: File | null;
+}
+
+export interface MakeReplyParams {
+  userId: string;
+  postId: string;
+  content: string;
+}
+
+export interface LikePostParams {
+  post_id: string;
+}
+
+const emptyUser: UserInfoModel = {
+  id: "",
+  displayName: "",
+  username: "",
+  dob: "",
+  createdAt: "",
+  isFollowing: false,
+  profileDescription: "",
+  numPosts: 0,
+  numFollowing: 0,
+  numFollowers: 0,
+  profilePicURL: "",
+  backgroundPicURL: "",
+};
 
 const UserProfile = () => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
-  const { id, userInfo, handleFollow, handleUnfollow, startEditing } =
-    useOutletContext<ContextType>();
+  const { user } = useAuth();
   const { userId } = useParams();
   const [posts, setPosts] = useState<PostModel[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -48,6 +107,214 @@ const UserProfile = () => {
         return posts;
     }
   }, [posts, mode]);
+
+  const getPostsFromUser = async ({
+    userId,
+  }: GetPostsFromUserProps): Promise<PostModel[] | null> => {
+    try {
+      const response = await axios.get(`http://localhost:3001/posts/${userId}`);
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return null;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  const handleFollow = async (id: string) => {
+    if (user) {
+      await axios.post("http://localhost:3001/follow", {
+        follower_id: user.id,
+        followee_id: userId,
+      });
+      setUserInfo((prev) => ({ ...prev, isFollowing: true }));
+    }
+  };
+
+  const handleUnfollow = async (id: string) => {
+    if (user) {
+      await axios.post("http://localhost:3001/unfollow", {
+        follower_id: user.id,
+        followee_id: userId,
+      });
+      setUserInfo((prev) => ({ ...prev, isFollowing: false }));
+    }
+  };
+
+  const startEditing = () => {
+    setIsEditing(true);
+  };
+
+  const stopEditing = () => {
+    setIsEditing(false);
+  };
+
+  const submitProfileChange = async ({
+    id,
+    displayName,
+    description,
+    profilePicture,
+    backgroundPicture,
+  }: SubmitProfileChangeParams) => {
+    try {
+      console.log(backgroundPicture);
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("display_name", displayName);
+      formData.append("description", description);
+
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture);
+      }
+      if (backgroundPicture) {
+        formData.append("backgroundPicture", backgroundPicture);
+      }
+
+      console.log("profilePicture type:", typeof profilePicture);
+      console.log("backgroundPicture type:", typeof backgroundPicture);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      const response = await axios.post(
+        "http://localhost:3001/change-profile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("response alright: ", response);
+
+      if (response.status === 201) {
+        await getUserInfo();
+        setIsEditing(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      console.log("userId:", userId);
+      const response = await axios.get(
+        `http://localhost:3001/user-info/${userId}`
+      );
+      console.log("user info:", response);
+      setUserInfo(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const likePost = async ({ post_id }: LikePostParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/like", {
+        user_id: user?.id,
+        post_id: post_id,
+      });
+      if (response.data.message === "Like added") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? { ...post, like_count: post.like_count + 1, user_liked: true }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const unLikePost = async ({ post_id }: LikePostParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/unlike", {
+        user_id: user?.id,
+        post_id: post_id,
+      });
+      if (response.data.message === "Like removed") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? { ...post, like_count: post.like_count - 1, user_liked: false }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const makeReply = async ({ userId, postId, content }: MakeReplyParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/make-reply", {
+        userId,
+        postId,
+        content,
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const repost = async ({ post_id }: LikePostParams) => {
+    try {
+      console.log("hello");
+      const response = await axios.post("http://localhost:3001/repost", {
+        user_id: user?.id,
+        post_id: post_id,
+      });
+      console.log("repost response:", response);
+      if (response.data.message === "Repost added") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? {
+                  ...post,
+                  repost_count: post.repost_count + 1,
+                  user_reposted: true,
+                }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const removeRepost = async ({ post_id }: LikePostParams) => {
+    try {
+      const response = await axios.post("http://localhost:3001/remove-repost", {
+        user_id: user?.id,
+        post_id: post_id,
+      });
+      if (response.data.message === "Repost removed") {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === post_id
+              ? {
+                  ...post,
+                  repost_count: post.repost_count - 1,
+                  user_reposted: false,
+                }
+              : post
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const back = () => {
     navigate("/home", { replace: true });
@@ -79,7 +346,7 @@ const UserProfile = () => {
         />
 
         <div className="w-full h-15 flex flex-row justify-end items-center pt-2 pr-10">
-          {userInfo.id === id ? (
+          {userInfo.id === user?.id ? (
             <button
               onClick={startEditing}
               className="text-black font-bold text-md border-1 border-gray-200 rounded-full h-10 w-32 cursor-pointer"
@@ -143,8 +410,26 @@ const UserProfile = () => {
             Media
           </button>
         </div>
-        <Feed posts={filteredPosts} />
+        <Feed
+          posts={filteredPosts}
+          likePost={likePost}
+          unLikePost={unLikePost}
+          repost={repost}
+          removeRepost={removeRepost}
+          makeReply={makeReply}
+        />
       </div>
+      {isEditing && (
+        <EditProfileBox
+          close={stopEditing}
+          id={userInfo.id}
+          displayName={userInfo.displayName}
+          description={userInfo.profileDescription}
+          profilePicURL={userInfo.profilePicURL}
+          backgroundPicURL={userInfo.backgroundPicURL}
+          submitProfileChange={submitProfileChange}
+        />
+      )}
     </div>
   );
 };

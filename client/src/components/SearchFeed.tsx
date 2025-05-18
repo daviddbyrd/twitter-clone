@@ -1,5 +1,5 @@
 import User from "./User.tsx";
-import { useParams, useOutletContext, useNavigate } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LargeSearchBox from "./LargeSearchBox.tsx";
@@ -20,15 +20,10 @@ const SearchFeed = () => {
   const { query } = useParams<{ query: string }>();
   const [results, setResults] = useState<UserProps[]>([]);
   const { id } = useOutletContext<ContextType>();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchResults();
   }, [query]);
-
-  const back = () => {
-    navigate(-1);
-  };
 
   const fetchResults = async () => {
     try {
@@ -47,7 +42,7 @@ const SearchFeed = () => {
   return (
     <div>
       <div className="w-full flex items-center justify-center h-20">
-        <LargeSearchBox back={back} />
+        <LargeSearchBox />
       </div>
       {results.map((user) => {
         return (

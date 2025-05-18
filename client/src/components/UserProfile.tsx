@@ -1,9 +1,11 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { UserInfoModel } from "../views/MainPage";
-import { useState, useMemo } from "react";
+import { useState, useMemo, use } from "react";
 import Feed from "./Feed";
 import { PostModel } from "../views/MainPage";
+import { getPostsFromUser } from "../api/user";
+import { useEffect } from "react";
 
 interface ContextType {
   id: string;
@@ -17,8 +19,22 @@ interface ContextType {
 const UserProfile = () => {
   const [mode, setMode] = useState<"posts" | "replies" | "media">("posts");
   const navigate = useNavigate();
-  const { id, userInfo, handleFollow, handleUnfollow, posts, startEditing } =
+  const { id, userInfo, handleFollow, handleUnfollow, startEditing } =
     useOutletContext<ContextType>();
+  const { userId } = useParams();
+  const [posts, setPosts] = useState<PostModel[]>([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      if (userId) {
+        const response = await getPostsFromUser({ userId });
+        if (response) {
+          setPosts(response);
+        }
+      }
+    };
+    getPosts();
+  }, [userId]);
 
   const filteredPosts = useMemo(() => {
     switch (mode) {

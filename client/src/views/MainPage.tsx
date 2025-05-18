@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import SearchBox from "../components/SearchBox";
+import RightSideBar from "../components/RightSideBar";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import OptionsBar from "../components/OptionsBar";
+import LeftSideBar from "../components/LeftSidesBar";
 import { useNavigate, useParams } from "react-router-dom";
 import EditProfileBox from "../components/EditProfileBox";
 import { Outlet } from "react-router-dom";
@@ -351,7 +351,7 @@ const MainPage = () => {
   return (
     <div className="h-screen w-screen flex justify-center">
       <div className="fixed top-0 left-0 h-full w-1/4">
-        <OptionsBar
+        <LeftSideBar
           handleLogOut={handleLogOut}
           handleProfileVisit={handleProfileVisit}
         />
@@ -376,7 +376,7 @@ const MainPage = () => {
         />
       </div>
       <div className="fixed top-0 right-0 h-full w-1/4">
-        <SearchBox />
+        <RightSideBar />
       </div>
       {isEditing && (
         <EditProfileBox

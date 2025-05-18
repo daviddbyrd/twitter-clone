@@ -1,11 +1,11 @@
 import { AiOutlineUser } from "react-icons/ai";
 
-interface OptionsBarProps {
+interface LeftSideBarProps {
   handleLogOut: () => void;
   handleProfileVisit: () => void;
 }
 
-const OptionsBar: React.FC<OptionsBarProps> = ({
+const LeftSideBar: React.FC<LeftSideBarProps> = ({
   handleLogOut,
   handleProfileVisit,
 }) => {
@@ -30,4 +30,4 @@ const OptionsBar: React.FC<OptionsBarProps> = ({
   );
 };
 
-export default OptionsBar;
+export default LeftSideBar;

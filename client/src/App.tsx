@@ -15,7 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/auth"
+            path="/"
             element={
               <RequireLoggedOut>
                 <AuthPage />
@@ -31,7 +31,7 @@ function App() {
             }
           >
             <Route path="home" element={<Home />} />
-            <Route path=":query" element={<UserProfile />} />
+            <Route path=":userId" element={<UserProfile />} />
             <Route path=":userId/status/:postId" element={<PostPage />} />
             <Route path="search/:query" element={<SearchFeed />}></Route>
           </Route>

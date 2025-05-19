@@ -5,7 +5,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import ReplyBox from "./ReplyBox";
 import { useState } from "react";
 import { LikePostParams, MakeReplyParams } from "../views/MainPage";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PostModel } from "./UserProfile";
 
 interface PostProps {
@@ -115,7 +115,7 @@ const Post = ({
           ) : (
             <button
               className="cursor-pointer"
-              onClick={() => likePost({ post_id: id })}
+              onClick={() => likePost({ post_id: post.id })}
             >
               <AiFillHeart className="w-7 h-7 text-black" />
             </button>
@@ -137,5 +137,5 @@ const Post = ({
     </div>
   );
 };
-
+``;
 export default Post;

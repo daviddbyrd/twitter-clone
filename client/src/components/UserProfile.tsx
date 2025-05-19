@@ -90,9 +90,11 @@ const UserProfile = () => {
         if (response) {
           setPosts(response);
         }
+        console.log(response);
       }
     };
     getPosts();
+    getUserInfo();
   }, [userId]);
 
   const filteredPosts = useMemo(() => {

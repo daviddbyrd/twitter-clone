@@ -32,6 +32,7 @@ const Feed = ({
         .map((post) => {
           return (
             <Post
+              key={post.id}
               post={post}
               likePost={likePost}
               unLikePost={unLikePost}

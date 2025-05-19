@@ -41,7 +41,10 @@ const Post = ({ post, onUpdate }: PostProps) => {
   };
 
   return (
-    <div className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4">
+    <div
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer hover:bg-gray-50"
+      onClick={handleClick}
+    >
       <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <span onClick={goToProfile} className="cursor-pointer">
@@ -81,61 +84,69 @@ const Post = ({ post, onUpdate }: PostProps) => {
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.repost_count}</h3>
           {post.user_reposted ? (
-            <button
-              className="rounded-full cursor-pointer"
-              onClick={() =>
-                removeRepost({
-                  postId: post.id,
-                  userId: user?.id,
-                  onSuccess: onUpdate,
-                })
-              }
-            >
-              <AiOutlineRetweet className="w-7 h-7 text-red-500" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="rounded-full cursor-pointer"
+                onClick={() =>
+                  removeRepost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiOutlineRetweet className="w-7 h-7 text-red-500" />
+              </button>
+            </span>
           ) : (
-            <button
-              className="cursor-pointer"
-              onClick={() =>
-                repost({
-                  postId: post.id,
-                  userId: user?.id,
-                  onSuccess: onUpdate,
-                })
-              }
-            >
-              <AiOutlineRetweet className="w-7 h-7 text-black" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="cursor-pointer"
+                onClick={() =>
+                  repost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiOutlineRetweet className="w-7 h-7 text-black" />
+              </button>
+            </span>
           )}
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.like_count}</h3>
           {post.user_liked ? (
-            <button
-              className="rounded-full cursor-pointer"
-              onClick={() =>
-                unLikePost({
-                  postId: post.id,
-                  userId: user?.id,
-                  onSuccess: onUpdate,
-                })
-              }
-            >
-              <AiFillHeart className="w-7 h-7 text-red-500" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="rounded-full cursor-pointer"
+                onClick={() =>
+                  unLikePost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiFillHeart className="w-7 h-7 text-red-500" />
+              </button>
+            </span>
           ) : (
-            <button
-              className="cursor-pointer"
-              onClick={() =>
-                likePost({
-                  postId: post.id,
-                  userId: user?.id,
-                  onSuccess: onUpdate,
-                })
-              }
-            >
-              <AiFillHeart className="w-7 h-7 text-black" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="cursor-pointer"
+                onClick={() =>
+                  likePost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiFillHeart className="w-7 h-7 text-black" />
+              </button>
+            </span>
           )}
         </div>
       </div>

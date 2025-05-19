@@ -1,37 +1,59 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PostModel } from "../views/MainPage";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
-interface ContextType {
+export interface PostModel {
   id: string;
-  back: () => void;
+  user_id: string;
+  username: string;
+  display_name: string;
+  content: string;
+  created_at: string;
+  like_count: number;
+  user_liked: boolean;
+  repost_count: number;
+  user_reposted: boolean;
+  reply_count: number;
+  parent_id: string;
+  profile_picture_url: string;
 }
 
 const PostPage = () => {
-  const { id, back } = useOutletContext<ContextType>();
   const { postId } = useParams();
   const [post, setPost] = useState<PostModel>();
   const [replies, setReplies] = useState<PostModel[]>([]);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     getPost();
     getReplies();
-  }, [postId, id]);
+  }, [postId, user]);
 
   const getPost = async () => {
-    const response = await axios.post(
-      `http://localhost:3001/get-post/${id}/${postId}`
-    );
-    console.log(response);
+    if (user?.id && postId) {
+      const response = await axios.get(
+        `http://localhost:3001/get-post/${user?.id}/${postId}`
+      );
+      console.log(response);
+    }
   };
 
   const getReplies = async () => {
-    const response = await axios.post(
-      `http://localhost:3001/get-replies/${id}/${postId}`
-    );
-    console.log(response);
+    if (user?.id && postId) {
+      const response = await axios.get(
+        `http://localhost:3001/get-replies/${user.id}/${postId}`
+      );
+      setReplies(response.data);
+      console.log("replies: ", response);
+    }
+  };
+
+  const back = () => {
+    navigate(-1);
   };
 
   return (

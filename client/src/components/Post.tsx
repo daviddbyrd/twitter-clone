@@ -4,31 +4,27 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
 import ReplyBox from "./ReplyBox";
 import { useState } from "react";
-import { LikePostParams, MakeReplyParams } from "../views/MainPage";
 import { useNavigate } from "react-router-dom";
 import { PostModel } from "./UserProfile";
-
-interface PostProps {
-  post: PostModel;
-  likePost: (params: LikePostParams) => Promise<void>;
-  unLikePost: (params: LikePostParams) => Promise<void>;
-  repost: (params: LikePostParams) => Promise<void>;
-  removeRepost: (params: LikePostParams) => Promise<void>;
-  makeReply: (params: MakeReplyParams) => Promise<void>;
-}
-
-const Post = ({
-  post,
+import {
   likePost,
   unLikePost,
   repost,
   removeRepost,
-  makeReply,
-}: PostProps) => {
+} from "../utils/Interactions";
+import { useAuth } from "../context/AuthContext";
+
+interface PostProps {
+  post: PostModel;
+  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
+}
+
+const Post = ({ post, setPosts }: PostProps) => {
   const timestamp = new Date(post.created_at);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const goToProfile = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate(`/${post.user_id}`, { replace: true });
@@ -90,14 +86,26 @@ const Post = ({
           {post.user_reposted ? (
             <button
               className="rounded-full cursor-pointer"
-              onClick={() => removeRepost({ post_id: post.id })}
+              onClick={() =>
+                removeRepost({
+                  postId: post.id,
+                  userId: user?.id,
+                  setPosts: setPosts,
+                })
+              }
             >
               <AiOutlineRetweet className="w-7 h-7 text-red-500" />
             </button>
           ) : (
             <button
               className="cursor-pointer"
-              onClick={() => repost({ post_id: post.id })}
+              onClick={() =>
+                repost({
+                  postId: post.id,
+                  userId: user?.id,
+                  setPosts: setPosts,
+                })
+              }
             >
               <AiOutlineRetweet className="w-7 h-7 text-black" />
             </button>
@@ -108,14 +116,26 @@ const Post = ({
           {post.user_liked ? (
             <button
               className="rounded-full cursor-pointer"
-              onClick={() => unLikePost({ post_id: post.id })}
+              onClick={() =>
+                unLikePost({
+                  postId: post.id,
+                  userId: user?.id,
+                  setPosts: setPosts,
+                })
+              }
             >
               <AiFillHeart className="w-7 h-7 text-red-500" />
             </button>
           ) : (
             <button
               className="cursor-pointer"
-              onClick={() => likePost({ post_id: post.id })}
+              onClick={() =>
+                likePost({
+                  postId: post.id,
+                  userId: user?.id,
+                  setPosts: setPosts,
+                })
+              }
             >
               <AiFillHeart className="w-7 h-7 text-black" />
             </button>
@@ -131,7 +151,6 @@ const Post = ({
           username={post.username}
           content={post.content}
           relativeTime={relativeTime}
-          makeReply={makeReply}
         />
       )}
     </div>

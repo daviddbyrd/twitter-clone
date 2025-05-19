@@ -204,114 +204,11 @@ const UserProfile = () => {
 
   const getUserInfo = async () => {
     try {
-      console.log("userId:", userId);
-      const response = await axios.get(
-        `http://localhost:3001/user-info/${userId}`
-      );
-      console.log("user info:", response);
-      setUserInfo(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const likePost = async ({ post_id }: LikePostParams) => {
-    try {
-      const response = await axios.post("http://localhost:3001/like", {
-        user_id: user?.id,
-        post_id: post_id,
-      });
-      if (response.data.message === "Like added") {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === post_id
-              ? { ...post, like_count: post.like_count + 1, user_liked: true }
-              : post
-          )
+      if (userId) {
+        const response = await axios.get(
+          `http://localhost:3001/user-info/${userId}`
         );
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const unLikePost = async ({ post_id }: LikePostParams) => {
-    try {
-      const response = await axios.post("http://localhost:3001/unlike", {
-        user_id: user?.id,
-        post_id: post_id,
-      });
-      if (response.data.message === "Like removed") {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === post_id
-              ? { ...post, like_count: post.like_count - 1, user_liked: false }
-              : post
-          )
-        );
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const makeReply = async ({ userId, postId, content }: MakeReplyParams) => {
-    try {
-      const response = await axios.post("http://localhost:3001/make-reply", {
-        userId,
-        postId,
-        content,
-      });
-      console.log(response);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const repost = async ({ post_id }: LikePostParams) => {
-    try {
-      console.log("hello");
-      const response = await axios.post("http://localhost:3001/repost", {
-        user_id: user?.id,
-        post_id: post_id,
-      });
-      console.log("repost response:", response);
-      if (response.data.message === "Repost added") {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === post_id
-              ? {
-                  ...post,
-                  repost_count: post.repost_count + 1,
-                  user_reposted: true,
-                }
-              : post
-          )
-        );
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const removeRepost = async ({ post_id }: LikePostParams) => {
-    try {
-      const response = await axios.post("http://localhost:3001/remove-repost", {
-        user_id: user?.id,
-        post_id: post_id,
-      });
-      if (response.data.message === "Repost removed") {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === post_id
-              ? {
-                  ...post,
-                  repost_count: post.repost_count - 1,
-                  user_reposted: false,
-                }
-              : post
-          )
-        );
+        setUserInfo(response.data);
       }
     } catch (err) {
       console.error(err);
@@ -412,14 +309,7 @@ const UserProfile = () => {
             Media
           </button>
         </div>
-        <Feed
-          posts={filteredPosts}
-          likePost={likePost}
-          unLikePost={unLikePost}
-          repost={repost}
-          removeRepost={removeRepost}
-          makeReply={makeReply}
-        />
+        <Feed posts={filteredPosts} setPosts={setPosts} />
       </div>
       {isEditing && (
         <EditProfileBox

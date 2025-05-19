@@ -23,7 +23,7 @@ router.post("/like", asyncHandler(like));
 router.post("/unlike", asyncHandler(unlike));
 router.get("/posts-from-followees/:user_id", asyncHandler(postsFromFollowees));
 router.post("/make-post", asyncHandler(makePost));
-router.get("get-post/:userId/:postId", asyncHandler(getPost));
-router.get("get-replies/:userId/:postId", asyncHandler(getReplies));
+router.get("/get-post/:userId/:postId", asyncHandler(getPost));
+router.get("/get-replies/:userId/:postId", asyncHandler(getReplies));
 
 export default router;

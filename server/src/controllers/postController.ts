@@ -199,16 +199,47 @@ export const getPost = async (req: Request, res: Response) => {
     SELECT * FROM posts 
     WHERE id = $1;
   `;
-  const response = await pool.query(sql_query, [userId]);
+  const response = await pool.query(sql_query, [postId]);
   res.status(200).json(response.rows);
 };
 
 export const getReplies = async (req: Request, res: Response) => {
   const { userId, postId } = req.params;
   const sql_query = `
-    SELECT * FROM posts
-    WHERE parent_id = $1; 
+    WITH post_stats AS (
+    SELECT 
+      p.id,
+      COUNT(DISTINCT l.user_id) AS like_count,
+      COUNT(DISTINCT r.user_id) AS repost_count,
+      COUNT(DISTINCT reply.id) AS reply_count
+    FROM posts p
+    LEFT JOIN likes l ON l.post_id = p.id
+    LEFT JOIN reposts r ON r.post_id = p.id
+    LEFT JOIN posts reply ON reply.parent_id = p.id
+    GROUP BY p.id
+    )
+    SELECT 
+    p.id, 
+    p.content,
+    p.parent_id,
+    p.user_id, 
+    p.created_at, 
+    u.username, 
+    u.display_name, 
+    ps.like_count,
+    ps.repost_count,
+    ps.reply_count,
+    (ul.user_id IS NOT NULL) AS user_liked,
+    (ur.user_id IS NOT NULL) AS user_reposted
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    LEFT JOIN post_stats ps ON ps.id = p.id
+    LEFT JOIN likes ul ON ul.post_id = p.id AND ul.user_id = $1 
+    LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1 
+    WHERE p.parent_id = $2
+    ORDER BY p.created_at DESC
+    LIMIT 20;
   `;
-  const response = await pool.query(sql_query, [userId]);
+  const response = await pool.query(sql_query, [userId, postId]);
   res.status(200).json(response.rows);
 };

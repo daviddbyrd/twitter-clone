@@ -1,6 +1,6 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
-import { MakeReplyParams } from "../views/MainPage";
+import { makeReply, PostModel } from "../utils/Interactions";
 
 interface ReplyBoxProps {
   close: () => void;
@@ -10,7 +10,7 @@ interface ReplyBoxProps {
   username: string;
   content: string;
   relativeTime: string;
-  makeReply: (params: MakeReplyParams) => Promise<void>;
+  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
 }
 
 const ReplyBox = ({
@@ -21,7 +21,6 @@ const ReplyBox = ({
   username,
   content,
   relativeTime,
-  makeReply,
 }: ReplyBoxProps) => {
   const [query, setQuery] = useState<string>("");
 

@@ -74,12 +74,14 @@ const Post = ({ post, onUpdate }: PostProps) => {
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.reply_count}</h3>
-          <button
-            className="rounded-full cursor-pointer"
-            onClick={() => setIsReplying(true)}
-          >
-            <AiOutlineComment className="w-7 h-7 text-gray-500" />
-          </button>
+          <span onClick={(e) => e.stopPropagation()}>
+            <button
+              className="rounded-full cursor-pointer"
+              onClick={() => setIsReplying(true)}
+            >
+              <AiOutlineComment className="w-7 h-7 text-gray-500" />
+            </button>
+          </span>
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.repost_count}</h3>

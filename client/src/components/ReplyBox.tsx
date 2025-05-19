@@ -37,7 +37,10 @@ const ReplyBox = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
+    <div
+      className="fixed inset-0 flex items-center justify-center w-screen h-screen"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="absolute inset-0 bg-black opacity-70"></div>
       <div className="relative z-50 h-140 w-130 rounded-xl bg-white flex flex-col items-center justify-start">
         <div className="flex flex-col h-full w-full items-center">

@@ -8,9 +8,11 @@ interface ReplyBoxProps {
   postId: string;
   displayName: string;
   username: string;
+  posterProfilePicURL: string;
+  userProfilePicURL: string;
   content: string;
   relativeTime: string;
-  onUpdate;
+  onUpdate: () => void;
 }
 
 const ReplyBox = ({
@@ -19,6 +21,8 @@ const ReplyBox = ({
   postId,
   displayName,
   username,
+  posterProfilePicURL,
+  userProfilePicURL,
   content,
   relativeTime,
   onUpdate,
@@ -62,7 +66,7 @@ const ReplyBox = ({
             <div className="w-20 flex flex-col mt-1">
               <div className="w-20 h-20 flex items-center justify-center">
                 <img
-                  src="/images/profilepic.png"
+                  src={posterProfilePicURL || "/images/default.jpeg"}
                   alt="Profile picture"
                   className="w-12 h-12 rounded-full mr-auto ml-5"
                 />
@@ -93,7 +97,7 @@ const ReplyBox = ({
             <div className="w-20 flex flex-col">
               <div className="w-20 h-20 flex items-center justify-center">
                 <img
-                  src="/images/profilepic.png"
+                  src={userProfilePicURL || "/images/default.jpeg"}
                   alt="Profile picture"
                   className="w-12 h-12 rounded-full mr-auto ml-5"
                 />

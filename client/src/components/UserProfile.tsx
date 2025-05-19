@@ -307,7 +307,7 @@ const UserProfile = () => {
             Media
           </button>
         </div>
-        <Feed posts={filteredPosts} onUpdate={fetchData} />
+        <Feed posts={filteredPosts} userInfo={userInfo} onUpdate={fetchData} />
       </div>
       {isEditing && (
         <EditProfileBox

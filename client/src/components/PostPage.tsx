@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import Feed from "./Feed";
+import LargePost from "./LargePost";
 
 export interface PostModel {
   id: string;
@@ -69,6 +70,7 @@ const PostPage = () => {
           <div className="font-bold text-lg">Post</div>
         </div>
       </div>
+      <LargePost post={post} />
       <Feed posts={replies} setPosts={setReplies} />
     </div>
   );

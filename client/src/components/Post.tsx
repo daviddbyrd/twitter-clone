@@ -5,7 +5,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import ReplyBox from "./ReplyBox";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostModel } from "./UserProfile";
+import { PostModel, UserInfoModel } from "./UserProfile";
 import {
   likePost,
   unLikePost,
@@ -16,10 +16,11 @@ import { useAuth } from "../context/AuthContext";
 
 interface PostProps {
   post: PostModel;
+  userInfo: UserInfoModel;
   onUpdate: () => void;
 }
 
-const Post = ({ post, onUpdate }: PostProps) => {
+const Post = ({ post, userInfo, onUpdate }: PostProps) => {
   const timestamp = new Date(post.created_at);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
@@ -159,6 +160,8 @@ const Post = ({ post, onUpdate }: PostProps) => {
           postId={post.id}
           displayName={post.display_name}
           username={post.username}
+          posterProfilePicURL={post.profile_picture_url}
+          userProfilePicURL={userInfo.profilePicURL}
           content={post.content}
           relativeTime={relativeTime}
           onUpdate={onUpdate}

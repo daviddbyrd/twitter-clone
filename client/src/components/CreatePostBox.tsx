@@ -3,9 +3,10 @@ import { makePostParams } from "./Home";
 
 interface CreatePostBoxProps {
   makePost: (params: makePostParams) => Promise<void>;
+  profilePicURL: string;
 }
 
-const CreatePostBox = ({ makePost }: CreatePostBoxProps) => {
+const CreatePostBox = ({ makePost, profilePicURL }: CreatePostBoxProps) => {
   const [postText, setPostText] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -22,7 +23,7 @@ const CreatePostBox = ({ makePost }: CreatePostBoxProps) => {
       <div className="w-full h-28 flex flex-row items-center items-start">
         <div className="w-20 h-20 flex items-center justify-center">
           <img
-            src="/images/profilepic.png"
+            src={profilePicURL || "images/default.jpg"}
             alt="Profile picture"
             className="w-12 h-12 rounded-full mr-auto ml-5"
           />

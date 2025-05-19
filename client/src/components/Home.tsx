@@ -23,21 +23,48 @@ export interface PostModel {
 export interface makePostParams {
   post: string;
 }
+export interface UserInfoModel {
+  id: string;
+  displayName: string;
+  username: string;
+  dob: string;
+  createdAt: string;
+  isFollowing: boolean;
+  profileDescription: string;
+  numPosts: number;
+  numFollowing: number;
+  numFollowers: number;
+  profilePicURL: string;
+  backgroundPicURL: string;
+}
+
+const emptyUser: UserInfoModel = {
+  id: "",
+  displayName: "",
+  username: "",
+  dob: "",
+  createdAt: "",
+  isFollowing: false,
+  profileDescription: "",
+  numPosts: 0,
+  numFollowing: 0,
+  numFollowers: 0,
+  profilePicURL: "",
+  backgroundPicURL: "",
+};
 
 const Home = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<PostModel[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
 
   useEffect(() => {
-    getPostsFromFollowees();
+    fetchData();
   }, []);
 
-  const makePost = async ({ post }: makePostParams): Promise<void> => {
-    await axios.post("http://localhost:3001/make-post", {
-      userId: user?.id,
-      content: post,
-    });
+  const fetchData = async () => {
     await getPostsFromFollowees();
+    await getUserInfo();
   };
 
   const getPostsFromFollowees = async () => {
@@ -56,13 +83,37 @@ const Home = () => {
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      if (user?.id) {
+        const response = await axios.get(
+          `http://localhost:3001/user-info/${user?.id}`
+        );
+        setUserInfo(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const makePost = async ({ post }: makePostParams): Promise<void> => {
+    await axios.post("http://localhost:3001/make-post", {
+      userId: user?.id,
+      content: post,
+    });
+    await getPostsFromFollowees();
+  };
+
   return (
     <div className="h-full w-full flex flex-col">
       <div>
-        <CreatePostBox makePost={makePost} />
+        <CreatePostBox
+          makePost={makePost}
+          profilePicURL={userInfo.profilePicURL}
+        />
       </div>
       <div className="min-h-screen">
-        <Feed posts={posts} setPosts={setPosts} />
+        <Feed posts={posts} onUpdate={getPostsFromFollowees} />
       </div>
     </div>
   );

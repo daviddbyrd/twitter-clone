@@ -5,7 +5,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import ReplyBox from "./ReplyBox";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostModel } from "./UserProfile";
+import { PostModel, UserInfoModel } from "./UserProfile";
 import {
   likePost,
   unLikePost,
@@ -14,12 +14,13 @@ import {
 } from "../utils/Interactions";
 import { useAuth } from "../context/AuthContext";
 
-interface PostProps {
+interface LargePostProps {
   post: PostModel;
-  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
+  userInfo: UserInfoModel;
+  onUpdate: () => void;
 }
 
-const Post = ({ post, setPosts }: PostProps) => {
+const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
   const timestamp = new Date(post.created_at);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
@@ -42,7 +43,7 @@ const Post = ({ post, setPosts }: PostProps) => {
 
   return (
     <div
-      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer"
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer hover:bg-gray-50"
       onClick={handleClick}
     >
       <div className="w-full h-20 flex flex-row items-center">
@@ -74,71 +75,81 @@ const Post = ({ post, setPosts }: PostProps) => {
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.reply_count}</h3>
-          <button
-            className="rounded-full cursor-pointer"
-            onClick={() => setIsReplying(true)}
-          >
-            <AiOutlineComment className="w-7 h-7 text-gray-500" />
-          </button>
+          <span onClick={(e) => e.stopPropagation()}>
+            <button
+              className="rounded-full cursor-pointer"
+              onClick={() => setIsReplying(true)}
+            >
+              <AiOutlineComment className="w-7 h-7 text-gray-500" />
+            </button>
+          </span>
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.repost_count}</h3>
           {post.user_reposted ? (
-            <button
-              className="rounded-full cursor-pointer"
-              onClick={() =>
-                removeRepost({
-                  postId: post.id,
-                  userId: user?.id,
-                  setPosts: setPosts,
-                })
-              }
-            >
-              <AiOutlineRetweet className="w-7 h-7 text-red-500" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="rounded-full cursor-pointer"
+                onClick={() =>
+                  removeRepost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiOutlineRetweet className="w-7 h-7 text-red-500" />
+              </button>
+            </span>
           ) : (
-            <button
-              className="cursor-pointer"
-              onClick={() =>
-                repost({
-                  postId: post.id,
-                  userId: user?.id,
-                  setPosts: setPosts,
-                })
-              }
-            >
-              <AiOutlineRetweet className="w-7 h-7 text-black" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="cursor-pointer"
+                onClick={() =>
+                  repost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiOutlineRetweet className="w-7 h-7 text-black" />
+              </button>
+            </span>
           )}
         </div>
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.like_count}</h3>
           {post.user_liked ? (
-            <button
-              className="rounded-full cursor-pointer"
-              onClick={() =>
-                unLikePost({
-                  postId: post.id,
-                  userId: user?.id,
-                  setPosts: setPosts,
-                })
-              }
-            >
-              <AiFillHeart className="w-7 h-7 text-red-500" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="rounded-full cursor-pointer"
+                onClick={() =>
+                  unLikePost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiFillHeart className="w-7 h-7 text-red-500" />
+              </button>
+            </span>
           ) : (
-            <button
-              className="cursor-pointer"
-              onClick={() =>
-                likePost({
-                  postId: post.id,
-                  userId: user?.id,
-                  setPosts: setPosts,
-                })
-              }
-            >
-              <AiFillHeart className="w-7 h-7 text-black" />
-            </button>
+            <span onClick={(e) => e.stopPropagation()}>
+              <button
+                className="cursor-pointer"
+                onClick={() =>
+                  likePost({
+                    postId: post.id,
+                    userId: user?.id,
+                    onSuccess: onUpdate,
+                  })
+                }
+              >
+                <AiFillHeart className="w-7 h-7 text-black" />
+              </button>
+            </span>
           )}
         </div>
       </div>
@@ -149,13 +160,15 @@ const Post = ({ post, setPosts }: PostProps) => {
           postId={post.id}
           displayName={post.display_name}
           username={post.username}
+          posterProfilePicURL={post.profile_picture_url}
+          userProfilePicURL={userInfo.profilePicURL}
           content={post.content}
           relativeTime={relativeTime}
-          setPosts={setPosts}
+          onUpdate={onUpdate}
         />
       )}
     </div>
   );
 };
 ``;
-export default Post;
+export default LargePost;

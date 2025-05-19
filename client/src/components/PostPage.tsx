@@ -22,24 +22,63 @@ export interface PostModel {
   profile_picture_url: string;
 }
 
+export interface UserInfoModel {
+  id: string;
+  displayName: string;
+  username: string;
+  dob: string;
+  createdAt: string;
+  isFollowing: boolean;
+  profileDescription: string;
+  numPosts: number;
+  numFollowing: number;
+  numFollowers: number;
+  profilePicURL: string;
+  backgroundPicURL: string;
+}
+
+const emptyUser: UserInfoModel = {
+  id: "",
+  displayName: "",
+  username: "",
+  dob: "",
+  createdAt: "",
+  isFollowing: false,
+  profileDescription: "",
+  numPosts: 0,
+  numFollowing: 0,
+  numFollowers: 0,
+  profilePicURL: "",
+  backgroundPicURL: "",
+};
+
 const PostPage = () => {
   const { postId } = useParams();
-  const [post, setPost] = useState<PostModel>();
+  const [post, setPost] = useState<PostModel | null>(null);
   const [replies, setReplies] = useState<PostModel[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
+    fetchData();
+  }, [postId, user]);
+
+  const fetchData = async () => {
     getPost();
     getReplies();
-  }, [postId, user]);
+    getUserInfo();
+  };
 
   const getPost = async () => {
     if (user?.id && postId) {
       const response = await axios.get(
         `http://localhost:3001/get-post/${user?.id}/${postId}`
       );
-      console.log(response);
+      console.log("post: ", response);
+      if (response.status === 200) {
+        setPost(response.data);
+      }
     }
   };
 
@@ -48,8 +87,23 @@ const PostPage = () => {
       const response = await axios.get(
         `http://localhost:3001/get-replies/${user.id}/${postId}`
       );
-      setReplies(response.data);
       console.log("replies: ", response);
+      if (response.status === 200) {
+        setReplies(response.data);
+      }
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      if (user?.id) {
+        const response = await axios.get(
+          `http://localhost:3001/user-info/${user.id}`
+        );
+        setUserInfo(response.data);
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -70,8 +124,12 @@ const PostPage = () => {
           <div className="font-bold text-lg">Post</div>
         </div>
       </div>
-      <LargePost post={post} />
-      <Feed posts={replies} setPosts={setReplies} />
+      {post && (
+        <div className="mt-12">
+          <LargePost post={post} userInfo={userInfo} onUpdate={fetchData} />
+        </div>
+      )}
+      <Feed posts={replies} userInfo={userInfo} onUpdate={fetchData} />
     </div>
   );
 };

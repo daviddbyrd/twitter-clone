@@ -26,6 +26,7 @@ export interface MakeReplyParams {
   userId: string | undefined;
   postId: string | undefined;
   content: string;
+  onSuccess: () => void;
 }
 
 export const likePost = async ({
@@ -76,18 +77,19 @@ export const makeReply = async ({
   userId,
   postId,
   content,
+  onSuccess,
 }: MakeReplyParams) => {
   try {
     if (!userId || !postId) {
       console.error("No userId or postId");
       return;
     }
-    const response = await axios.post("http://localhost:3001/make-reply", {
+    await axios.post("http://localhost:3001/make-reply", {
       userId,
       postId,
       content,
     });
-    console.log(response);
+    if (onSuccess) onSuccess();
   } catch (err) {
     console.error(err);
   }

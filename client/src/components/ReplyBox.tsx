@@ -10,6 +10,7 @@ interface ReplyBoxProps {
   username: string;
   content: string;
   relativeTime: string;
+  onUpdate;
 }
 
 const ReplyBox = ({
@@ -20,6 +21,7 @@ const ReplyBox = ({
   username,
   content,
   relativeTime,
+  onUpdate,
 }: ReplyBoxProps) => {
   const [query, setQuery] = useState<string>("");
 
@@ -29,7 +31,12 @@ const ReplyBox = ({
 
   const handleSubmit = async () => {
     try {
-      await makeReply({ postId, userId, content: query });
+      await makeReply({
+        postId,
+        userId,
+        content: query,
+        onSuccess: onUpdate,
+      });
       close();
     } catch (err) {
       console.error(err);

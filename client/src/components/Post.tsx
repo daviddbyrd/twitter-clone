@@ -161,6 +161,7 @@ const Post = ({ post, onUpdate }: PostProps) => {
           username={post.username}
           content={post.content}
           relativeTime={relativeTime}
+          onUpdate={onUpdate}
         />
       )}
     </div>

@@ -20,6 +20,10 @@ export interface PostModel {
   profile_picture_url: string;
 }
 
+export interface makePostParams {
+  post: string;
+}
+
 const Home = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<PostModel[]>([]);
@@ -27,6 +31,14 @@ const Home = () => {
   useEffect(() => {
     getPostsFromFollowees();
   }, []);
+
+  const makePost = async ({ post }: makePostParams): Promise<void> => {
+    await axios.post("http://localhost:3001/make-post", {
+      userId: user?.id,
+      content: post,
+    });
+    await getPostsFromFollowees();
+  };
 
   const getPostsFromFollowees = async () => {
     try {
@@ -47,10 +59,10 @@ const Home = () => {
   return (
     <div className="h-full w-full flex flex-col">
       <div>
-        <CreatePostBox />
+        <CreatePostBox makePost={makePost} />
       </div>
       <div className="min-h-screen">
-        <Feed posts={posts} />
+        <Feed posts={posts} setPosts={setPosts} />
       </div>
     </div>
   );

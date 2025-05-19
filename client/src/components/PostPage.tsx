@@ -1,9 +1,9 @@
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { PostModel } from "../views/MainPage";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import Feed from "./Feed";
 
 export interface PostModel {
   id: string;
@@ -69,6 +69,7 @@ const PostPage = () => {
           <div className="font-bold text-lg">Post</div>
         </div>
       </div>
+      <Feed posts={replies} setPosts={setReplies} />
     </div>
   );
 };

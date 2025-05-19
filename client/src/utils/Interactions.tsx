@@ -17,9 +17,9 @@ export interface PostModel {
 }
 
 export interface LikePostParams {
-  userId: string | undefined;
   postId: string | undefined;
-  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
+  userId: string | undefined;
+  onSuccess?: () => void;
 }
 
 export interface MakeReplyParams {
@@ -31,7 +31,7 @@ export interface MakeReplyParams {
 export const likePost = async ({
   postId,
   userId,
-  setPosts,
+  onSuccess,
 }: LikePostParams) => {
   try {
     if (!userId || !postId) {
@@ -43,13 +43,7 @@ export const likePost = async ({
       post_id: postId,
     });
     if (response.data.message === "Like added") {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? { ...post, like_count: post.like_count + 1, user_liked: true }
-            : post
-        )
-      );
+      if (onSuccess) onSuccess();
     }
   } catch (err) {
     console.error(err);
@@ -59,7 +53,7 @@ export const likePost = async ({
 export const unLikePost = async ({
   postId,
   userId,
-  setPosts,
+  onSuccess,
 }: LikePostParams) => {
   try {
     if (!userId || !postId) {
@@ -71,13 +65,7 @@ export const unLikePost = async ({
       post_id: postId,
     });
     if (response.data.message === "Like removed") {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? { ...post, like_count: post.like_count - 1, user_liked: false }
-            : post
-        )
-      );
+      if (onSuccess) onSuccess();
     }
   } catch (err) {
     console.error(err);
@@ -105,7 +93,7 @@ export const makeReply = async ({
   }
 };
 
-export const repost = async ({ postId, userId, setPosts }: LikePostParams) => {
+export const repost = async ({ postId, userId, onSuccess }: LikePostParams) => {
   try {
     if (!userId || !postId) {
       console.error("No userId or postId");
@@ -118,17 +106,7 @@ export const repost = async ({ postId, userId, setPosts }: LikePostParams) => {
     });
     console.log("repost response:", response);
     if (response.data.message === "Repost added") {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                repost_count: post.repost_count + 1,
-                user_reposted: true,
-              }
-            : post
-        )
-      );
+      if (onSuccess) onSuccess();
     }
   } catch (err) {
     console.error(err);
@@ -138,7 +116,7 @@ export const repost = async ({ postId, userId, setPosts }: LikePostParams) => {
 export const removeRepost = async ({
   postId,
   userId,
-  setPosts,
+  onSuccess,
 }: LikePostParams) => {
   try {
     if (!userId || !postId) {
@@ -150,18 +128,46 @@ export const removeRepost = async ({
       post_id: postId,
     });
     if (response.data.message === "Repost removed") {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                repost_count: post.repost_count - 1,
-                user_reposted: false,
-              }
-            : post
-        )
-      );
+      if (onSuccess) onSuccess();
     }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+interface HandleFollowParams {
+  followerId: string;
+  followeeId: string;
+  onSuccess?: () => void;
+}
+
+export const handleFollow = async ({
+  followerId,
+  followeeId,
+  onSuccess,
+}: HandleFollowParams) => {
+  try {
+    await axios.post("http://localhost:3001/follow", {
+      follower_id: followerId,
+      followee_id: followeeId,
+    });
+    if (onSuccess) onSuccess();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const handleUnfollow = async ({
+  followerId,
+  followeeId,
+  onSuccess,
+}: HandleFollowParams) => {
+  try {
+    await axios.post("http://localhost:3001/unfollow", {
+      follower_id: followerId,
+      followee_id: followeeId,
+    });
+    if (onSuccess) onSuccess();
   } catch (err) {
     console.error(err);
   }

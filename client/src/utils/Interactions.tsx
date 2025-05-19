@@ -136,8 +136,8 @@ export const removeRepost = async ({
 };
 
 interface HandleFollowParams {
-  followerId: string;
-  followeeId: string;
+  followerId: string | undefined;
+  followeeId: string | undefined;
   onSuccess?: () => void;
 }
 
@@ -147,6 +147,10 @@ export const handleFollow = async ({
   onSuccess,
 }: HandleFollowParams) => {
   try {
+    if (!followerId || !followeeId) {
+      console.error("No userId or postId");
+      return;
+    }
     await axios.post("http://localhost:3001/follow", {
       follower_id: followerId,
       followee_id: followeeId,
@@ -163,6 +167,10 @@ export const handleUnfollow = async ({
   onSuccess,
 }: HandleFollowParams) => {
   try {
+    if (!followerId || !followeeId) {
+      console.error("No userId or postId");
+      return;
+    }
     await axios.post("http://localhost:3001/unfollow", {
       follower_id: followerId,
       followee_id: followeeId,

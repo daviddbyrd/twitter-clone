@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { handleFollow, handleUnfollow } from "../utils/Interactions";
+import { useAuth } from "../context/AuthContext";
 
 interface UserProps {
   id: string;
@@ -7,6 +8,7 @@ interface UserProps {
   displayName: string;
   profilePicURL: string;
   isFollowing: boolean;
+  onFollowChange: () => void;
 }
 
 const User = ({
@@ -15,8 +17,10 @@ const User = ({
   displayName,
   profilePicURL,
   isFollowing,
+  onFollowChange,
 }: UserProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const goToProfile = () => {
     navigate(`/${id}`, { replace: true });
@@ -48,14 +52,26 @@ const User = ({
       <div className="ml-auto mr-5">
         {isFollowing ? (
           <button
-            onClick={() => handleUnfollow(id)}
+            onClick={() =>
+              handleUnfollow({
+                followerId: user?.id,
+                followeeId: id,
+                onSuccess: onFollowChange,
+              })
+            }
             className="text-black font-bold text-sm border-1 border-gray-100 rounded-md h-10 w-20 cursor-pointer"
           >
             Unfollow
           </button>
         ) : (
           <button
-            onClick={() => handleFollow(id)}
+            onClick={() =>
+              handleFollow({
+                followerId: user?.id,
+                followeeId: id,
+                onSuccess: onFollowChange,
+              })
+            }
             className="bg-black font-bold text-sm text-white rounded-md h-10 w-20 cursor-pointer"
           >
             Follow

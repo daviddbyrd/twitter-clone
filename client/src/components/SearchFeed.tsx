@@ -1,8 +1,9 @@
 import User from "./User.tsx";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LargeSearchBox from "./LargeSearchBox.tsx";
+import { useAuth } from "../context/AuthContext.tsx";
 
 interface UserProps {
   id: string;
@@ -12,14 +13,10 @@ interface UserProps {
   is_following: boolean;
 }
 
-interface ContextType {
-  id: string;
-}
-
 const SearchFeed = () => {
   const { query } = useParams<{ query: string }>();
   const [results, setResults] = useState<UserProps[]>([]);
-  const { id } = useOutletContext<ContextType>();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchResults();
@@ -27,12 +24,14 @@ const SearchFeed = () => {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/users/${query}/${id}`
-      );
-      console.log(response);
-      if (response) {
-        setResults(response.data);
+      if (user?.id) {
+        const response = await axios.get(
+          `http://localhost:3001/users/${query}/${user.id}`
+        );
+        console.log(response);
+        if (response) {
+          setResults(response.data);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -53,6 +52,7 @@ const SearchFeed = () => {
             displayName={user.display_name}
             profilePicURL={user.profile_picture_url}
             isFollowing={user.is_following}
+            onFollowChange={fetchResults}
           />
         );
       })}

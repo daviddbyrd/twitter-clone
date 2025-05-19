@@ -113,7 +113,7 @@ const Home = () => {
         />
       </div>
       <div className="min-h-screen">
-        <Feed posts={posts} onUpdate={getPostsFromFollowees} />
+        <Feed posts={posts} onUpdate={fetchData} />
       </div>
     </div>
   );

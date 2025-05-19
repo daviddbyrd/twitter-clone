@@ -5,6 +5,7 @@ import { useState, useMemo, useEffect } from "react";
 import Feed from "./Feed";
 import axios from "axios";
 import EditProfileBox from "./EditProfileBox";
+import { handleFollow, handleUnfollow } from "../utils/Interactions";
 
 interface GetPostsFromUserProps {
   userId: string;
@@ -84,18 +85,36 @@ const UserProfile = () => {
   const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
 
   useEffect(() => {
-    const getPosts = async () => {
-      if (userId) {
-        const response = await getPostsFromUser({ userId });
-        if (response) {
-          setPosts(response);
-        }
-        console.log(response);
-      }
-    };
-    getPosts();
-    getUserInfo();
+    fetchData();
   }, [userId]);
+
+  const fetchData = async () => {
+    await getPosts();
+    await getUserInfo();
+  };
+
+  const getPosts = async () => {
+    if (userId) {
+      const response = await getPostsFromUser({ userId });
+      if (response) {
+        setPosts(response);
+      }
+      console.log(response);
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      if (userId) {
+        const response = await axios.get(
+          `http://localhost:3001/user-info/${userId}`
+        );
+        setUserInfo(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const filteredPosts = useMemo(() => {
     switch (mode) {
@@ -122,26 +141,6 @@ const UserProfile = () => {
     } catch (err) {
       console.error(err);
       return null;
-    }
-  };
-
-  const handleFollow = async (id: string) => {
-    if (user) {
-      await axios.post("http://localhost:3001/follow", {
-        follower_id: user.id,
-        followee_id: userId,
-      });
-      setUserInfo((prev) => ({ ...prev, isFollowing: true }));
-    }
-  };
-
-  const handleUnfollow = async (id: string) => {
-    if (user) {
-      await axios.post("http://localhost:3001/unfollow", {
-        follower_id: user.id,
-        followee_id: userId,
-      });
-      setUserInfo((prev) => ({ ...prev, isFollowing: false }));
     }
   };
 
@@ -202,19 +201,6 @@ const UserProfile = () => {
     }
   };
 
-  const getUserInfo = async () => {
-    try {
-      if (userId) {
-        const response = await axios.get(
-          `http://localhost:3001/user-info/${userId}`
-        );
-        setUserInfo(response.data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const back = () => {
     navigate("/home", { replace: true });
   };
@@ -254,14 +240,26 @@ const UserProfile = () => {
             </button>
           ) : userInfo.isFollowing ? (
             <button
-              onClick={() => handleUnfollow(userInfo.id)}
+              onClick={() =>
+                handleUnfollow({
+                  followerId: user?.id,
+                  followeeId: userInfo.id,
+                  onSuccess: fetchData,
+                })
+              }
               className="text-black font-bold text-md border-1 border-gray-200 rounded-full h-10 w-32 cursor-pointer"
             >
               Unfollow
             </button>
           ) : (
             <button
-              onClick={() => handleFollow(userInfo.id)}
+              onClick={() =>
+                handleFollow({
+                  followerId: user?.id,
+                  followeeId: userInfo.id,
+                  onSuccess: fetchData,
+                })
+              }
               className="bg-black font-bold text-md text-white rounded-full h-10 w-32 cursor-pointer"
             >
               Follow
@@ -309,7 +307,7 @@ const UserProfile = () => {
             Media
           </button>
         </div>
-        <Feed posts={filteredPosts} setPosts={setPosts} />
+        <Feed posts={filteredPosts} onUpdate={fetchData} />
       </div>
       {isEditing && (
         <EditProfileBox

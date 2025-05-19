@@ -10,7 +10,6 @@ interface ReplyBoxProps {
   username: string;
   content: string;
   relativeTime: string;
-  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
 }
 
 const ReplyBox = ({

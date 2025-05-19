@@ -16,10 +16,10 @@ import { useAuth } from "../context/AuthContext";
 
 interface PostProps {
   post: PostModel;
-  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
+  onUpdate: () => void;
 }
 
-const Post = ({ post, setPosts }: PostProps) => {
+const Post = ({ post, onUpdate }: PostProps) => {
   const timestamp = new Date(post.created_at);
   const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
   const [isReplying, setIsReplying] = useState(false);
@@ -41,10 +41,7 @@ const Post = ({ post, setPosts }: PostProps) => {
   };
 
   return (
-    <div
-      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer"
-      onClick={handleClick}
-    >
+    <div className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer">
       <div className="w-full h-20 flex flex-row items-center">
         <div className="w-20 h-20 flex items-center justify-center">
           <span onClick={goToProfile} className="cursor-pointer">
@@ -90,7 +87,7 @@ const Post = ({ post, setPosts }: PostProps) => {
                 removeRepost({
                   postId: post.id,
                   userId: user?.id,
-                  setPosts: setPosts,
+                  onSuccess: onUpdate,
                 })
               }
             >
@@ -103,7 +100,7 @@ const Post = ({ post, setPosts }: PostProps) => {
                 repost({
                   postId: post.id,
                   userId: user?.id,
-                  setPosts: setPosts,
+                  onSuccess: onUpdate,
                 })
               }
             >
@@ -120,7 +117,7 @@ const Post = ({ post, setPosts }: PostProps) => {
                 unLikePost({
                   postId: post.id,
                   userId: user?.id,
-                  setPosts: setPosts,
+                  onSuccess: onUpdate,
                 })
               }
             >
@@ -133,7 +130,7 @@ const Post = ({ post, setPosts }: PostProps) => {
                 likePost({
                   postId: post.id,
                   userId: user?.id,
-                  setPosts: setPosts,
+                  onSuccess: onUpdate,
                 })
               }
             >
@@ -151,7 +148,6 @@ const Post = ({ post, setPosts }: PostProps) => {
           username={post.username}
           content={post.content}
           relativeTime={relativeTime}
-          setPosts={setPosts}
         />
       )}
     </div>

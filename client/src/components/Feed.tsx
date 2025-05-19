@@ -3,10 +3,10 @@ import { PostModel } from "../components/UserProfile";
 
 interface FeedProps {
   posts: PostModel[];
-  setPosts: React.Dispatch<React.SetStateAction<PostModel[]>>;
+  onUpdate: () => void;
 }
 
-const Feed = ({ posts, setPosts }: FeedProps) => {
+const Feed = ({ posts, onUpdate }: FeedProps) => {
   return (
     <div className="w-full min-h-screen flex flex-col border-x-1 border-gray-100">
       {posts
@@ -15,7 +15,7 @@ const Feed = ({ posts, setPosts }: FeedProps) => {
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         .map((post) => {
-          return <Post key={post.id} post={post} setPosts={setPosts} />;
+          return <Post key={post.id} post={post} onUpdate={onUpdate} />;
         })}
     </div>
   );

@@ -19,13 +19,13 @@ const CreatePostBox = ({ makePost, profilePicURL }: CreatePostBoxProps) => {
   };
 
   return (
-    <div className="w-full bg-white border-1 border-gray-100 flex flex-col items-center p-4">
+    <div className="w-full bg-white border-1 border-gray-100 flex flex-col items-center pl-3 pt-3">
       <div className="w-full h-28 flex flex-row items-center items-start">
-        <div className="w-20 h-20 flex items-center justify-center">
+        <div className="w-14 h-14 flex items-center justify-center">
           <img
             src={profilePicURL || "images/default.jpg"}
             alt="Profile picture"
-            className="w-12 h-12 rounded-full mr-auto ml-5"
+            className="w-12 h-12 rounded-full"
           />
         </div>
         <div className="w-full ml-auto mr-5 pl-5 pt-5 h-24">

@@ -43,7 +43,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
 
   return (
     <div
-      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer hover:bg-gray-50"
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer hover:bg-gray-50"
       onClick={handleClick}
     >
       <div className="w-full h-20 flex flex-row items-center">
@@ -52,28 +52,30 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
             <img
               src={post.profile_picture_url || "/images/default.jpg"}
               alt="Profile picture"
-              className="w-12 h-12 rounded-full mr-auto ml-5"
+              className="w-12 h-12 rounded-full mr-auto ml-1"
             />
           </span>
         </div>
-        <div className="flex flex-col ml-2">
+        <div className="flex flex-col justify-start h-full  mt-8">
           <div>
-            <span onClick={goToProfile} className="cursor-pointer">
-              <h1 className="text-lg font-bold">{post.display_name}</h1>
+            <span
+              onClick={goToProfile}
+              className="cursor-pointer text-lg font-bold"
+            >
+              {post.display_name}
+            </span>
+            <span
+              onClick={goToProfile}
+              className="cursor-pointer text-md text-gray-500 ml-3"
+            >
+              {`@${post.username} • ${relativeTime}`}
             </span>
           </div>
-          <div>
-            <span onClick={goToProfile} className="cursor-pointer">
-              <h2 className="text-md text-gray-500">{`@${post.username} • ${relativeTime}`}</h2>
-            </span>
-          </div>
+          <div className="w-full mt-1">{post.content}</div>
         </div>
       </div>
-      <div className="w-full px-4">
-        <div>{post.content}</div>
-      </div>
-      <div className="flex flex-row h-20 w-full items-center justify-end">
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+      <div className="flex flex-row h-12 w-full items-center justify-end">
+        <div className="w-40 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.reply_count}</h3>
           <span onClick={(e) => e.stopPropagation()}>
             <button
@@ -84,7 +86,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
             </button>
           </span>
         </div>
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+        <div className="w-40 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.repost_count}</h3>
           {post.user_reposted ? (
             <span onClick={(e) => e.stopPropagation()}>
@@ -118,7 +120,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
             </span>
           )}
         </div>
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+        <div className="w-40 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.like_count}</h3>
           {post.user_liked ? (
             <span onClick={(e) => e.stopPropagation()}>

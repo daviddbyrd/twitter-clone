@@ -120,7 +120,7 @@ const PostPage = () => {
 
   return (
     <div className="border-x border-gray-100">
-      <div className="fixed backdrop-blur top-0 z-10 bg-white/80 flex flex-row justify-start items-center w-5/10 h-12 border-b border-gray-100">
+      <div className="fixed backdrop-blur top-0 z-10 bg-white/80 flex flex-row justify-start items-center w-5/10 h-14 border-b border-gray-100">
         <button
           className="h-10 w-10 ml-3 flex items-center justify-center cursor-pointer"
           onClick={back}
@@ -133,7 +133,7 @@ const PostPage = () => {
         <span onClick={(e) => e.stopPropagation()}>
           <div className="w-20 h-full absolute right-3 top-2">
             <button
-              className="bg-black text-white rounded-full h-8 w-20 cursor-pointer"
+              className="bg-black text-white rounded-full h-9 w-20 cursor-pointer"
               onClick={() => setIsReplying(true)}
             >
               Reply

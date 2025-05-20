@@ -123,7 +123,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
               {post.user_liked ? (
                 <span onClick={(e) => e.stopPropagation()}>
                   <button
-                    className="ursor-pointer flex items-center justify-center"
+                    className="cursor-pointer flex items-center justify-center"
                     onClick={() =>
                       unLikePost({
                         postId: post.id,

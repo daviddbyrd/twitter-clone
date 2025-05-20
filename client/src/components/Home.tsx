@@ -38,25 +38,10 @@ export interface UserInfoModel {
   backgroundPicURL: string;
 }
 
-const emptyUser: UserInfoModel = {
-  id: "",
-  displayName: "",
-  username: "",
-  dob: "",
-  createdAt: "",
-  isFollowing: false,
-  profileDescription: "",
-  numPosts: 0,
-  numFollowing: 0,
-  numFollowers: 0,
-  profilePicURL: "",
-  backgroundPicURL: "",
-};
-
 const Home = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<PostModel[]>([]);
-  const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
+  const [userInfo, setUserInfo] = useState<UserInfoModel | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -73,7 +58,7 @@ const Home = () => {
         const response = await axios.get(
           `http://localhost:3001/posts-from-followees/${user.id}`
         );
-        console.log(response);
+        console.log("posts from followees: ", response.data);
         if (response.status === 200) {
           setPosts(response.data);
         }
@@ -106,15 +91,19 @@ const Home = () => {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div>
-        <CreatePostBox
-          makePost={makePost}
-          profilePicURL={userInfo.profilePicURL}
-        />
-      </div>
-      <div className="min-h-screen">
-        <Feed posts={posts} userInfo={userInfo} onUpdate={fetchData} />
-      </div>
+      {userInfo && (
+        <>
+          <div>
+            <CreatePostBox
+              makePost={makePost}
+              profilePicURL={userInfo.profilePicURL}
+            />
+          </div>
+          <div className="min-h-screen">
+            <Feed posts={posts} userInfo={userInfo} onUpdate={fetchData} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

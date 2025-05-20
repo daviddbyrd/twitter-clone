@@ -144,8 +144,8 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
         u.username, 
         u.display_name, 
         u.profile_picture_url,
-        CAST(COUNT(l.user_id) AS INTEGER) AS like_count,
-        CAST(COUNT(r.user_id) AS INTEGER) AS repost_count,
+        CAST(COUNT(DISTINCT l.user_id) AS INTEGER) AS like_count,
+        CAST(COUNT(DISTINCT r.user_id) AS INTEGER) AS repost_count,
         CASE
           WHEN ul.user_id IS NOT NULL THEN TRUE
           ELSE FALSE
@@ -154,7 +154,7 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
           WHEN ur.user_id IS NOT NULL THEN TRUE
           ELSE FALSE
         END AS user_reposted,
-        CAST(COUNT(reply.id) AS INTEGER) as reply_count
+        CAST(COUNT(DISTINCT reply.id) AS INTEGER) as reply_count
       FROM posts p
       JOIN users u ON p.user_id = u.id
       LEFT JOIN likes l ON l.post_id = p.id
@@ -172,7 +172,7 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
     `;
   const response = await pool.query(sql_query, [user_id]);
 
-  const updatedRows = response.rows.map((row) => {
+  const posts = response.rows.map((row) => {
     if (row.profile_picture_url) {
       row.profile_picture_url = `${req.protocol}://${req.get("host")}/uploads/${
         row.profile_picture_url
@@ -180,8 +180,9 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
     }
     return row;
   });
+  console.log(posts);
 
-  res.status(200).json(updatedRows);
+  res.status(200).json(posts);
 };
 
 export const makePost = async (req: Request, res: Response) => {

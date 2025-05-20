@@ -36,17 +36,17 @@ const InlineReplyBox = ({ post, userInfo, onUpdate }: InlineReplyBoxProps) => {
   };
 
   return (
-    <div className="w-full h-min-15 flex flex-row items-start justify-start border-b border-gray-100 p-3">
-      <div className="w-15 h-15 flex flex-col items-center justify-start">
+    <div className="w-full min-h-14 flex flex-row items-start justify-start border-b border-gray-100 relative">
+      <div className="w-14 h-14 flex flex-col items-center justify-start m-3 shrink-0">
         <span onClick={goToProfile} className="cursor-pointer">
           <img
             src={post.profile_picture_url || "/images/default.jpg"}
             alt="Profile picture"
-            className="w-12 h-12 rounded-full mr-auto"
+            className="w-12 h-12 rounded-full object-cover"
           />
         </span>
       </div>
-      <div className="w-full h-full ml-auto pl-5 h-24">
+      <div className="w-full h-full pt-3">
         <TextareaAutosize
           className="w-full focus:outline-none resize-none"
           placeholder="Post your reply"
@@ -54,7 +54,7 @@ const InlineReplyBox = ({ post, userInfo, onUpdate }: InlineReplyBoxProps) => {
           onChange={(e) => handleChange(e)}
         />
       </div>
-      <div className="w-20 h-15 flex items-center justify-center">
+      <div className="w-20 h-full flex flex-col items-center justify-end mr-3 absolute right-5 bottom-5">
         <button
           className="bg-black text-white rounded-full h-10 w-20 cursor-pointer"
           onClick={handleReply}

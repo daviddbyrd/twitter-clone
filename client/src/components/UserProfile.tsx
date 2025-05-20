@@ -117,6 +117,7 @@ const UserProfile = () => {
   };
 
   const filteredPosts = useMemo(() => {
+    console.log(posts);
     switch (mode) {
       case "posts":
         return posts.filter((post) => !post.parent_id);

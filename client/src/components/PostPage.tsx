@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Feed from "./Feed";
 import LargePost from "./LargePost";
 import InlineReplyBox from "./InlineReplyBox";
+import ReplyBox from "./ReplyBox";
 
 export interface PostModel {
   id: string;
@@ -58,6 +59,7 @@ const PostPage = () => {
   const [post, setPost] = useState<PostModel | null>(null);
   const [replies, setReplies] = useState<PostModel[]>([]);
   const [userInfo, setUserInfo] = useState<UserInfoModel>(emptyUser);
+  const [isReplying, setIsReplying] = useState<boolean>(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -124,6 +126,16 @@ const PostPage = () => {
         <div className="flex flex-col items-start justify-center h-full ml-8">
           <div className="font-bold text-lg">Post</div>
         </div>
+        <span onClick={(e) => e.stopPropagation()}>
+          <div className="w-20 h-full flex flex-col items-center justify-end mr-3 absolute right-5 bottom-5">
+            <button
+              className="bg-black text-white rounded-full h-10 w-20 cursor-pointer"
+              onClick={() => setIsReplying(true)}
+            >
+              Reply
+            </button>
+          </div>
+        </span>
       </div>
       {post && (
         <div className="mt-12">
@@ -133,9 +145,24 @@ const PostPage = () => {
             userInfo={userInfo}
             onUpdate={fetchData}
           />
+          <Feed posts={replies} userInfo={userInfo} onUpdate={fetchData} />
         </div>
       )}
-      <Feed posts={replies} userInfo={userInfo} onUpdate={fetchData} />
+
+      {isReplying && post && (
+        <ReplyBox
+          close={close}
+          userId={post.user_id}
+          postId={post.id}
+          displayName={post.display_name}
+          username={post.username}
+          posterProfilePicURL={post.profile_picture_url}
+          userProfilePicURL={userInfo.profilePicURL}
+          content={post.content}
+          createdAt={post.created_at}
+          onUpdate={fetchData}
+        />
+      )}
     </div>
   );
 };

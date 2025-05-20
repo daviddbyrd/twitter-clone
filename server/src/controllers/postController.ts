@@ -36,7 +36,7 @@ export const getPostsById = async (req: Request, res: Response) => {
       LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1 
       WHERE p.user_id = $1 OR ur.user_id IS NOT NULL
       ORDER BY p.created_at DESC
-      LIMIT 20;
+      LIMIT 100;
     `;
   const response = await pool.query(sql_query, [id]);
   if (response) {
@@ -168,7 +168,7 @@ export const postsFromFollowees = async (req: Request, res: Response) => {
         )
       GROUP BY p.id, p.content, p.user_id, p.created_at, u.username, u.display_name, u.profile_picture_url, user_liked, user_reposted 
       ORDER BY p.created_at
-      LIMIT 20;
+      LIMIT 100;
     `;
   const response = await pool.query(sql_query, [user_id]);
 
@@ -230,7 +230,7 @@ export const getPost = async (req: Request, res: Response) => {
     LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1 
     WHERE p.id = $2
     ORDER BY p.created_at DESC
-    LIMIT 20;
+    LIMIT 100;
   `;
   const response = await pool.query(sql_query, [userId, postId]);
 
@@ -286,7 +286,7 @@ export const getReplies = async (req: Request, res: Response) => {
     LEFT JOIN reposts ur ON ur.post_id = p.id AND ur.user_id = $1 
     WHERE p.parent_id = $2
     ORDER BY p.created_at DESC
-    LIMIT 20;
+    LIMIT 100;
   `;
   const response = await pool.query(sql_query, [userId, postId]);
   const replies = response.rows.map((row) => {

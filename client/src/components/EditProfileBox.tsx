@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { SubmitProfileChangeParams } from "../views/MainPage";
 import { AiOutlineCamera, AiOutlineClose } from "react-icons/ai";
 
 interface EditProfileBoxProps {
@@ -10,6 +9,14 @@ interface EditProfileBoxProps {
   profilePicURL: string;
   backgroundPicURL: string;
   submitProfileChange: (params: SubmitProfileChangeParams) => Promise<void>;
+}
+
+export interface SubmitProfileChangeParams {
+  id: string;
+  displayName: string;
+  description: string;
+  profilePicture: File | null;
+  backgroundPicture: File | null;
 }
 
 interface ProfileInfoModel {

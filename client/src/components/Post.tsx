@@ -46,7 +46,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
       className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer hover:bg-gray-50"
       onClick={handleClick}
     >
-      <div className="w-full flex flex-row items-start justify-start pt-1">
+      <div className="w-full flex flex-row items-start justify-start pt-1 pr-5">
         <div className="w-15 h-15 flex flex-col items-center justify-start m-3">
           <span onClick={goToProfile} className="cursor-pointer">
             <img
@@ -72,8 +72,8 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
             </span>
           </div>
           <div className="mt-1">{post.content}</div>
-          <div className="flex flex-row h-12 items-center justify-between px-10">
-            <div className="w-1/3 h-full flex flex-row items-center justify-center">
+          <div className="flex flex-row h-12 w-full items-center justify-between pr-20">
+            <div className="w-15 h-full flex flex-row items-center justify-center">
               <h3 className="mr-2 text-xl">{post.reply_count}</h3>
               <span onClick={(e) => e.stopPropagation()}>
                 <button
@@ -84,7 +84,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
                 </button>
               </span>
             </div>
-            <div className="w-1/3 h-full flex flex-row items-center justify-center">
+            <div className="w-15 h-full flex flex-row items-center justify-center">
               <h3 className="mr-2 text-xl">{post.repost_count}</h3>
               {post.user_reposted ? (
                 <span onClick={(e) => e.stopPropagation()}>
@@ -118,7 +118,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
                 </span>
               )}
             </div>
-            <div className="w-1/3 h-full flex flex-row items-center justify-center">
+            <div className="w-15 h-full flex flex-row items-center justify-center">
               <h3 className="mr-2 text-xl">{post.like_count}</h3>
               {post.user_liked ? (
                 <span onClick={(e) => e.stopPropagation()}>

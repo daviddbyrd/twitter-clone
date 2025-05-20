@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import Feed from "./Feed";
 import LargePost from "./LargePost";
+import InlineReplyBox from "./InlineReplyBox";
 
 export interface PostModel {
   id: string;
@@ -127,6 +128,11 @@ const PostPage = () => {
       {post && (
         <div className="mt-12">
           <LargePost post={post} userInfo={userInfo} onUpdate={fetchData} />
+          <InlineReplyBox
+            post={post}
+            userInfo={userInfo}
+            onUpdate={fetchData}
+          />
         </div>
       )}
       <Feed posts={replies} userInfo={userInfo} onUpdate={fetchData} />

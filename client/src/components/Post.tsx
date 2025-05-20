@@ -46,7 +46,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
       className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer hover:bg-gray-50"
       onClick={handleClick}
     >
-      <div className="w-full flex flex-row items-start justify-start pt-1 pr-5">
+      <div className="w-full flex flex-row items-start justify-start pt-1">
         <div className="w-15 h-15 flex flex-col items-center justify-start m-3">
           <span onClick={goToProfile} className="cursor-pointer">
             <img

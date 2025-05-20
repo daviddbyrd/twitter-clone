@@ -1,6 +1,6 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
-import { makeReply, PostModel } from "../utils/Interactions";
+import { makeReply } from "../utils/Interactions";
 import { formatDistanceToNow } from "date-fns";
 
 interface ReplyBoxProps {

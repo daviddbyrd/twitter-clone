@@ -112,7 +112,7 @@ const PostPage = () => {
   };
 
   return (
-    <div>
+    <div className="border-x border-gray-100">
       <div className="fixed backdrop-blur top-0 z-10 bg-white/80 flex flex-row justify-start items-center w-5/10 h-12 border-b border-gray-100">
         <button
           className="h-10 w-10 ml-3 flex items-center justify-center cursor-pointer"

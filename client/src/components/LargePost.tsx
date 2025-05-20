@@ -43,7 +43,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
 
   return (
     <div
-      className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer hover:bg-gray-50"
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer"
       onClick={handleClick}
     >
       <div className="w-full h-20 flex flex-row items-center">
@@ -70,9 +70,9 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
         </div>
       </div>
       <div className="w-full px-4 text-lg">{post.content}</div>
-      <div className="w-full px-4 text-md pt-6 text-gray-500">{createdAt}</div>
-      <div className="flex flex-row h-20 w-full items-center justify-end">
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+      <div className="w-full px-4 text-md py-4 text-gray-500">{createdAt}</div>
+      <div className="flex flex-row h-15 w-full items-center justify-between px-10 border-t border-x border-gray-100">
+        <div className="w-15 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.reply_count}</h3>
           <span onClick={(e) => e.stopPropagation()}>
             <button
@@ -83,7 +83,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
             </button>
           </span>
         </div>
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+        <div className="w-15 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.repost_count}</h3>
           {post.user_reposted ? (
             <span onClick={(e) => e.stopPropagation()}>
@@ -117,7 +117,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
             </span>
           )}
         </div>
-        <div className="w-40 h-20 flex flex-row items-center justify-center">
+        <div className="w-15 h-full flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.like_count}</h3>
           {post.user_liked ? (
             <span onClick={(e) => e.stopPropagation()}>
@@ -161,6 +161,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
           username={post.username}
           posterProfilePicURL={post.profile_picture_url}
           userProfilePicURL={userInfo.profilePicURL}
+          content={post.content}
           createdAt={post.created_at}
           onUpdate={onUpdate}
         />

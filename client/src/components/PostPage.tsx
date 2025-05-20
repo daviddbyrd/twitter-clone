@@ -114,6 +114,10 @@ const PostPage = () => {
     navigate(-1);
   };
 
+  const close = () => {
+    setIsReplying(false);
+  };
+
   return (
     <div className="border-x border-gray-100">
       <div className="fixed backdrop-blur top-0 z-10 bg-white/80 flex flex-row justify-start items-center w-5/10 h-12 border-b border-gray-100">
@@ -127,9 +131,9 @@ const PostPage = () => {
           <div className="font-bold text-lg">Post</div>
         </div>
         <span onClick={(e) => e.stopPropagation()}>
-          <div className="w-20 h-full flex flex-col items-center justify-end mr-3 absolute right-5 bottom-5">
+          <div className="w-20 h-full absolute right-3 top-2">
             <button
-              className="bg-black text-white rounded-full h-10 w-20 cursor-pointer"
+              className="bg-black text-white rounded-full h-8 w-20 cursor-pointer"
               onClick={() => setIsReplying(true)}
             >
               Reply

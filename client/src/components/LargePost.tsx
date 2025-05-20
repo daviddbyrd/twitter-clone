@@ -132,7 +132,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
                   })
                 }
               >
-                <AiFillHeart className="w-5 h-5 text-red-500" />
+                <AiFillHeart className="w-6 h-6 text-red-500" />
               </button>
             </span>
           ) : (

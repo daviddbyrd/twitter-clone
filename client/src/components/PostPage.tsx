@@ -75,7 +75,7 @@ const PostPage = () => {
       const response = await axios.get(
         `http://localhost:3001/get-post/${user?.id}/${postId}`
       );
-      console.log("post: ", response);
+      console.log("post: ", response.data);
       if (response.status === 200) {
         setPost(response.data);
       }

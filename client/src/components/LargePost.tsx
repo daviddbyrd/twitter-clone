@@ -41,6 +41,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
     navigate(`/${post.user_id}/status/${post.id}`);
   };
 
+  console.log("Profile pic url: ", post.profile_picture_url);
   return (
     <div
       className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer"

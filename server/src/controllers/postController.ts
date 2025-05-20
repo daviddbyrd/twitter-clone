@@ -216,6 +216,7 @@ export const getPost = async (req: Request, res: Response) => {
     p.created_at, 
     u.username, 
     u.display_name, 
+    u.profile_picture_url,
     ps.like_count,
     ps.repost_count,
     ps.reply_count,
@@ -231,6 +232,16 @@ export const getPost = async (req: Request, res: Response) => {
     LIMIT 20;
   `;
   const response = await pool.query(sql_query, [userId, postId]);
+
+  let profilePictureFullURL = "";
+
+  if (response.rows[0].profile_picture_url) {
+    profilePictureFullURL = `${req.protocol}://${req.get("host")}/uploads/${
+      response.rows[0].profile_picture_url
+    }`;
+  }
+  response.rows[0].profile_picture_url = profilePictureFullURL;
+
   if (response.rows?.length > 0) {
     res.status(200).json(response.rows[0]);
   } else {
@@ -261,6 +272,7 @@ export const getReplies = async (req: Request, res: Response) => {
     p.created_at, 
     u.username, 
     u.display_name, 
+    u.profile_picture_url,
     ps.like_count,
     ps.repost_count,
     ps.reply_count,
@@ -276,5 +288,14 @@ export const getReplies = async (req: Request, res: Response) => {
     LIMIT 20;
   `;
   const response = await pool.query(sql_query, [userId, postId]);
-  res.status(200).json(response.rows);
+  const replies = response.rows.map((row) => {
+    if (row.profile_picture_url) {
+      row.profile_picture_url = `${req.protocol}://${req.get("host")}/uploads/${
+        row.profile_picture_url
+      }`;
+    }
+    return row;
+  });
+
+  res.status(200).json(replies);
 };

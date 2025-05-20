@@ -1,6 +1,7 @@
 import { AiOutlineUser, AiOutlineHome } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { LuBookmark } from "react-icons/lu";
 
 const LeftSideBar = () => {
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ const LeftSideBar = () => {
 
   return (
     <div className="flex flex-col justify-end h-full w-full">
+      <button
+        className="cursor-pointer flex flex-row p-4 my-2 ml-10 mr-auto items-center w-8/10 rounded-full hover:bg-gray-100"
+        onClick={handleHomeVisit}
+      >
+        <LuBookmark size={30} />
+        <span className="text-black font-bold text-lg ml-5">Bookmarks</span>
+      </button>
+
       <button
         className="cursor-pointer flex flex-row p-4 my-2 ml-10 mr-auto items-center w-8/10 rounded-full hover:bg-gray-100"
         onClick={handleHomeVisit}

@@ -163,7 +163,7 @@ const Post = ({ post, userInfo, onUpdate }: PostProps) => {
           posterProfilePicURL={post.profile_picture_url}
           userProfilePicURL={userInfo.profilePicURL}
           content={post.content}
-          relativeTime={relativeTime}
+          createdAt={post.created_at}
           onUpdate={onUpdate}
         />
       )}

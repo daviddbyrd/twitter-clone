@@ -1,6 +1,7 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 import { makeReply, PostModel } from "../utils/Interactions";
+import { formatDistanceToNow } from "date-fns";
 
 interface ReplyBoxProps {
   close: () => void;
@@ -11,7 +12,7 @@ interface ReplyBoxProps {
   posterProfilePicURL: string;
   userProfilePicURL: string;
   content: string;
-  relativeTime: string;
+  createdAt: string;
   onUpdate: () => void;
 }
 
@@ -24,10 +25,12 @@ const ReplyBox = ({
   posterProfilePicURL,
   userProfilePicURL,
   content,
-  relativeTime,
+  createdAt,
   onUpdate,
 }: ReplyBoxProps) => {
   const [query, setQuery] = useState<string>("");
+  const timestamp = new Date(createdAt);
+  const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuery(e.target.value);

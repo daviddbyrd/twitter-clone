@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { AiFillHeart } from "react-icons/ai";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { AiOutlineComment } from "react-icons/ai";
@@ -22,7 +22,7 @@ interface LargePostProps {
 
 const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
   const timestamp = new Date(post.created_at);
-  const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
+  const createdAt = format(timestamp, "h:mm a '·' MMM d, yyyy");
   const [isReplying, setIsReplying] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -43,7 +43,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
 
   return (
     <div
-      className="w-full bg-white border-gray-100 border-b flex flex-col items-center p-4 cursor-pointer hover:bg-gray-50"
+      className="w-full bg-white border-gray-100 border-b flex flex-col items-center cursor-pointer hover:bg-gray-50"
       onClick={handleClick}
     >
       <div className="w-full h-20 flex flex-row items-center">
@@ -64,14 +64,13 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
           </div>
           <div>
             <span onClick={goToProfile} className="cursor-pointer">
-              <h2 className="text-md text-gray-500">{`@${post.username} • ${relativeTime}`}</h2>
+              <h2 className="text-md text-gray-500">{`@${post.username}`}</h2>
             </span>
           </div>
         </div>
       </div>
-      <div className="w-full px-4">
-        <div>{post.content}</div>
-      </div>
+      <div className="w-full px-4 text-lg">{post.content}</div>
+      <div className="w-full px-4 text-md pt-6 text-gray-500">{createdAt}</div>
       <div className="flex flex-row h-20 w-full items-center justify-end">
         <div className="w-40 h-20 flex flex-row items-center justify-center">
           <h3 className="mr-2 text-xl">{post.reply_count}</h3>
@@ -162,8 +161,7 @@ const LargePost = ({ post, userInfo, onUpdate }: LargePostProps) => {
           username={post.username}
           posterProfilePicURL={post.profile_picture_url}
           userProfilePicURL={userInfo.profilePicURL}
-          content={post.content}
-          relativeTime={relativeTime}
+          createdAt={post.created_at}
           onUpdate={onUpdate}
         />
       )}

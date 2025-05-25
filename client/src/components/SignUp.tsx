@@ -11,7 +11,7 @@ interface SignUpProps {
 }
 
 const SignUp: React.FC<SignUpProps> = ({ close }) => {
-  const [signUpForm, setLogInForm] = useState({
+  const [signUpForm, setSignUpForm] = useState({
     email: "",
     username: "",
     displayName: "",
@@ -30,7 +30,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
   }, [isLoggedIn, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLogInForm({ ...signUpForm, [e.target.name]: e.target.value });
+    setSignUpForm({ ...signUpForm, [e.target.name]: e.target.value });
   };
 
   const checkAvailability = async () => {
@@ -76,7 +76,7 @@ const SignUp: React.FC<SignUpProps> = ({ close }) => {
 
   const handleInfoStep = () => {
     if (signUpForm.username && signUpForm.email && signUpForm.dob) {
-      setLogInForm({ ...signUpForm, displayName: signUpForm.username });
+      setSignUpForm({ ...signUpForm, displayName: signUpForm.username });
       setStep("password");
     }
   };

@@ -31,7 +31,7 @@ const CreatePostBox = ({ makePost, profilePicURL }: CreatePostBoxProps) => {
         <div className="w-full ml-auto mr-5 pl-5 pt-5 h-24">
           <textarea
             className="w-full h-30 focus:outline-none resize-none"
-            placeholder="What happening?"
+            placeholder="What's happening?"
             value={postText}
             onChange={(e) => handleChange(e)}
           />
